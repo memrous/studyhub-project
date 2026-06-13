@@ -1,0 +1,39 @@
+import { useNavigate } from 'react-router-dom'
+import { useSubjects } from '../hooks/useSubjects'
+import SubjectsView from '../components/SubjectsView'
+import PageState from '../components/PageState'
+
+const SubjectsPage = () => {
+  const navigate = useNavigate()
+  const { data: subjects, addSubject: handleAddSubject, isLoading, error, refetch: reloadData } = useSubjects()
+
+  if (isLoading) {
+    return <PageState variant="loading" title="Loading..." />
+  }
+
+  if (error) {
+    return (
+      <PageState
+        variant="error"
+        title={error}
+        description="Zkuste stránku načíst znovu."
+        actionLabel="Zkusit znovu"
+        onAction={reloadData}
+      />
+    )
+  }
+
+  const handleSelectSubject = (subject) => {
+    navigate(`/subjects/${subject.id}`)
+  }
+
+  return (
+    <SubjectsView
+      subjects={subjects}
+      onSelectSubject={handleSelectSubject}
+      onAddSubject={handleAddSubject}
+    />
+  )
+}
+
+export default SubjectsPage

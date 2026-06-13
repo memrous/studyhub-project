@@ -1,0 +1,22 @@
+# Frontend ignorované soubory
+studyhub-frontend/node_modules/
+studyhub-frontend/.env.development
+studyhub-frontend/.env.production
+studyhub-frontend/.env.*.local
+studyhub-frontend/dist/
+
+# Backend ignorované soubory
+studyhub-backend/.env
+studyhub-backend/vendor/
+studyhub-backend/storage/*.key
+studyhub-backend/storage/framework/cache/data/*
+studyhub-backend/storage/framework/views/*
+studyhub-backend/storage/framework/sessions/*
+studyhub-backend/storage/logs/*.log
+studyhub-backend/bootstrap/cache/*
+
+# Systémové soubory
+.DS_Store
+Thumbs.db
+.vscode/
+*.code-workspace
