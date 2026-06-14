@@ -48,11 +48,11 @@ class Subject extends Model
 
     public function getCompletionTypeAttribute()
     {
-        return $this->completion_type;
+        return $this->attributes['completion_type'] ?? null;
     }
-
+    
     public function getIsMandatoryAttribute()
     {
-        return $this->is_mandatory;
+        return $this->attributes['is_mandatory'] ?? null;
     }
 }

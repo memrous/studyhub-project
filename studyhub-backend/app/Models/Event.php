@@ -36,16 +36,17 @@ class Event extends Model
 
     public function getSubjectIdAttribute()
     {
-        return $this->subject_id;
+        return $this->attributes['subject_id'] ?? null;
     }
-
+    
     public function getStartTimeAttribute()
     {
-        return $this->time;
+        return $this->attributes['time'] ?? null;
     }
-
+    
     public function getEndTimeAttribute()
     {
-        return $this->end_time;
+        return $this->attributes['end_time'] ?? null;
     }
 }
+  

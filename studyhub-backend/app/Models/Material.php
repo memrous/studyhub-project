@@ -36,9 +36,9 @@ class Material extends Model
 
     public function getSubjectIdAttribute()
     {
-        return $this->subject_id;
+        return $this->attributes['subject_id'] ?? null;
     }
-
+    
     public function getUploadedAtAttribute()
     {
         return $this->created_at ? $this->created_at->toISOString() : null;
