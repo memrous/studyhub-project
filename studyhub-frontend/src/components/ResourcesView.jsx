@@ -457,18 +457,18 @@ const ResourcesView = ({ resources, subjects, onUploadResource }) => {
         r.description.toLowerCase().includes(q)
       )
     }
-    if (sortKey === 'name') list.sort((a, b) => a.title.localeCompare(b.title))
-    if (sortKey === 'type') list.sort((a, b) => a.type.localeCompare(b.type))
-    if (sortKey === 'recent') list.sort((a, b) => b.uploadDate.localeCompare(a.uploadDate))
+    if (sortKey === 'name') list.sort((a, b) => (a.title ?? '').localeCompare(b.title ?? ''))
+    if (sortKey === 'type') list.sort((a, b) => (a.type ?? '').localeCompare(b.type ?? ''))
+    if (sortKey === 'recent') list.sort((a, b) => (b.uploadedAt ?? '').localeCompare(a.uploadedAt ?? ''))
     return list
   }, [resources, subjectFilter, typeFilter, searchQuery, sortKey])
 
   // Get recent 3 resources for horizontal layout
   const recentResources = useMemo(() => {
-    return [...resources]
-      .sort((a, b) => b.uploadDate.localeCompare(a.uploadDate))
-      .slice(0, 3)
-  }, [resources])
+  return [...resources]
+    .sort((a, b) => (b.uploadedAt ?? '').localeCompare(a.uploadedAt ?? ''))
+    .slice(0, 3)
+}, [resources])
 
   // Group filtered resources by subject
   const grouped = useMemo(() => {

@@ -2,6 +2,7 @@
 import { createContext, useCallback, useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import * as api from '../services/api'
+import { setAuthToken } from '../services/httpClient'
 
 /**
  * AuthContext
@@ -39,36 +40,25 @@ export const AuthProvider = ({ children }) => {
   // ── Session helper functions ──────────────────────────────────
   const clearSession = useCallback(() => {
     localStorage.removeItem(LS_AUTH)
+    setAuthToken(null)
     setUser(null)
   }, [])
 
-  const getStoredUserId = useCallback(() => {
-    const authDataStr = localStorage.getItem(LS_AUTH)
-    if (!authDataStr) {
-      return user?.id
-    }
-
-    try {
-      const parsed = JSON.parse(authDataStr)
-      return parsed.user?.id || user?.id
-    } catch {
-      return user?.id
-    }
-  }, [user])
-
   const logout = useCallback(async () => {
     try {
-      await api.logout(getStoredUserId())
+      await api.logout()
+    } catch (err) {
+      console.warn('Backend logout failed:', err)
     } finally {
       clearSession()
       navigate('/login', { replace: true })
     }
-  }, [navigate, clearSession, getStoredUserId])
+  }, [navigate, clearSession])
 
   // ── Session restore on mount ──────────────────────────────────
   // NOTE: intentionally omits `logout` from deps — including it would create
-  // an infinite loop: logout → getStoredUserId → [user] → setUser in effect
-  // → user changes → logout re-created → effect re-runs → getUser() called again.
+  // an infinite loop: logout triggers state changes, then the effect re-runs
+  // and calls getUser() again.
   // `navigate` is a stable reference from React Router and is safe as a dep.
   useEffect(() => {
     const restoreSession = async () => {
@@ -91,6 +81,8 @@ export const AuthProvider = ({ children }) => {
           setUser(cachedUser)
         }
 
+        setAuthToken(token)
+
         const response = await api.getUser(token)
 
         if (response.status === 'success') {
@@ -103,8 +95,7 @@ export const AuthProvider = ({ children }) => {
         // Token rejected by server — clear session and redirect without
         // calling logout() (which would re-introduce the unstable dep chain)
         if (response.error === 'unauthorized') {
-          localStorage.removeItem(LS_AUTH)
-          setUser(null)
+          clearSession()
           navigate('/login', { replace: true })
           return
         }
@@ -115,12 +106,10 @@ export const AuthProvider = ({ children }) => {
           return
         }
 
-        localStorage.removeItem(LS_AUTH)
-        setUser(null)
+        clearSession()
       } catch {
         // Token invalid or expired — clear session silently
-        localStorage.removeItem(LS_AUTH)
-        setUser(null)
+        clearSession()
       } finally {
         setIsLoading(false)
       }
@@ -130,46 +119,64 @@ export const AuthProvider = ({ children }) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigate])
 
-  // ── Persist helpers ───────────────────────────────────────────
-  const persistSession = useCallback((userData, token) => {
-    localStorage.setItem(LS_AUTH, JSON.stringify({ token, user: userData }))
-    setUser(userData)
-  }, [])
-
   // ── Auth actions ──────────────────────────────────────────────
 
   const login = useCallback(async (email, password) => {
+    // A. Await the API response from api.real.js.
     const response = await api.login(email, password)
     if (response.status === 'error') {
       throw new Error(getAuthErrorMessage(response.error))
     }
 
     const { user: userData, token } = response.data
-    persistSession(userData, token)
+
+    // B. Save to localStorage under key 'studyhub:auth' matching {"token": "...", "user": {...}}
+    localStorage.setItem(LS_AUTH, JSON.stringify({ token, user: userData }))
+
+    // C. Set active Axios common header
+    setAuthToken(token)
+
+    // D. Update global Auth State/Context
+    setUser(userData)
+
+    // E. Redirect to '/dashboard'
     navigate('/dashboard', { replace: true })
-  }, [navigate, persistSession])
+  }, [navigate])
 
   const register = useCallback(async (name, email, password) => {
+    // A. Await the API response from api.real.js.
     const response = await api.register(name, email, password)
     if (response.status === 'error') {
       throw new Error(getAuthErrorMessage(response.error))
     }
 
     const { user: userData, token } = response.data
-    persistSession(userData, token)
+
+    // B. Save to localStorage under key 'studyhub:auth' matching {"token": "...", "user": {...}}
+    localStorage.setItem(LS_AUTH, JSON.stringify({ token, user: userData }))
+
+    // C. Set active Axios common header
+    setAuthToken(token)
+
+    // D. Update global Auth State/Context
+    setUser(userData)
+
+    // E. Redirect to '/dashboard'
     navigate('/dashboard', { replace: true })
-  }, [navigate, persistSession])
+  }, [navigate])
 
   // ── Listen for 401 Unauthorized events from httpClient ───────
   useEffect(() => {
     const handleUnauthorized = () => {
-      logout()
+      // Cleanly clear session and redirect without calling API logout
+      clearSession()
+      navigate('/login', { replace: true })
     }
     window.addEventListener('studyhub:unauthorized', handleUnauthorized)
     return () => {
       window.removeEventListener('studyhub:unauthorized', handleUnauthorized)
     }
-  }, [logout])
+  }, [clearSession, navigate])
 
   const value = {
     user,

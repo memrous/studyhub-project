@@ -24,6 +24,8 @@ const CalendarPage = () => {
     deleteEvent: handleDeleteEvent,
   } = useEvents()
 
+  const currentSubjects = subjects ?? []
+  const currentEvents = events ?? []
   const isLoading = subjectsLoading || eventsLoading
   const error = subjectsError || eventsError
   const reloadData = () => {
@@ -54,7 +56,7 @@ const CalendarPage = () => {
     )
   }
 
-  if (events.length === 0 && subjects.length === 0) {
+  if (currentEvents.length === 0 && currentSubjects.length === 0) {
     return (
       <PageState
         variant="empty"
@@ -66,8 +68,8 @@ const CalendarPage = () => {
 
   return (
     <CalendarView
-      events={events}
-      subjects={subjects}
+      events={currentEvents}
+      subjects={currentSubjects}
       onCreateEvent={handleCreateEvent}
       onEditEvent={handleEditEvent}
       onDeleteEvent={handleDeleteEvent}

@@ -19,10 +19,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    // Allow the Vite dev server origin; falls back to localhost:5174
-    'allowed_origins' => [
-        env('FRONTEND_URL', 'http://localhost:5174'),
-    ],
+    'allowed_origins' => [env('FRONTEND_URL', 'http://localhost:5175')],
 
     'allowed_origins_patterns' => [],
 

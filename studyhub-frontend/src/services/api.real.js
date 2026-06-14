@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import httpClient from './httpClient'
+import httpClient, { setAuthToken } from './httpClient'
 
 const success = (data) => ({ data, error: null, status: 'success' })
 const failure = (error) => ({ data: null, error, status: 'error' })
@@ -18,6 +18,12 @@ const normalizeHttpError = (error) => {
 
   if (isNetworkError(error)) {
     return failure('network_error')
+  }
+
+  if (error?.response?.status === 422) {
+    const errors = error?.response?.data?.errors
+    if (errors?.email || errors?.password) return failure('invalid_credentials')
+    return failure(Object.values(errors ?? {}).flat()[0] ?? 'validation_error')
   }
 
   if (error?.response?.status === 500) {
@@ -39,15 +45,25 @@ const request = async (handler) => {
 // ── Auth API Functions ───────────────────────────────────────────
 
 export const login = async (email, password) => {
-  return request(() => httpClient.post('/login', { email, password }).then((res) => res.data))
+  const result = await request(() => httpClient.post('/login', { email, password }).then((res) => res.data))
+  if (result.status === 'success' && result.data?.token) {
+    setAuthToken(result.data.token)
+  }
+  return result
 }
 
 export const register = async (name, email, password) => {
-  return request(() => httpClient.post('/register', { name, email, password }).then((res) => res.data))
+  const result = await request(() => httpClient.post('/register', { name, email, password }).then((res) => res.data))
+  if (result.status === 'success' && result.data?.token) {
+    setAuthToken(result.data.token)
+  }
+  return result
 }
 
-export const logout = async (userId) => {
-  return request(() => httpClient.post('/logout').then((res) => res.data))
+export const logout = async () => {
+  const result = await request(() => httpClient.post('/logout').then((res) => res.data))
+  setAuthToken(null)
+  return result
 }
 
 export const getUser = async (token) => {
