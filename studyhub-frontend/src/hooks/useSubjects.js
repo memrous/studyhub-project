@@ -70,6 +70,28 @@ export const useSubjects = () => {
     },
   })
 
+  // ── Mutation: delete subject ──────────────────────────────────
+  const deleteSubjectMutation = useMutation({
+    mutationFn: (subjectId) => api.deleteSubject(user.id, subjectId).then(res => {
+      if (res.status === 'error') throw new Error(res.error)
+      return res.data
+    }),
+    onMutate: async (subjectId) => {
+      await queryClient.cancelQueries({ queryKey })
+      const previousSubjects = queryClient.getQueryData(queryKey)
+      queryClient.setQueryData(queryKey, (old) => (old ?? []).filter(s => s.id !== subjectId))
+      return { previousSubjects }
+    },
+    onError: (err, subjectId, context) => {
+      if (context?.previousSubjects) {
+        queryClient.setQueryData(queryKey, context.previousSubjects)
+      }
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey })
+    },
+  })
+
   return {
     /** @type {import('../contracts/subject').Subject[]} */
     data: query.data ?? [],
@@ -77,5 +99,6 @@ export const useSubjects = () => {
     error: query.error?.message ?? null,
     refetch: query.refetch,
     addSubject: (subject) => addSubjectMutation.mutate(subject),
+    deleteSubject: (subjectId) => deleteSubjectMutation.mutate(subjectId),
   }
 }

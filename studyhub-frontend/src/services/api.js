@@ -6,10 +6,15 @@ const activeApi = isMock ? mockApi : realApi
 
 export const login = activeApi.login
 export const register = activeApi.register
+export const checkAvailability = activeApi.checkAvailability
 export const logout = activeApi.logout
 export const getUser = activeApi.getUser
+export const connectStag = activeApi.connectStag
+export const disconnectStag = activeApi.disconnectStag
 export const getSubjects = activeApi.getSubjects
 export const createSubject = activeApi.createSubject
+export const deleteSubject = activeApi.deleteSubject
+
 export const getEvents = activeApi.getEvents
 export const createEvent = activeApi.createEvent
 export const editEvent = activeApi.editEvent

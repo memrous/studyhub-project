@@ -20,8 +20,16 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'username',
         'email',
         'password',
+        'university_id',
+        'faculty_id',
+        'study_program_id',
+        'academic_year',
+        'stag_student_id',
+        'stag_username',
+        'stag_password',
     ];
 
     /**
@@ -50,5 +58,20 @@ class User extends Authenticatable
     public function subjects()
     {
         return $this->hasMany(Subject::class);
+    }
+
+    public function university()
+    {
+        return $this->belongsTo(University::class);
+    }
+
+    public function faculty()
+    {
+        return $this->belongsTo(Faculty::class);
+    }
+
+    public function studyProgram()
+    {
+        return $this->belongsTo(StudyProgram::class);
     }
 }

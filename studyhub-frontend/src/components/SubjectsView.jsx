@@ -170,7 +170,7 @@ const Dropdown = ({ label, icon: Icon, options, value, onChange }) => {
 }
 
 // ─── Main SubjectsView Component ─────────────────────────────
-const SubjectsView = ({ subjects, onSelectSubject, onAddSubject }) => {
+const SubjectsView = ({ subjects, onSelectSubject, onAddSubject, onDeleteSubject }) => {
   const [filterType, setFilterType] = useState('all')     // 'all' | 'Mandatory' | 'Elective'
   const [sortKey, setSortKey] = useState('default')       // 'default' | 'name' | 'code' | 'credits'
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -260,7 +260,7 @@ const SubjectsView = ({ subjects, onSelectSubject, onAddSubject }) => {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
             {displayed.map(subject => (
-              <SubjectCard key={subject.id} subject={subject} onSelect={onSelectSubject} />
+              <SubjectCard key={subject.id} subject={subject} onSelect={onSelectSubject} onDelete={onDeleteSubject} />
             ))}
           </div>
         )}

@@ -8,6 +8,12 @@ export default defineConfig({
     host: '0.0.0.0',
     port: 5175,
     strictPort: true,
+    proxy: {
+      "/storage": {
+        target: "http://localhost:80",
+        changeOrigin: true,
+      },
+    },
     watch: {
       usePolling: true,
     },

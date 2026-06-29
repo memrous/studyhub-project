@@ -1,0 +1,10 @@
+**/node_modules/**
+**/vendor/**
+**/public/build/**
+**/bootstrap/cache/**
+**/storage/**
+**/.git/**
+**/.idea/**
+**/.vscode/**
+**/logs/**
+**/*.log

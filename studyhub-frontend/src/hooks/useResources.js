@@ -75,6 +75,6 @@ export const useResources = () => {
     isLoading: query.isLoading,
     error: query.error?.message ?? null,
     refetch: query.refetch,
-    uploadResource: (resource) => uploadMutation.mutate(resource),
+    uploadResource: (resource) => uploadMutation.mutateAsync(resource),
   }
 }

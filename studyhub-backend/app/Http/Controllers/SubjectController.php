@@ -42,4 +42,17 @@ class SubjectController extends Controller
 
         return response()->json($subject, 201);
     }
+
+    public function destroy(Request $request, $id)
+    {
+        $userId = $request->user()->id;
+
+        $subject = Subject::where('user_id', $userId)->findOrFail($id);
+        $subject->delete();
+
+        return response()->json([
+            'message' => 'Subject deleted successfully.',
+            'id' => (int)$id,
+        ]);
+    }
 }

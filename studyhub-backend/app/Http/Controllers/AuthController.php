@@ -9,19 +9,47 @@ use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
+    // POST /api/check-availability
+    public function checkAvailability(Request $request)
+    {
+        $request->validate([
+            'email'    => 'required|email|unique:users,email',
+            'username' => 'required|string|alpha_dash|unique:users,username',
+        ]);
+
+        return response()->json(['available' => true]);
+    }
+
+
     // POST /api/register
     public function register(Request $request)
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
+            'email' => 'required|email|unique:users,email',
+            'username' => 'required|string|alpha_dash|unique:users,username',
             'password' => 'required|string|min:8',
+            'university_id' => 'nullable|integer',
+            'faculty_id' => 'nullable|integer',
+            'study_program_id' => 'nullable|integer',
+            'academic_year' => 'nullable|integer',
+            'stag_student_id' => 'nullable|string',
+            'stag_username' => 'nullable|string',
+            'stag_password' => 'nullable|string',
         ]);
 
         $user = User::create([
             'name' => $validated['name'],
+            'username' => $validated['username'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
+            'university_id' => $validated['university_id'] ?? null,
+            'faculty_id' => $validated['faculty_id'] ?? null,
+            'study_program_id' => $validated['study_program_id'] ?? null,
+            'academic_year' => $validated['academic_year'] ?? null,
+            'stag_student_id' => $validated['stag_student_id'] ?? null,
+            'stag_username' => $validated['stag_username'] ?? null,
+            'stag_password' => $validated['stag_password'] ?? null,
         ]);
 
         // Vygenerujeme token, aby byl uživatel po registraci rovnou přihlášen

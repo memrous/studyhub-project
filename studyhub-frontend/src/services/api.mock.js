@@ -14,13 +14,16 @@ const MOCK_USER_DB = [
   {
     id: 1,
     name: 'Bořek Šarman',
+    username: 'boreksarman',
     email: 'borek.sarman@upol.cz',
     password: 'password',
     university: 'Palacký University Olomouc',
     faculty: 'Faculty of Science',
     program: 'Applied Informatics',
     year: '1st Year',
-    stagConnected: true,
+    stag_student_id: null,
+    stag_username: null,
+    stag_password: null,
     role: 'student',
     avatarUrl:
       'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80',
@@ -37,6 +40,47 @@ const sanitizeUser = (user) => {
 const getNamespacedKey = (userId, key) => {
   const scope = userId || 'fallback'
   return `studyhub:${scope}:${key}`
+}
+
+const getAuthTokenFromStorage = () => {
+  const authDataStr = localStorage.getItem('studyhub:auth')
+  if (!authDataStr) return null
+
+  try {
+    const { token } = JSON.parse(authDataStr)
+    return token || null
+  } catch {
+    return null
+  }
+}
+
+const getCurrentMockUser = () => {
+  const token = getAuthTokenFromStorage()
+  if (!token) return null
+
+  const parts = token.split('-')
+  const userId = Number(parts[2])
+  if (!Number.isFinite(userId)) return null
+
+  return mockRegisteredUsers.find((user) => user.id === userId) ?? null
+}
+
+const normalizeRegisterPayload = (args) => {
+  if (args.length === 1 && typeof args[0] === 'object') {
+    return args[0]
+  }
+
+  const [name, username, email, password, stagStudentId, stagUsername, stagPassword] = args
+
+  return {
+    name,
+    username,
+    email,
+    password,
+    stag_student_id: stagStudentId || null,
+    stag_username: stagUsername || null,
+    stag_password: stagPassword || null,
+  }
 }
 
 // ── Auth API Functions ───────────────────────────────────────────
@@ -56,27 +100,41 @@ export const login = async (email, password) => {
   return success({ user: sanitizeUser(found), token })
 }
 
-export const register = async (name, email, password) => {
+export const register = async (...args) => {
   await delay(MOCK_DELAY)
 
-  const existing = mockRegisteredUsers.find(
-    (u) => u.email.toLowerCase() === email.toLowerCase()
-  )
+  const payload = normalizeRegisterPayload(args)
+  const errors = {}
 
-  if (existing) {
-    return failure('email_exists')
+  if (mockRegisteredUsers.find((u) => u.email.toLowerCase() === payload.email.toLowerCase())) {
+    errors.email = ['The email has already been taken.']
+  }
+  if (payload.username && mockRegisteredUsers.find((u) => u.username && u.username.toLowerCase() === payload.username.toLowerCase())) {
+    errors.username = ['The username has already been taken.']
+  }
+
+  if (Object.keys(errors).length > 0) {
+    return {
+      data: null,
+      error: 'validation_error',
+      errors: errors,
+      status: 'error'
+    }
   }
 
   const newUser = {
     id: Date.now(),
-    name,
-    email,
-    password,
+    name: payload.name,
+    username: payload.username,
+    email: payload.email,
+    password: payload.password,
     university: 'Palacký University Olomouc',
     faculty: 'Faculty of Science',
     program: 'Student',
     year: '1st Year',
-    stagConnected: false,
+    stag_student_id: payload.stag_student_id ?? null,
+    stag_username: payload.stag_username ?? null,
+    stag_password: payload.stag_password ?? null,
     role: 'student',
     avatarUrl:
       'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80',
@@ -85,6 +143,25 @@ export const register = async (name, email, password) => {
   mockRegisteredUsers.push(newUser)
   const token = `mock-token-${newUser.id}-${Date.now()}`
   return success({ user: sanitizeUser(newUser), token })
+}
+
+export const checkAvailability = async ({ email, username }) => {
+  await delay(MOCK_DELAY)
+
+  const errors = {}
+
+  if (mockRegisteredUsers.find((u) => u.email.toLowerCase() === email.toLowerCase())) {
+    errors.email = ['The email has already been taken.']
+  }
+  if (username && mockRegisteredUsers.find((u) => u.username && u.username.toLowerCase() === username.toLowerCase())) {
+    errors.username = ['The username has already been taken.']
+  }
+
+  if (Object.keys(errors).length > 0) {
+    return { data: null, error: 'validation_error', errors, status: 'error' }
+  }
+
+  return success({ available: true })
 }
 
 export const logout = async (userId) => {
@@ -102,8 +179,13 @@ export const logout = async (userId) => {
 export const getUser = async (token) => {
   await delay(300)
 
-  const parts = token.split('-')
-  const userId = parseInt(parts[2], 10)
+  const authToken = token || getAuthTokenFromStorage()
+  if (!authToken) {
+    return failure('unauthorized')
+  }
+
+  const parts = authToken.split('-')
+  const userId = Number(parts[2])
 
   const found = mockRegisteredUsers.find((u) => u.id === userId)
   if (!found) {
@@ -111,6 +193,36 @@ export const getUser = async (token) => {
   }
 
   return success({ user: sanitizeUser(found) })
+}
+
+export const connectStag = async (payload) => {
+  await delay(400)
+
+  const currentUser = getCurrentMockUser()
+  if (!currentUser) {
+    return failure('unauthorized')
+  }
+
+  currentUser.stag_student_id = payload.stag_student_id ?? payload.stagStudentId ?? null
+  currentUser.stag_username = payload.stag_username ?? payload.stagUsername ?? null
+  currentUser.stag_password = payload.stag_password ?? payload.stagPassword ?? null
+
+  return success({ user: sanitizeUser(currentUser) })
+}
+
+export const disconnectStag = async () => {
+  await delay(300)
+
+  const currentUser = getCurrentMockUser()
+  if (!currentUser) {
+    return failure('unauthorized')
+  }
+
+  currentUser.stag_student_id = null
+  currentUser.stag_username = null
+  currentUser.stag_password = null
+
+  return success({ user: sanitizeUser(currentUser) })
 }
 
 // ── Application State API Functions ──────────────────────────────
@@ -139,6 +251,17 @@ export const createSubject = async (userId, newSubject) => {
   localStorage.setItem(key, JSON.stringify(updatedList))
   return success(newSubject)
 }
+
+export const deleteSubject = async (userId, subjectId) => {
+  await delay(100)
+  const key = getNamespacedKey(userId, 'subjects')
+  const saved = localStorage.getItem(key)
+  const list = saved ? JSON.parse(saved) : INITIAL_SUBJECTS
+  const updatedList = list.filter((s) => s.id !== Number(subjectId) && s.id !== subjectId)
+  localStorage.setItem(key, JSON.stringify(updatedList))
+  return success(subjectId)
+}
+
 
 export const getEvents = async (userId) => {
   await delay(MOCK_DELAY)

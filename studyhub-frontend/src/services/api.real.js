@@ -22,8 +22,13 @@ const normalizeHttpError = (error) => {
 
   if (error?.response?.status === 422) {
     const errors = error?.response?.data?.errors
-    if (errors?.email || errors?.password) return failure('invalid_credentials')
-    return failure(Object.values(errors ?? {}).flat()[0] ?? 'validation_error')
+    const errKey = (errors?.email || errors?.password) ? 'invalid_credentials' : (Object.values(errors ?? {}).flat()[0] ?? 'validation_error')
+    return {
+      data: null,
+      error: errKey,
+      errors: errors,
+      status: 'error'
+    }
   }
 
   if (error?.response?.status === 500) {
@@ -42,7 +47,23 @@ const request = async (handler) => {
   }
 }
 
-// ── Auth API Functions ───────────────────────────────────────────
+const normalizeRegisterPayload = (args) => {
+  if (args.length === 1 && typeof args[0] === 'object') {
+    return args[0]
+  }
+
+  const [name, username, email, password, stagStudentId, stagUsername, stagPassword] = args
+
+  return {
+    name,
+    username,
+    email,
+    password,
+    ...(stagStudentId ? { stag_student_id: stagStudentId } : {}),
+    ...(stagUsername ? { stag_username: stagUsername } : {}),
+    ...(stagPassword ? { stag_password: stagPassword } : {}),
+  }
+}
 
 export const login = async (email, password) => {
   const result = await request(() => httpClient.post('/login', { email, password }).then((res) => res.data))
@@ -52,12 +73,17 @@ export const login = async (email, password) => {
   return result
 }
 
-export const register = async (name, email, password) => {
-  const result = await request(() => httpClient.post('/register', { name, email, password }).then((res) => res.data))
+export const register = async (...args) => {
+  const payload = normalizeRegisterPayload(args)
+  const result = await request(() => httpClient.post('/register', payload).then((res) => res.data))
   if (result.status === 'success' && result.data?.token) {
     setAuthToken(result.data.token)
   }
   return result
+}
+
+export const checkAvailability = async ({ email, username }) => {
+  return request(() => httpClient.post('/check-availability', { email, username }).then((res) => res.data))
 }
 
 export const logout = async () => {
@@ -66,11 +92,17 @@ export const logout = async () => {
   return result
 }
 
-export const getUser = async (token) => {
+export const getUser = async () => {
   return request(() => httpClient.get('/user').then((res) => res.data))
 }
 
-// ── Application State API Functions ──────────────────────────────
+export const connectStag = async (payload) => {
+  return request(() => httpClient.post('/user/stag', payload).then((res) => res.data))
+}
+
+export const disconnectStag = async () => {
+  return request(() => httpClient.delete('/user/stag').then((res) => res.data))
+}
 
 export const getSubjects = async (userId) => {
   return request(() => httpClient.get('/subjects').then((res) => res.data))
@@ -79,6 +111,11 @@ export const getSubjects = async (userId) => {
 export const createSubject = async (userId, newSubject) => {
   return request(() => httpClient.post('/subjects', newSubject).then((res) => res.data))
 }
+
+export const deleteSubject = async (userId, subjectId) => {
+  return request(() => httpClient.delete(`/subjects/${subjectId}`).then((res) => res.data))
+}
+
 
 export const getEvents = async (userId) => {
   return request(() => httpClient.get('/events').then((res) => res.data))
@@ -105,5 +142,20 @@ export const getResources = async (userId) => {
 }
 
 export const createResource = async (userId, newResource) => {
+  if (newResource.file) {
+    const formData = new FormData()
+    Object.keys(newResource).forEach((key) => {
+      if (newResource[key] !== null && newResource[key] !== undefined) {
+        formData.append(key, newResource[key])
+      }
+    })
+    return request(() =>
+      httpClient.post('/materials', formData, {
+        headers: {
+          'Content-Type': undefined,
+        },
+      }).then((res) => res.data)
+    )
+  }
   return request(() => httpClient.post('/materials', newResource).then((res) => res.data))
 }

@@ -5,7 +5,7 @@ import PageState from '../components/PageState'
 
 const SubjectsPage = () => {
   const navigate = useNavigate()
-  const { data: subjects, addSubject: handleAddSubject, isLoading, error, refetch: reloadData } = useSubjects()
+  const { data: subjects, addSubject: handleAddSubject, deleteSubject: handleDeleteSubject, isLoading, error, refetch: reloadData } = useSubjects()
 
   if (isLoading) {
     return <PageState variant="loading" title="Loading..." />
@@ -32,6 +32,7 @@ const SubjectsPage = () => {
       subjects={subjects}
       onSelectSubject={handleSelectSubject}
       onAddSubject={handleAddSubject}
+      onDeleteSubject={handleDeleteSubject}
     />
   )
 }

@@ -1,4 +1,4 @@
-import { Database, Globe, Code2, Monitor, GitBranch, Network, BookOpen, User } from 'lucide-react'
+import { Database, Globe, Code2, Monitor, GitBranch, Network, BookOpen, User, Trash2 } from 'lucide-react'
 
 const SUBJECT_ICONS = {
   DBS: Database,
@@ -15,7 +15,7 @@ const SubjectIcon = ({ code }) => {
   return <Icon className="w-5 h-5" />;
 };
 
-const SubjectCard = ({ subject, onSelect }) => {
+const SubjectCard = ({ subject, onSelect, onDelete }) => {
   
   return (
     <div className="bg-white border border-[#E2E8F0] rounded-lg shadow-ambient hover:shadow-md transition-shadow flex flex-col p-5 gap-4 font-inter">
@@ -75,12 +75,28 @@ const SubjectCard = ({ subject, onSelect }) => {
           {subject.semester} Semester
         </span>
         
-        <button 
-          onClick={() => onSelect?.(subject)}
-          className="bg-[#004ac6] hover:bg-[#003ea8] active:scale-[0.98] text-white font-semibold px-4 py-2 rounded-md text-label-md transition-all cursor-pointer shadow-sm flex items-center gap-1.5"
-        >
-          Open Subject
-        </button>
+        <div className="flex items-center gap-2">
+          {onDelete && (
+            <button 
+              onClick={(e) => {
+                e.stopPropagation();
+                if (window.confirm(`Are you sure you want to delete the subject "${subject.name}"?`)) {
+                  onDelete(subject.id);
+                }
+              }}
+              className="text-[#737686] hover:text-red-600 hover:bg-red-50 p-2 rounded-md transition-all cursor-pointer border border-transparent hover:border-red-200"
+              title="Delete Subject"
+            >
+              <Trash2 className="w-4 h-4" />
+            </button>
+          )}
+          <button 
+            onClick={() => onSelect?.(subject)}
+            className="bg-[#004ac6] hover:bg-[#003ea8] active:scale-[0.98] text-white font-semibold px-4 py-2 rounded-md text-label-md transition-all cursor-pointer shadow-sm flex items-center gap-1.5"
+          >
+            Open Subject
+          </button>
+        </div>
       </div>
     </div>
   )
