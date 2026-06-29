@@ -104,6 +104,10 @@ export const disconnectStag = async () => {
   return request(() => httpClient.delete('/user/stag').then((res) => res.data))
 }
 
+export const getStagSyncStatus = async () => {
+  return request(() => httpClient.get('/user/stag/status').then((res) => res.data))
+}
+
 export const getSubjects = async (userId) => {
   return request(() => httpClient.get('/subjects').then((res) => res.data))
 }

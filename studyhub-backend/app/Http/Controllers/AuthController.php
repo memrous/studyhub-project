@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use App\Jobs\StagSyncJob;
 
 class AuthController extends Controller
 {
@@ -54,6 +55,10 @@ class AuthController extends Controller
 
         // Vygenerujeme token, aby byl uživatel po registraci rovnou přihlášen
         $token = $user->createToken('auth_token')->plainTextToken;
+
+        if ($user->stag_username && $user->stag_password) {
+            StagSyncJob::dispatch($user);
+        }
 
         return response()->json([
             'user' => $user,

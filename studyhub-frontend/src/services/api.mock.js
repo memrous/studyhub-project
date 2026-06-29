@@ -225,6 +225,11 @@ export const disconnectStag = async () => {
   return success({ user: sanitizeUser(currentUser) })
 }
 
+export const getStagSyncStatus = async () => {
+  await delay(200)
+  return success({ stag_sync_status: 'success', stag_synced_at: new Date().toISOString() })
+}
+
 // ── Application State API Functions ──────────────────────────────
 
 export const getSubjects = async (userId) => {

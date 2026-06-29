@@ -6,6 +6,7 @@ use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\StagController;
+use App\Http\Controllers\StagConnectController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -43,4 +44,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // STAG Synchronizace
     Route::post('/stag/sync-schedule', [StagController::class, 'syncSchedule']);
+    Route::post('/user/stag',          [StagConnectController::class, 'connect']);
+    Route::delete('/user/stag',        [StagConnectController::class, 'disconnect']);
+    Route::get('/user/stag/status',    [StagConnectController::class, 'status']);
 });

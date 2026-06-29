@@ -30,25 +30,23 @@ const Profile = ({ user: initialUser }) => {
   const [stagSubmitting, setStagSubmitting] = useState(false)
   const [disconnecting, setDisconnecting] = useState(false)
   const [connectionMessage, setConnectionMessage] = useState('')
+  const [syncStatus, setSyncStatus] = useState(initialUser?.stag_sync_status ?? null)
+  // null | 'pending' | 'success' | 'failed'
+  // eslint-disable-next-line no-unused-vars
+  const [syncPolling, setSyncPolling] = useState(false)
 
 
   useEffect(() => {
+    if (!initialUser) return
     let active = true
 
     const loadUser = async () => {
-      if (!initialUser) {
-        setIsFetching(true)
-      }
-
       const refreshed = await refreshUser()
       if (!active) return
 
       if (refreshed) {
         setUser(refreshed)
-      }
-
-      if (!initialUser) {
-        setIsFetching(false)
+        setSyncStatus(refreshed.stag_sync_status ?? null)
       }
     }
 
@@ -58,6 +56,33 @@ const Profile = ({ user: initialUser }) => {
       active = false
     }
   }, [initialUser, refreshUser])
+
+  useEffect(() => {
+    if (!initialUser || syncStatus !== 'pending') return
+
+    setTimeout(() => {
+      setSyncPolling(true)
+    }, 0)
+    const interval = setInterval(async () => {
+      const result = await api.getStagSyncStatus()
+      if (result.status === 'success') {
+        const newStatus = result.data?.stag_sync_status
+        setSyncStatus(newStatus)
+        if (newStatus !== 'pending') {
+          clearInterval(interval)
+          setSyncPolling(false)
+          // Refresh user data to update the connected badge
+          const refreshed = await refreshUser()
+          if (refreshed) setUser(refreshed)
+        }
+      }
+    }, 3000)
+
+    return () => {
+      clearInterval(interval)
+      setSyncPolling(false)
+    }
+  }, [syncStatus, refreshUser, initialUser])
 
   const effectiveUser = user ?? initialUser
   const isStagConnected = Boolean(effectiveUser?.stag_student_id)
@@ -91,6 +116,7 @@ const Profile = ({ user: initialUser }) => {
     const refreshedUser = await refreshUser()
     if (refreshedUser) {
       setUser(refreshedUser)
+      setSyncStatus(refreshedUser.stag_sync_status ?? null)
     }
     return refreshedUser
   }
@@ -126,7 +152,8 @@ const Profile = ({ user: initialUser }) => {
       setShowStagForm(false)
       setStagForm(emptyStagForm)
       setStagErrors({})
-      setConnectionMessage('IS/STAG has been connected successfully.')
+      setSyncStatus('pending')
+      setConnectionMessage('IS/STAG connected. Syncing your schedule in the background...')
     } catch {
       setConnectionMessage('We could not connect IS/STAG. Please check the values and try again.')
     } finally {
@@ -153,6 +180,7 @@ const Profile = ({ user: initialUser }) => {
       setShowStagForm(false)
       setStagForm(emptyStagForm)
       setStagErrors({})
+      setSyncStatus(null)
       setConnectionMessage('IS/STAG has been disconnected.')
     } catch {
       setConnectionMessage('We could not disconnect IS/STAG right now. Please try again.')
@@ -254,6 +282,27 @@ const Profile = ({ user: initialUser }) => {
           <div className="flex items-start gap-2.5 px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg">
             <ShieldCheck className="w-4 h-4 text-slate-600 shrink-0 mt-0.5" />
             <p className="text-label-sm text-slate-700">{connectionMessage}</p>
+          </div>
+        )}
+
+        {isStagConnected && syncStatus === 'pending' && (
+          <div className="flex items-start gap-2.5 px-4 py-3 bg-blue-50 border border-blue-200 rounded-lg">
+            <Loader2 className="w-4 h-4 text-blue-600 shrink-0 mt-0.5 animate-spin" />
+            <p className="text-label-sm text-blue-700">Syncing your schedule from IS/STAG...</p>
+          </div>
+        )}
+
+        {isStagConnected && syncStatus === 'success' && (
+          <div className="flex items-start gap-2.5 px-4 py-3 bg-emerald-50 border border-emerald-200 rounded-lg">
+            <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+            <p className="text-label-sm text-emerald-700">Schedule synced successfully from IS/STAG.</p>
+          </div>
+        )}
+
+        {isStagConnected && syncStatus === 'failed' && (
+          <div className="flex items-start gap-2.5 px-4 py-3 bg-red-50 border border-red-200 rounded-lg">
+            <AlertCircle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
+            <p className="text-label-sm text-red-700">Schedule sync failed. Check your STAG credentials and try reconnecting.</p>
           </div>
         )}
 
@@ -383,7 +432,6 @@ const Profile = ({ user: initialUser }) => {
                   <div className="sm:col-span-2">
                     <p className="text-xs font-bold uppercase tracking-wider text-emerald-700">Password</p>
                     <p className="mt-1 text-sm font-semibold tracking-[0.25em] text-emerald-950">••••••••</p>
-                    <p className="mt-1 text-xs text-emerald-700">Heslo je uložené na backendu a v UI je skryté.</p>
                   </div>
                 </div>
 
@@ -391,7 +439,7 @@ const Profile = ({ user: initialUser }) => {
                   type="button"
                   onClick={handleDisconnectStag}
                   disabled={disconnecting}
-                  className="inline-flex items-center justify-center gap-2 rounded-lg border border-red-200 bg-white px-4 py-2.5 text-sm font-semibold text-red-700 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-60"
+                  className="cursor-pointer inline-flex items-center justify-center gap-2 rounded-lg border border-red-200 bg-white px-4 py-2.5 text-sm font-semibold text-red-700 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {disconnecting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Unlink2 className="h-4 w-4" />}
                   Disconnect IS/STAG

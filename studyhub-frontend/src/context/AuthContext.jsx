@@ -3,6 +3,7 @@ import { createContext, useCallback, useContext, useEffect, useState } from 'rea
 import { useNavigate } from 'react-router-dom'
 import * as api from '../services/api'
 import { setAuthToken } from '../services/httpClient'
+import queryClient from '../lib/queryClient'
 
 /**
  * AuthContext
@@ -41,6 +42,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem(LS_AUTH)
     setAuthToken(null)
     setUser(null)
+    queryClient.clear()
   }, [])
 
   const refreshUser = useCallback(async () => {

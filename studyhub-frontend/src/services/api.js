@@ -11,6 +11,7 @@ export const logout = activeApi.logout
 export const getUser = activeApi.getUser
 export const connectStag = activeApi.connectStag
 export const disconnectStag = activeApi.disconnectStag
+export const getStagSyncStatus = activeApi.getStagSyncStatus
 export const getSubjects = activeApi.getSubjects
 export const createSubject = activeApi.createSubject
 export const deleteSubject = activeApi.deleteSubject

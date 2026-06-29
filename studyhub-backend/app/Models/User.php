@@ -30,6 +30,9 @@ class User extends Authenticatable
         'stag_student_id',
         'stag_username',
         'stag_password',
+        'stag_sync_status',
+        'stag_sync_error',
+        'stag_synced_at',
     ];
 
     /**
@@ -40,6 +43,8 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'stag_password',
+        'stag_sync_error',
     ];
 
     /**
@@ -52,6 +57,8 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'stag_password' => 'encrypted',
+            'stag_synced_at' => 'datetime',
         ];
     }
 

@@ -1,0 +1,30 @@
+{
+  "rozvrhovaAkce": [
+    {
+      "katedra": "KIV",
+      "predmet": "PIA",
+      "typAkceZkr": "Př",
+      "mistnost": "UU301",
+      "denZkr": "Po",
+      "casOd": "10:15",
+      "casDo": "11:50",
+      "ucitel": {
+        "jmeno": "Jan",
+        "prijmeni": "Novák"
+      }
+    },
+    {
+      "katedra": "KIV",
+      "predmet": "OS",
+      "typAkceZkr": "Cv",
+      "mistnost": "UI204",
+      "denZkr": "St",
+      "casOd": "14:00",
+      "casDo": "15:35",
+      "ucitel": {
+        "jmeno": "Petr",
+        "prijmeni": "Černý"
+      }
+    }
+  ]
+}

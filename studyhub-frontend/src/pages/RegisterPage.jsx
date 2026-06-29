@@ -39,7 +39,6 @@ const ACADEMIC_YEARS = [
   { value: '4', label: '4th Year' },
   { value: '5', label: '5th Year' },
   { value: '6', label: '6th Year' },
-  { value: 'other', label: 'Other' },
 ]
 
 const STEP_META = [
@@ -831,7 +830,7 @@ const RegisterPage = () => {
                 <button
                   type="button"
                   onClick={handleBack}
-                  className="flex items-center justify-center gap-2 py-2.5 px-5 bg-[#F8F9FB] hover:bg-[#EEF1F5] border border-[#E2E8F0] text-on-surface font-semibold rounded-lg text-label-md transition-all"
+                  className="flex items-center justify-center gap-2 py-2.5 px-5 bg-[#F8F9FB] hover:bg-[#EEF1F5] border border-[#E2E8F0] text-on-surface font-semibold rounded-lg text-label-md transition-all cursor-pointer"
                 >
                   <ArrowLeft className="w-4 h-4" /> Back
                 </button>
@@ -842,7 +841,7 @@ const RegisterPage = () => {
                   type="button"
                   onClick={handleNext}
                   disabled={checking}
-                  className="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 bg-[#004ac6] hover:bg-[#003ea8] active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold rounded-lg text-label-md transition-all shadow-sm"
+                  className="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 bg-[#004ac6] hover:bg-[#003ea8] active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold rounded-lg text-label-md transition-all shadow-sm cursor-pointer"
                 >
                   {checking ? (
                     <><Loader2 className="w-4 h-4 animate-spin" /> Checking…</>
@@ -856,7 +855,7 @@ const RegisterPage = () => {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 bg-[#004ac6] hover:bg-[#003ea8] active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold rounded-lg text-label-md transition-all shadow-sm"
+                  className="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 bg-[#004ac6] hover:bg-[#003ea8] active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold rounded-lg text-label-md transition-all shadow-sm cursor-pointer"
                 >
                   {submitting ? (
                     <><Loader2 className="w-4 h-4 animate-spin" /> Creating account</>
