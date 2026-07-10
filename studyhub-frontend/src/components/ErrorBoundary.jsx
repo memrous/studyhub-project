@@ -28,9 +28,9 @@ class ErrorBoundary extends Component {
               <AlertTriangle className="w-6 h-6" />
             </div>
             <div className="flex flex-col gap-2">
-              <h1 className="text-headline-md font-semibold text-on-surface">Něco se pokazilo</h1>
+              <h1 className="text-headline-md font-semibold text-on-surface">Something went wrong</h1>
               <p className="text-body-md text-on-surface-variant">
-                Zkuste stránku načíst znovu. Aplikace zůstala zachycená v bezpečném stavu.
+                Please try reloading the page. The application was kept in a safe state.
               </p>
             </div>
             <button
@@ -38,7 +38,7 @@ class ErrorBoundary extends Component {
               onClick={this.handleReload}
               className="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-[#004ac6] text-white text-label-md font-semibold hover:bg-[#003ea8] transition-colors"
             >
-              Znovu načíst stránku
+              Reload page
             </button>
           </div>
         </div>

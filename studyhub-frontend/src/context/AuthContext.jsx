@@ -46,6 +46,16 @@ export const AuthProvider = ({ children }) => {
   }, [])
 
   const refreshUser = useCallback(async () => {
+    // Guard: do not attempt API call if there is no token in storage
+    const authDataStr = localStorage.getItem(LS_AUTH)
+    if (!authDataStr) return null
+    try {
+      const { token } = JSON.parse(authDataStr)
+      if (!token) return null
+    } catch {
+      return null
+    }
+
     try {
       const response = await api.getUser()
 

@@ -1,5 +1,8 @@
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Calendar as CalendarIcon, BookOpen } from 'lucide-react'
+import { useQueryClient } from '@tanstack/react-query'
+import * as api from '../services/api'
 import { useAppState } from '../context/AppStateContext'
 import { useAuth } from '../context/AuthContext'
 import { useSubjects } from '../hooks/useSubjects'
@@ -21,6 +24,50 @@ const DashboardPage = () => {
   const { data: subjects, isLoading: subjectsLoading, error: subjectsError, refetch: refetchSubjects } = useSubjects()
   const { data: events, isLoading: eventsLoading, error: eventsError, refetch: refetchEvents } = useEvents()
   const { data: resources, isLoading: resourcesLoading, error: resourcesError, refetch: refetchResources } = useResources()
+
+  const queryClient = useQueryClient()
+  const [stagSyncStatus, setStagSyncStatus] = useState(user?.stag_sync_status ?? null)
+
+  // Hned za useState pro stagSyncStatus přidej tento useEffect:
+  useEffect(() => {
+    if (user?.stag_sync_status) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setStagSyncStatus(user.stag_sync_status)
+    } else if (user?.stag_username && subjects?.length === 0) {
+      // Uživatel má STAG credentials ale žádná data — sync pravděpodobně ještě nezačal
+      setStagSyncStatus('pending')
+    }
+  }, [user?.stag_sync_status, user?.stag_username, subjects?.length])
+
+  // Polluj stag_sync_status dokud je 'pending', pak invaliduj data
+  useEffect(() => {
+    if (stagSyncStatus !== 'pending') return
+
+    const interval = setInterval(async () => {
+      const result = await api.getStagSyncStatus()
+
+      // Zastav polling při odhlášení
+      if (result.error === 'unauthorized') {
+        clearInterval(interval)
+        return
+      }
+
+      if (result.status === 'success') {
+        const newStatus = result.data?.stag_sync_status
+        if (newStatus && newStatus !== 'pending') {
+          setStagSyncStatus(newStatus)
+          clearInterval(interval)
+
+          // Invaliduj React Query cache — data se načtou automaticky
+          queryClient.invalidateQueries({ queryKey: ['subjects'] })
+          queryClient.invalidateQueries({ queryKey: ['events'] })
+          queryClient.invalidateQueries({ queryKey: ['resources'] })
+        }
+      }
+    }, 3000)
+
+    return () => clearInterval(interval)
+  }, [stagSyncStatus, queryClient])
 
   const isLoading = subjectsLoading || eventsLoading || resourcesLoading
   const error = subjectsError || eventsError || resourcesError
@@ -44,19 +91,44 @@ const DashboardPage = () => {
       <PageState
         variant="error"
         title={error}
-        description="Zkuste stránku načíst znovu."
-        actionLabel="Zkusit znovu"
+        description="Please try reloading the page."
+        actionLabel="Try again"
         onAction={reloadData}
       />
     )
   }
 
   if (subjects.length === 0 && events.length === 0 && resources.length === 0) {
+    // Sync stále probíhá — zobraz loading místo "Žádná data"
+    if (stagSyncStatus === 'pending') {
+      return (
+        <PageState
+          variant="loading"
+          title="Syncing schedule from IS/STAG..."
+          description="This may take a few seconds. The page will automatically refresh."
+        />
+      )
+    }
+
+    // Sync selhal — zobraz chybu s možností přejít do profilu
+    if (stagSyncStatus === 'failed') {
+      return (
+        <PageState
+          variant="error"
+          title="Sync failed"
+          description="Failed to sync your schedule from IS/STAG."
+          actionLabel="Go to Profile"
+          onAction={() => navigate('/profile')}
+        />
+      )
+    }
+
+    // Žádný sync neprobíhá — skutečně prázdný stav
     return (
       <PageState
         variant="empty"
-        title="Žádná data"
-        description="Zatím nejsou k dispozici žádné předměty, události ani materiály."
+        title="No data"
+        description="No subjects, events, or resources are available yet."
       />
     )
   }

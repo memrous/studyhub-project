@@ -249,12 +249,12 @@ const SubjectsView = ({ subjects, onSelectSubject, onAddSubject, onDeleteSubject
               <BookOpen className="w-6 h-6" />
             </div>
             <p className="text-headline-md font-semibold text-on-surface">
-              {subjects.length === 0 ? 'Žádná data' : 'Žádné odpovídající předměty'}
+              {subjects.length === 0 ? 'No data' : 'No matching subjects'}
             </p>
             <p className="text-body-md text-[#737686]">
               {subjects.length === 0
-                ? 'Zatím nemáte žádné zapsané předměty.'
-                : 'Zkuste změnit filtr nebo přidat nový předmět.'}
+                ? 'You do not have any enrolled subjects yet.'
+                : 'Try changing the filter or add a new subject.'}
             </p>
           </div>
         ) : (

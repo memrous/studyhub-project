@@ -49,8 +49,8 @@ const CalendarPage = () => {
       <PageState
         variant="error"
         title={error}
-        description="Zkuste stránku načíst znovu."
-        actionLabel="Zkusit znovu"
+        description="Please try reloading the page."
+        actionLabel="Try again"
         onAction={reloadData}
       />
     )
@@ -60,8 +60,8 @@ const CalendarPage = () => {
     return (
       <PageState
         variant="empty"
-        title="Žádná data"
-        description="Kalendář zatím neobsahuje žádné události."
+        title="No data"
+        description="The calendar does not contain any events yet."
       />
     )
   }

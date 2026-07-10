@@ -16,8 +16,8 @@ const SubjectsPage = () => {
       <PageState
         variant="error"
         title={error}
-        description="Zkuste stránku načíst znovu."
-        actionLabel="Zkusit znovu"
+        description="Please try reloading the page."
+        actionLabel="Try again"
         onAction={reloadData}
       />
     )

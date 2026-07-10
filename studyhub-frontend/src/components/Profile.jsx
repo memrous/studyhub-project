@@ -55,7 +55,8 @@ const Profile = ({ user: initialUser }) => {
     return () => {
       active = false
     }
-  }, [initialUser, refreshUser])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   useEffect(() => {
     if (!initialUser || syncStatus !== 'pending') return
@@ -65,6 +66,14 @@ const Profile = ({ user: initialUser }) => {
     }, 0)
     const interval = setInterval(async () => {
       const result = await api.getStagSyncStatus()
+
+      // Guard: stop polling immediately if the session ended (logout / token expiry)
+      if (result.error === 'unauthorized') {
+        clearInterval(interval)
+        setSyncPolling(false)
+        return
+      }
+
       if (result.status === 'success') {
         const newStatus = result.data?.stag_sync_status
         setSyncStatus(newStatus)

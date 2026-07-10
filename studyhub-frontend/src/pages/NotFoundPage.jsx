@@ -9,16 +9,16 @@ const NotFoundPage = () => {
           <SearchX className="w-6 h-6" />
         </div>
         <div className="flex flex-col gap-2">
-          <h1 className="text-headline-md font-semibold text-on-surface">Stránka nenalezena</h1>
+          <h1 className="text-headline-md font-semibold text-on-surface">Page not found</h1>
           <p className="text-body-md text-on-surface-variant">
-            Tato adresa neexistuje nebo byla přesunuta.
+            This page does not exist or has been moved.
           </p>
         </div>
         <Link
           to="/dashboard"
           className="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-[#004ac6] text-white text-label-md font-semibold hover:bg-[#003ea8] transition-colors"
         >
-          Zpět na dashboard
+          Back to Dashboard
         </Link>
       </div>
     </div>

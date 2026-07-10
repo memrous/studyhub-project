@@ -19,6 +19,7 @@ services:
             IGNITION_LOCAL_SITES_PATH: '${PWD}'
         volumes:
             - '.:/var/www/html'
+            - '../stag_mock_import:/var/www/stag_mock_import'
         networks:
             - sail
         depends_on:
