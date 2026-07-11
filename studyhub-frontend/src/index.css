@@ -133,3 +133,12 @@
     font-size: 10px;
   }
 }
+
+@keyframes studyhub-toast-shrink {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0%;
+  }
+}

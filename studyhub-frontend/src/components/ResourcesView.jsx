@@ -3,9 +3,7 @@ import { renderAsync } from 'docx-preview'
 import {
   FileText,
   FileVideo,
-  FileImage,
   Link2,
-  File,
   Download,
   ExternalLink,
   Eye,
@@ -15,11 +13,10 @@ import {
   Plus,
   X,
   Check,
-  FolderOpen,
-  BookOpen,
   History,
   Bookmark
 } from "lucide-react"
+import CustomIcon from './CustomIcon'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:80/api"
 
@@ -46,10 +43,10 @@ const resolveResourceUrl = (url) => {
 const TYPE_CONFIG = {
   PDF:       { Icon: FileText,  iconBg: 'bg-[#ffdad6]', iconColor: 'text-[#ba1a1a]', badgeBg: 'bg-[#ffdad6]', badgeText: 'text-[#ba1a1a]' },
   NOTES:     { Icon: Bookmark,  iconBg: 'bg-[#eeefff]', iconColor: 'text-[#004ac6]', badgeBg: 'bg-[#eeefff]', badgeText: 'text-[#004ac6]' },
-  SLIDES:    { Icon: FileImage, iconBg: 'bg-[#eeefff]', iconColor: 'text-[#004ac6]', badgeBg: 'bg-[#eeefff]', badgeText: 'text-[#004ac6]' },
+  SLIDES:    { Icon: (props) => <CustomIcon name="image" {...props} />, iconBg: 'bg-[#eeefff]', iconColor: 'text-[#004ac6]', badgeBg: 'bg-[#eeefff]', badgeText: 'text-[#004ac6]' },
   RECORDING: { Icon: FileVideo, iconBg: 'bg-[#ffede6]', iconColor: 'text-[#bc4800]', badgeBg: 'bg-[#ffede6]', badgeText: 'text-[#bc4800]' },
   LINK:      { Icon: Link2,     iconBg: 'bg-[#ffede6]', iconColor: 'text-[#bc4800]', badgeBg: 'bg-[#ffede6]', badgeText: 'text-[#bc4800]' },
-  DOC:       { Icon: File,      iconBg: 'bg-[#eeefff]', iconColor: 'text-[#004ac6]', badgeBg: 'bg-[#eeefff]', badgeText: 'text-[#004ac6]' },
+  DOC:       { Icon: (props) => <CustomIcon name="file" {...props} />,  iconBg: 'bg-[#eeefff]', iconColor: 'text-[#004ac6]', badgeBg: 'bg-[#eeefff]', badgeText: 'text-[#004ac6]' },
 }
 
 const getTypeConfig = (type) => TYPE_CONFIG[type] ?? TYPE_CONFIG['DOC']
@@ -751,7 +748,7 @@ const ResourcesView = ({ resources, subjects, onUploadResource }) => {
         {grouped.length === 0 ? (
           <div className="bg-white border border-[#E2E8F0] rounded-lg p-16 text-center flex flex-col items-center gap-3 shadow-ambient">
             <div className="w-12 h-12 bg-[#eeefff] text-primary rounded-full flex items-center justify-center">
-              <BookOpen className="w-6 h-6" />
+              <CustomIcon name="book" className="w-6 h-6" />
             </div>
             <p className="text-headline-md font-semibold text-on-surface">No resources match your search criteria</p>
             <p className="text-body-md text-[#737686]">Try adjusting filters or upload a new resource.</p>
@@ -767,7 +764,7 @@ const ResourcesView = ({ resources, subjects, onUploadResource }) => {
                 {/* Section header */}
                 <div className="flex items-center justify-between border-b border-slate-100 pb-2">
                   <h3 className="text-body-lg font-bold text-on-surface flex items-center gap-2">
-                    <FolderOpen className="w-4 h-4 text-primary" />
+                    <CustomIcon name="folder" className="w-4 h-4" />
                     {subject.name} <span className="text-label-sm text-slate-400 font-medium">({subject.code})</span>
                   </h3>
                 </div>

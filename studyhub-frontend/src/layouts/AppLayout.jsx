@@ -1,36 +1,31 @@
 import { useState } from 'react'
 import { Outlet, NavLink } from 'react-router-dom'
 import { 
-  LayoutGrid, 
-  BookOpen, 
-  Calendar, 
   X, 
   GraduationCap, 
-  Library, 
-  User, 
   LogOut, 
-  Menu, 
-  Bell 
+  Menu 
 } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
+import CustomIcon from '../components/CustomIcon'
 
 // Desktop Components
 import Sidebar from '../components/Sidebar'
 import Header from '../components/Header'
 
 const MOBILE_NAV_ITEMS = [
-  { to: '/dashboard', icon: LayoutGrid, label: 'Dashboard' },
-  { to: '/subjects',  icon: BookOpen,   label: 'Subjects'  },
-  { to: '/calendar',  icon: Calendar,   label: 'Calendar'  },
-  { to: '/materials', icon: Library,    label: 'Resources' },
+  { to: '/dashboard', customIcon: 'dashboard', label: 'Dashboard' },
+  { to: '/subjects',  customIcon: 'book',      label: 'Subjects'  },
+  { to: '/calendar',  customIcon: 'calendar',  label: 'Calendar'  },
+  { to: '/materials', customIcon: 'folder',    label: 'Resources' },
 ]
 
 const MOBILE_DRAWER_ITEMS = [
-  { to: '/dashboard', icon: LayoutGrid, label: 'Dashboard' },
-  { to: '/subjects',  icon: BookOpen,   label: 'Subjects'  },
-  { to: '/calendar',  icon: Calendar,   label: 'Calendar'  },
-  { to: '/materials', icon: Library,    label: 'Resources' },
-  { to: '/profile',   icon: User,       label: 'Profile'   },
+  { to: '/dashboard', customIcon: 'dashboard', label: 'Dashboard' },
+  { to: '/subjects',  customIcon: 'book',      label: 'Subjects'  },
+  { to: '/calendar',  customIcon: 'calendar',  label: 'Calendar'  },
+  { to: '/materials', customIcon: 'folder',    label: 'Resources' },
+  { to: '/profile',   customIcon: 'profile',   label: 'Profile'   },
 ]
 
 const AppLayout = () => {
@@ -84,7 +79,7 @@ const AppLayout = () => {
             <span className="font-geist font-bold text-lg text-on-surface tracking-tight">StudyHub</span>
           </div>
           <button className="p-1 text-on-surface-variant hover:text-on-surface relative">
-            <Bell className="w-5 h-5" />
+            <CustomIcon name="bell" className="w-5 h-5" />
             <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-error rounded-full"></span>
           </button>
         </header>
@@ -95,7 +90,7 @@ const AppLayout = () => {
 
         {/* Mobile Bottom Nav inline */}
         <nav className="fixed bottom-0 left-0 right-0 h-16 bg-white border-t border-[#E2E8F0] flex justify-around items-center px-2 z-40 shadow-[0_-2px_10px_0_rgba(0,0,0,0.04)] font-inter">
-          {MOBILE_NAV_ITEMS.map(({ to, icon: Icon, label }) => (
+          {MOBILE_NAV_ITEMS.map(({ to, icon: Icon, customIcon, label }) => (
             <NavLink key={to} to={to}>
               {({ isActive }) => (
                 <div className={`flex flex-col items-center gap-1 transition-colors cursor-pointer ${
@@ -106,7 +101,11 @@ const AppLayout = () => {
                       ? 'bg-[#dbe1ff] text-[#004ac6] px-4 py-1 rounded-full flex items-center justify-center'
                       : 'px-4 py-1 flex items-center justify-center'
                   }>
-                    <Icon className="w-4 h-4" />
+                    {customIcon ? (
+                      <CustomIcon name={customIcon} className="w-4 h-4" />
+                    ) : (
+                      <Icon className="w-4 h-4" />
+                    )}
                   </div>
                   <span className="text-[10px] font-bold tracking-tight">{label}</span>
                 </div>
@@ -148,7 +147,7 @@ const AppLayout = () => {
               </div>
 
               <nav className="flex flex-col gap-1">
-                {MOBILE_DRAWER_ITEMS.map(({ to, icon: Icon, label }) => (
+                {MOBILE_DRAWER_ITEMS.map(({ to, icon: Icon, customIcon, label }) => (
                   <NavLink
                     key={to}
                     to={to}
@@ -157,7 +156,11 @@ const AppLayout = () => {
                   >
                     {({ isActive }) => (
                       <>
-                        <Icon className={`w-4 h-4 ${getDrawerIconClass({ isActive })}`} />
+                        {customIcon ? (
+                          <CustomIcon name={customIcon} className="w-4 h-4" />
+                        ) : (
+                          <Icon className={`w-4 h-4 ${getDrawerIconClass({ isActive })}`} />
+                        )}
                         {label}
                       </>
                     )}
@@ -189,12 +192,12 @@ const AppLayout = () => {
                           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                           <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-green-500"></span>
                         </span>
-                        STAG: Connected
+                          Connected
                       </span>
                     ) : (
                       <span className="flex items-center gap-1.5 text-red-500/80">
                         <span className="h-1.5 w-1.5 rounded-full bg-red-400"></span>
-                        STAG: Not Connected
+                         Not Connected
                       </span>
                     )}
                   </div>

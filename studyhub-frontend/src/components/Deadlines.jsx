@@ -1,4 +1,5 @@
-import { AlertCircle, Clock, Bell } from 'lucide-react'
+import { AlertCircle, Clock } from 'lucide-react'
+import CustomIcon from './CustomIcon'
 
 const getDeadlineLabel = (dateStr) => {
   if (dateStr === '2026-12-20') return 'Due 20 December';
@@ -115,7 +116,7 @@ const Deadlines = ({ events, subjects, onDeadlineClick }) => {
       {/* DESKTOP LAYOUT: Upcoming Deadlines */}
       <div className="hidden lg:flex bg-white border border-[#E2E8F0] p-5 rounded-lg shadow-ambient flex-col gap-4 font-inter text-on-surface">
         <div className="flex items-center gap-2">
-          <Bell className="w-5 h-5" />
+          <CustomIcon name="bell" className="w-5 h-5" />
           <h2 className="text-headline-md font-semibold">Upcoming Deadlines</h2>
         </div>
 

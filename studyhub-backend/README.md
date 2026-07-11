@@ -21,6 +21,25 @@ Laravel is a web application framework with expressive, elegant syntax. We belie
 
 Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
+## Getting Started
+
+To set up the project locally:
+
+1. Clone the repository and install dependencies:
+   ```bash
+   composer install
+   ```
+2. Set up the `.env` file:
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
+3. Create the symbolic link for files/resources:
+   ```bash
+   php artisan storage:link
+   ```
+   *(Note: While the composer setup/update scripts attempt to run this automatically, Docker/Sail users or environments running composer in a container may need to run this manually to ensure the public/storage symlink exists).*
+
 ## Learning Laravel
 
 Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.

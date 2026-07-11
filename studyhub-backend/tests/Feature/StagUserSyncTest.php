@@ -16,20 +16,22 @@ class StagUserSyncTest extends TestCase
 
     public function test_migration_adds_columns_and_encrypts_existing_passwords(): void
     {
-        // 1. Rollback the migration so we are in the state before it ran
-        Artisan::call('migrate:rollback', ['--step' => 1]);
+        // 1. Rollback 2 steps:
+        //    step 1 = stag_last_sync_attempt_at (most recent)
+        //    step 2 = stag_sync_status / stag_sync_error / stag_synced_at (the one we're testing)
+        Artisan::call('migrate:rollback', ['--step' => 2]);
 
-        // Assert columns do not exist
+        // Assert stag_sync_status columns do not exist after rollback
         $this->assertFalse(Schema::hasColumn('users', 'stag_sync_status'));
         $this->assertFalse(Schema::hasColumn('users', 'stag_sync_error'));
         $this->assertFalse(Schema::hasColumn('users', 'stag_synced_at'));
 
         // 2. Insert a user with a raw plaintext password directly using DB to bypass Eloquent casts
         DB::table('users')->insert([
-            'name' => 'Test User',
-            'username' => 'testuser',
-            'email' => 'test@example.com',
-            'password' => bcrypt('password'),
+            'name'          => 'Test User',
+            'username'      => 'testuser',
+            'email'         => 'test@example.com',
+            'password'      => bcrypt('password'),
             'stag_password' => 'my-plaintext-password-123',
         ]);
 
@@ -37,7 +39,7 @@ class StagUserSyncTest extends TestCase
         $userRaw = DB::table('users')->first();
         $this->assertEquals('my-plaintext-password-123', $userRaw->stag_password);
 
-        // 3. Run migrate up
+        // 3. Run migrate up (adds stag_sync_status + stag_last_sync_attempt_at)
         Artisan::call('migrate');
 
         // Assert columns now exist
@@ -45,7 +47,7 @@ class StagUserSyncTest extends TestCase
         $this->assertTrue(Schema::hasColumn('users', 'stag_sync_error'));
         $this->assertTrue(Schema::hasColumn('users', 'stag_synced_at'));
 
-        // 4. Verify that the user's password in the database is now encrypted (not equal to plaintext)
+        // 4. Verify that the user's password in the database is now encrypted
         $userRawAfter = DB::table('users')->first();
         $this->assertNotEquals('my-plaintext-password-123', $userRawAfter->stag_password);
         $this->assertEquals('my-plaintext-password-123', Crypt::decryptString($userRawAfter->stag_password));
@@ -54,12 +56,16 @@ class StagUserSyncTest extends TestCase
         $userEloquent = User::first();
         $this->assertEquals('my-plaintext-password-123', $userEloquent->stag_password);
 
-        // 6. Test rollback (down) decrypts back to plaintext
-        Artisan::call('migrate:rollback', ['--step' => 1]);
+        // 6. Test rollback (down) for the stag_sync_status migration only (step 2 from current tip):
+        //    step 1 = stag_last_sync_attempt_at, step 2 = stag_sync_status
+        Artisan::call('migrate:rollback', ['--step' => 2]);
 
         $userRawRolledBack = DB::table('users')->first();
         $this->assertEquals('my-plaintext-password-123', $userRawRolledBack->stag_password);
         $this->assertFalse(Schema::hasColumn('users', 'stag_sync_status'));
+
+        // Restore migrations so RefreshDatabase teardown works cleanly
+        Artisan::call('migrate');
     }
 
     public function test_user_model_casts_and_hidden_fields(): void

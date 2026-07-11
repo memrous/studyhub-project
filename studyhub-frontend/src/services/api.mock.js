@@ -227,7 +227,20 @@ export const disconnectStag = async () => {
 
 export const getStagSyncStatus = async () => {
   await delay(200)
-  return success({ stag_sync_status: 'success', stag_synced_at: new Date().toISOString() })
+  return success({ stag_sync_status: 'success', stag_synced_at: new Date().toISOString(), next_allowed_at: null })
+}
+
+export const resyncStag = async () => {
+  await delay(400)
+  const currentUser = getCurrentMockUser()
+  if (!currentUser) return failure('unauthorized')
+  if (!currentUser.stag_student_id) return { data: null, error: 'STAG is not connected.', status: 'error' }
+  // In mock mode, always succeed
+  const nextAllowedAt = new Date(Date.now() + 30 * 60 * 1000).toISOString()
+  return success({
+    message: 'Resync started in background.',
+    next_allowed_at: nextAllowedAt,
+  })
 }
 
 // ── Application State API Functions ──────────────────────────────

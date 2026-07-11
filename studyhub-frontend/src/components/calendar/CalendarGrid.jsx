@@ -1,7 +1,7 @@
-
-import { Calendar as CalendarIcon, Clock, Plus } from 'lucide-react'
+import { Plus } from 'lucide-react'
 import DayCell from './DayCell'
 import { getEventStyle, formatDateKey } from './useCalendarState'
+import CustomIcon from '../CustomIcon'
 
 const CalendarGrid = ({
   activeView,
@@ -72,7 +72,7 @@ const CalendarGrid = ({
                         <div>
                           <h4 className="text-label-md font-bold text-on-surface leading-tight">{event.title}</h4>
                           <span className="text-[10px] text-[#737686] flex items-center gap-1 mt-0.5">
-                            <Clock className="w-3 h-3" /> {event.startTime} {event.endTime && `– ${event.endTime}`}
+                            <CustomIcon name="clock" className="w-3 h-3" /> {event.startTime} {event.endTime && `– ${event.endTime}`}
                           </span>
                         </div>
                       </div>
@@ -140,7 +140,7 @@ const CalendarGrid = ({
                             </div>
                             <h4 className="text-label-md font-bold leading-snug truncate" title={event.title}>{event.title}</h4>
                             <div className="flex items-center gap-1 text-[10px] opacity-80 mt-0.5">
-                              <Clock className="w-3 h-3 shrink-0" />
+                              <CustomIcon name="clock" className="w-3 h-3 shrink-0" />
                               <span>{event.startTime}</span>
                             </div>
                           </div>
@@ -160,7 +160,7 @@ const CalendarGrid = ({
           <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:gap-0 justify-between border-b border-[#E2E8F0] pb-4 mb-4">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-[#eeefff] text-primary flex items-center justify-center rounded-md">
-                <CalendarIcon className="w-5 h-5" />
+                <CustomIcon name="calendar" className="w-5 h-5" />
               </div>
               <div>
                 <h3 className=" text-headline-md font-bold text-on-surface capitalize">
@@ -209,7 +209,7 @@ const CalendarGrid = ({
                               <div>
                                 <h4 className="text-label-md font-bold leading-tight">{event.title}</h4>
                                 <span className="text-[10px] flex items-center gap-1 mt-1 opacity-80">
-                                  <Clock className="w-3.5 h-3.5" /> {event.startTime} {event.endTime && `– ${event.endTime}`} ({event.type})
+                                  <CustomIcon name="clock" className="w-3.5 h-3.5" /> {event.startTime} {event.endTime && `– ${event.endTime}`} ({event.type})
                                 </span>
                               </div>
                             </div>

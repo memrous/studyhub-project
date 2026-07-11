@@ -1,6 +1,6 @@
-
-import { X, Calendar as CalendarIcon, Clock } from 'lucide-react'
+import { X } from 'lucide-react'
 import { getEventStyle } from './useCalendarState'
+import CustomIcon from '../CustomIcon'
 
 const EventDetailModal = ({
   selectedDetailEvent,
@@ -50,13 +50,13 @@ const EventDetailModal = ({
 
           <div className="grid grid-cols-2 gap-3 bg-[#F2F4F6] p-3 rounded-lg border border-[#E2E8F0]">
             <div className="flex items-center gap-2 text-on-surface-variant">
-              <CalendarIcon className="w-4 h-4 text-[#737686] shrink-0" />
+              <CustomIcon name="calendar" className="w-4 h-4 shrink-0" />
               <span className="text-label-md font-medium text-on-surface">
                 {new Date(selectedDetailEvent.date).toLocaleDateString('cs-CZ', { day: 'numeric', month: 'short', year: 'numeric' })}
               </span>
             </div>
             <div className="flex items-center gap-2 text-on-surface-variant">
-              <Clock className="w-4 h-4 text-[#737686] shrink-0" />
+              <CustomIcon name="clock" className="w-4 h-4 shrink-0" />
               <span className="text-label-md font-medium text-on-surface">
                 {selectedDetailEvent.startTime} {selectedDetailEvent.endTime && `– ${selectedDetailEvent.endTime}`}
               </span>

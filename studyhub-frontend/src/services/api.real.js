@@ -31,6 +31,15 @@ const normalizeHttpError = (error) => {
     }
   }
 
+  if (error?.response?.status === 429) {
+    // Preserve the full body so callers can read retry_after_seconds / next_allowed_at
+    return {
+      data: error.response.data ?? null,
+      error: 'rate_limited',
+      status: 'error',
+    }
+  }
+
   if (error?.response?.status === 500) {
     return failure('server_error')
   }
@@ -106,6 +115,10 @@ export const disconnectStag = async () => {
 
 export const getStagSyncStatus = async () => {
   return request(() => httpClient.get('/user/stag/status').then((res) => res.data))
+}
+
+export const resyncStag = async () => {
+  return request(() => httpClient.post('/user/stag/resync').then((res) => res.data))
 }
 
 export const getSubjects = async (userId) => {

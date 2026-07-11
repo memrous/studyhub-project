@@ -8,7 +8,6 @@ import {
   EyeOff,
   User,
   AlertCircle,
-  BookOpen,
   CalendarDays,
   BarChart3,
   ArrowRight,
@@ -21,13 +20,14 @@ import {
   Building2,
   Check,
 } from 'lucide-react'
+import CustomIcon from '../components/CustomIcon'
 import { useAuth } from '../context/AuthContext'
 import httpClient from '../services/httpClient'
 import { checkAvailability } from '../services/api'
 
 
 const FEATURES = [
-  { icon: BookOpen, text: 'Manage all your enrolled subjects and materials in one place.' },
+  { icon: () => <CustomIcon name="book" className="w-5 h-5" />, text: 'Manage all your enrolled subjects and materials in one place.' },
   { icon: CalendarDays, text: 'Visual calendar with deadlines, lectures, and exams.' },
   { icon: BarChart3, text: 'Track your academic progress and upcoming credits.' },
 ]
@@ -627,7 +627,7 @@ const RegisterPage = () => {
                     Faculty
                   </label>
                   <div className="relative">
-                    <BookOpen className="w-4 h-4 text-outline absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    <CustomIcon name="book" className="w-4 h-4 text-outline absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                     <select
                       id="reg-faculty"
                       value={form.faculty_id}

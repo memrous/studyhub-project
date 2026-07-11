@@ -33,6 +33,7 @@ class User extends Authenticatable
         'stag_sync_status',
         'stag_sync_error',
         'stag_synced_at',
+        'stag_last_sync_attempt_at',
     ];
 
     /**
@@ -55,10 +56,11 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-            'stag_password' => 'encrypted',
-            'stag_synced_at' => 'datetime',
+            'email_verified_at'           => 'datetime',
+            'password'                    => 'hashed',
+            'stag_password'              => 'encrypted',
+            'stag_synced_at'             => 'datetime',
+            'stag_last_sync_attempt_at'  => 'datetime',
         ];
     }
 

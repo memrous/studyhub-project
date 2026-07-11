@@ -19,6 +19,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        if ($this->app->environment('local')) {
+            $link = public_path('storage');
+            $target = storage_path('app/public');
+
+            if (!is_link($link) || realpath($link) !== realpath($target)) {
+                \Illuminate\Support\Facades\Log::warning("Storage symlink missing - run `php artisan storage:link`");
+            }
+        }
     }
 }

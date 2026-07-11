@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Calendar as CalendarIcon, BookOpen } from 'lucide-react'
 import { useQueryClient } from '@tanstack/react-query'
+import CustomIcon from '../components/CustomIcon'
 import * as api from '../services/api'
 import { useAppState } from '../context/AppStateContext'
 import { useAuth } from '../context/AuthContext'
@@ -26,27 +26,35 @@ const DashboardPage = () => {
   const { data: resources, isLoading: resourcesLoading, error: resourcesError, refetch: refetchResources } = useResources()
 
   const queryClient = useQueryClient()
-  const [stagSyncStatus, setStagSyncStatus] = useState(user?.stag_sync_status ?? null)
 
-  // Hned za useState pro stagSyncStatus přidej tento useEffect:
+  // Derive initial sync status from user object:
+  // - Use stag_sync_status if available
+  // - Fall back to 'pending' only if the user has STAG credentials but has never synced
+  const derivedInitialStatus = (() => {
+    if (!user) return null
+    if (user.stag_sync_status) return user.stag_sync_status
+    if (user.stag_username && !user.stag_synced_at) return 'pending'
+    return null
+  })()
+  const [stagSyncStatus, setStagSyncStatus] = useState(derivedInitialStatus)
+
+  // Keep stagSyncStatus in sync when the user object updates (e.g. after refreshUser)
   useEffect(() => {
-    if (user?.stag_sync_status) {
+    if (user?.stag_sync_status && user.stag_sync_status !== stagSyncStatus) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setStagSyncStatus(user.stag_sync_status)
-    } else if (user?.stag_username && subjects?.length === 0) {
-      // Uživatel má STAG credentials ale žádná data — sync pravděpodobně ještě nezačal
-      setStagSyncStatus('pending')
     }
-  }, [user?.stag_sync_status, user?.stag_username, subjects?.length])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.stag_sync_status])
 
-  // Polluj stag_sync_status dokud je 'pending', pak invaliduj data
+  // Poll stag_sync_status while it is 'pending', then invalidate React Query cache
   useEffect(() => {
     if (stagSyncStatus !== 'pending') return
 
     const interval = setInterval(async () => {
       const result = await api.getStagSyncStatus()
 
-      // Zastav polling při odhlášení
+      // Stop polling on logout / token expiry
       if (result.error === 'unauthorized') {
         clearInterval(interval)
         return
@@ -58,7 +66,7 @@ const DashboardPage = () => {
           setStagSyncStatus(newStatus)
           clearInterval(interval)
 
-          // Invaliduj React Query cache — data se načtou automaticky
+          // Invalidate React Query cache — data will reload automatically
           queryClient.invalidateQueries({ queryKey: ['subjects'] })
           queryClient.invalidateQueries({ queryKey: ['events'] })
           queryClient.invalidateQueries({ queryKey: ['resources'] })
@@ -151,7 +159,7 @@ const DashboardPage = () => {
           <h1 className="text-display text-on-surface">Good morning, {user.name}!</h1>
           <div className="flex items-center gap-2 text-body-md text-on-surface-variant font-medium">
             <div className="w-5 h-5 bg-[#ffdad6] text-[#ba1a1a] flex items-center justify-center rounded-sm">
-              <CalendarIcon className="w-3.5 h-3.5" />
+              <CustomIcon name="calendar" className="w-3.5 h-3.5" />
             </div>
             <span>
               You have <strong className="text-on-surface font-semibold">{todayDeadlinesCount} deadlines</strong> today. Time to dive in!
@@ -249,7 +257,7 @@ const DashboardPage = () => {
               >
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 bg-[#eeefff] text-[#004ac6] flex items-center justify-center rounded-md shrink-0">
-                    <BookOpen className="w-5 h-5" />
+                    <CustomIcon name="book" className="w-5 h-5" />
                   </div>
                   <div>
                     <h4 className="text-label-md text-on-surface font-semibold">{sub.name}</h4>

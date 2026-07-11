@@ -7,17 +7,17 @@ import {
   Eye,
   EyeOff,
   AlertCircle,
-  BookOpen,
   CalendarDays,
   BarChart3,
   ArrowRight,
   Loader2,
 } from 'lucide-react'
+import CustomIcon from '../components/CustomIcon'
 import { useAuth } from '../context/AuthContext'
 
 // ── Left brand panel feature list ────────────────────────────────
 const FEATURES = [
-  { icon: BookOpen,     text: 'Manage all your enrolled subjects and materials in one place.' },
+  { icon: () => <CustomIcon name="book" className="w-5 h-5" />, text: 'Manage all your enrolled subjects and materials in one place.' },
   { icon: CalendarDays, text: 'Visual calendar with deadlines, lectures, and exams.' },
   { icon: BarChart3,    text: 'Track your academic progress and upcoming credits.' },
 ]

@@ -1,12 +1,13 @@
 import { NavLink } from 'react-router-dom'
-import { LayoutGrid, BookOpen, Calendar, User, GraduationCap, Library, LogOut } from 'lucide-react'
+import { GraduationCap, LogOut } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
+import CustomIcon from './CustomIcon'
 
 const NAV_ITEMS = [
-  { to: '/dashboard', icon: LayoutGrid, label: 'Dashboard' },
-  { to: '/subjects',  icon: BookOpen,   label: 'Subjects'  },
-  { to: '/calendar',  icon: Calendar,   label: 'Calendar'  },
-  { to: '/materials', icon: Library,    label: 'Resources' },
+  { to: '/dashboard', customIcon: 'dashboard', label: 'Dashboard' },
+  { to: '/subjects',  customIcon: 'book',      label: 'Subjects'  },
+  { to: '/calendar',  customIcon: 'calendar',  label: 'Calendar'  },
+  { to: '/materials', customIcon: 'folder',    label: 'Resources' },
 ]
 
 const Sidebar = () => {
@@ -34,11 +35,15 @@ const Sidebar = () => {
 
         {/* Navigation Links */}
         <nav className="flex flex-col gap-1">
-          {NAV_ITEMS.map(({ to, icon: Icon, label }) => (
+          {NAV_ITEMS.map(({ to, icon: Icon, customIcon, label }) => (
             <NavLink key={to} to={to} className={getClass}>
               {({ isActive }) => (
                 <>
-                  <Icon className={`w-4 h-4 ${getIconClass({ isActive })}`} />
+                  {customIcon ? (
+                    <CustomIcon name={customIcon} className="w-4 h-4" />
+                  ) : (
+                    <Icon className={`w-4 h-4 ${getIconClass({ isActive })}`} />
+                  )}
                   {label}
                 </>
               )}
@@ -53,7 +58,7 @@ const Sidebar = () => {
         <NavLink to="/profile" className={getClass}>
           {({ isActive }) => (
             <>
-              <User className={`w-4 h-4 ${getIconClass({ isActive })}`} />
+              <CustomIcon name="profile" className="w-4 h-4" />
               Profile
             </>
           )}

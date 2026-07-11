@@ -55,7 +55,7 @@ class StagController extends Controller
                         'semester' => $subjectData['semester'],
                         'completion_type' => $subjectData['completionType'] ?? 'Credit',
                         'is_mandatory' => $subjectData['isMandatory'] ?? true,
-                        'description' => 'Importováno z IS/STAG'
+                        'description' => 'Imported from IS/STAG'
                     ]
                 );
 

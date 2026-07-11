@@ -35,7 +35,8 @@ class StagConnectControllerTest extends TestCase
         $this->assertEquals('S12345', $user->stag_student_id);
         $this->assertEquals('stag_user_123', $user->stag_username);
         $this->assertEquals('stag_pass_123', $user->stag_password);
-        $this->assertNull($user->stag_sync_status);
+        // connect() now sets stag_sync_status to 'pending' immediately
+        $this->assertEquals('pending', $user->stag_sync_status);
 
         Queue::assertPushed(StagSyncJob::class, function ($job) use ($user) {
             return $job->user->id === $user->id;
@@ -75,9 +76,11 @@ class StagConnectControllerTest extends TestCase
         $response = $this->actingAs($user, 'sanctum')->getJson('/api/user/stag/status');
 
         $response->assertStatus(200);
-        $response->assertExactJson([
+        // status() now also includes next_allowed_at — use assertJsonFragment
+        $response->assertJsonFragment([
             'stag_sync_status' => 'pending',
             'stag_synced_at'   => null,
         ]);
+        $response->assertJsonStructure(['stag_sync_status', 'stag_synced_at', 'next_allowed_at']);
     }
 }

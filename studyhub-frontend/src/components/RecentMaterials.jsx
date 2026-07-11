@@ -1,4 +1,5 @@
-import { Folder, FileText, ExternalLink, Download } from 'lucide-react'
+import { FileText, ExternalLink, Download } from 'lucide-react'
+import CustomIcon from './CustomIcon'
 
 const getResourceTypeStyles = (type) => {
   switch (type) {
@@ -76,7 +77,7 @@ const RecentMaterials = ({ resources, subjects }) => {
       {/* DESKTOP LAYOUT: Recent Materials */}
       <div className="hidden lg:flex bg-white border border-[#E2E8F0] p-5 rounded-lg shadow-ambient flex-col gap-4 relative font-inter text-on-surface">
         <div className="flex items-center gap-2">
-          <Folder className="w-5 h-5" />
+          <CustomIcon name="folder" className="w-5 h-5" />
           <h2 className="text-headline-md font-semibold">Recent Materials</h2>
         </div>
 

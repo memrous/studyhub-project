@@ -47,4 +47,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/user/stag',          [StagConnectController::class, 'connect']);
     Route::delete('/user/stag',        [StagConnectController::class, 'disconnect']);
     Route::get('/user/stag/status',    [StagConnectController::class, 'status']);
+    Route::post('/user/stag/resync',   [StagConnectController::class, 'resync']);
 });

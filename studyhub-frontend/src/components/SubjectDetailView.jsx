@@ -2,7 +2,6 @@ import { useState } from 'react'
 import {
   ArrowLeft,
   User,
-  BookOpen,
   ShieldCheck,
   Download,
   ExternalLink,
@@ -14,6 +13,7 @@ import {
   Info,
   Bookmark
 } from 'lucide-react'
+import CustomIcon from './CustomIcon'
 
 // Tab definitions
 const TABS = ['Overview', 'Materials', 'Assignments', 'Tests & Exams']
@@ -334,7 +334,7 @@ const SubjectDetailView = ({ subject, events, resources, onBack, onUpdateEventSt
               <User className="w-3.5 h-3.5 shrink-0" /> Lecturer: {subject.lecturer}
             </span>
             <span className="flex items-center gap-1.5">
-              <BookOpen className="w-3.5 h-3.5 shrink-0" /> {subject.credits} Credits
+              <CustomIcon name="book" className="w-3.5 h-3.5 shrink-0" /> {subject.credits} Credits
             </span>
             <span className="flex items-center gap-1.5">
               <ShieldCheck className="w-3.5 h-3.5 shrink-0" /> {subject.isMandatory ? 'Mandatory' : 'Elective'}

@@ -5,10 +5,10 @@ import {
   Plus,
   X,
   ChevronDown,
-  BookOpen,
   Check,
 } from 'lucide-react'
 import SubjectCard from './SubjectCard'
+import CustomIcon from './CustomIcon'
 
 // ─── Create Subject Modal ────────────────────────────────────
 const CreateSubjectModal = ({ onClose, onSave }) => {
@@ -246,7 +246,7 @@ const SubjectsView = ({ subjects, onSelectSubject, onAddSubject, onDeleteSubject
         {displayed.length === 0 ? (
           <div className="bg-white border border-[#E2E8F0] rounded-lg p-16 text-center flex flex-col items-center gap-3 shadow-ambient">
             <div className="w-12 h-12 bg-[#eeefff] text-primary rounded-full flex items-center justify-center">
-              <BookOpen className="w-6 h-6" />
+              <CustomIcon name="book" className="w-6 h-6" />
             </div>
             <p className="text-headline-md font-semibold text-on-surface">
               {subjects.length === 0 ? 'No data' : 'No matching subjects'}

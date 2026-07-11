@@ -1,19 +1,7 @@
-import { Database, Globe, Code2, Monitor, GitBranch, Network, BookOpen, User, Trash2 } from 'lucide-react'
+import { User, Trash2 } from 'lucide-react'
+import CustomIcon from './CustomIcon'
 
-const SUBJECT_ICONS = {
-  DBS: Database,
-  WA: Globe,
-  PROG: Code2,
-  OS: Monitor,
-  SE: GitBranch,
-  NET: Network,
-};
-
-const SubjectIcon = ({ code }) => {
-  const key = Object.keys(SUBJECT_ICONS).find(k => code.includes(k));
-  const Icon = key ? SUBJECT_ICONS[key] : BookOpen;
-  return <Icon className="w-5 h-5" />;
-};
+const SubjectIcon = () => <CustomIcon name="book" className="w-5 h-5" />
 
 const SubjectCard = ({ subject, onSelect, onDelete }) => {
   

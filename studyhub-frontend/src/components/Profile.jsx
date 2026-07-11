@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   AlertCircle,
   GraduationCap,
@@ -9,8 +10,11 @@ import {
   Link2,
   KeyRound,
   XCircle,
+  LayoutGrid,
+  RefreshCw,
 } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
+import { useToast } from '../context/ToastContext'
 import * as api from '../services/api'
 
 const emptyStagForm = {
@@ -20,27 +24,30 @@ const emptyStagForm = {
 }
 
 const Profile = ({ user: initialUser }) => {
+  const navigate = useNavigate()
   const { refreshUser } = useAuth()
+  const toast = useToast()
   const [user, setUser] = useState(initialUser ?? null)
-  const [isFetching, setIsFetching] = useState(!initialUser)
+  const [isFetching] = useState(!initialUser)
   const [profileError, setProfileError] = useState('')
   const [showStagForm, setShowStagForm] = useState(false)
   const [stagForm, setStagForm] = useState(emptyStagForm)
   const [stagErrors, setStagErrors] = useState({})
   const [stagSubmitting, setStagSubmitting] = useState(false)
   const [disconnecting, setDisconnecting] = useState(false)
-  const [connectionMessage, setConnectionMessage] = useState('')
+  const [resyncLoading, setResyncLoading] = useState(false)
   const [syncStatus, setSyncStatus] = useState(initialUser?.stag_sync_status ?? null)
+  const [nextAllowedAt, setNextAllowedAt] = useState(null)
+  const [cooldownSecs, setCooldownSecs] = useState(0)
   // null | 'pending' | 'success' | 'failed'
   // eslint-disable-next-line no-unused-vars
   const [syncPolling, setSyncPolling] = useState(false)
 
 
   useEffect(() => {
-    if (!initialUser) return
     let active = true
 
-    const loadUser = async () => {
+    const loadUserAndStatus = async () => {
       const refreshed = await refreshUser()
       if (!active) return
 
@@ -48,9 +55,16 @@ const Profile = ({ user: initialUser }) => {
         setUser(refreshed)
         setSyncStatus(refreshed.stag_sync_status ?? null)
       }
+
+      // Fetch STAG status on mount to retrieve next_allowed_at
+      const statusRes = await api.getStagSyncStatus()
+      if (!active) return
+      if (statusRes.status === 'success' && statusRes.data?.next_allowed_at) {
+        setNextAllowedAt(statusRes.data.next_allowed_at)
+      }
     }
 
-    loadUser()
+    loadUserAndStatus()
 
     return () => {
       active = false
@@ -77,12 +91,19 @@ const Profile = ({ user: initialUser }) => {
       if (result.status === 'success') {
         const newStatus = result.data?.stag_sync_status
         setSyncStatus(newStatus)
+        if (result.data?.next_allowed_at) {
+          setNextAllowedAt(result.data.next_allowed_at)
+        }
         if (newStatus !== 'pending') {
           clearInterval(interval)
           setSyncPolling(false)
           // Refresh user data to update the connected badge
           const refreshed = await refreshUser()
           if (refreshed) setUser(refreshed)
+          // Auto-navigate to dashboard after sync completes
+          if (newStatus === 'success') {
+            setTimeout(() => navigate('/dashboard'), 2000)
+          }
         }
       }
     }, 3000)
@@ -91,7 +112,35 @@ const Profile = ({ user: initialUser }) => {
       clearInterval(interval)
       setSyncPolling(false)
     }
-  }, [syncStatus, refreshUser, initialUser])
+  }, [syncStatus, refreshUser, initialUser, navigate])
+
+  // Handle countdown timer based on nextAllowedAt
+  useEffect(() => {
+    if (!nextAllowedAt) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setCooldownSecs(0)
+      return
+    }
+
+    const calculateCooldown = () => {
+      const diffMs = new Date(nextAllowedAt).getTime() - Date.now()
+      const diffSecs = Math.max(0, Math.ceil(diffMs / 1000))
+      setCooldownSecs(diffSecs)
+      return diffSecs
+    }
+
+    const initialDiff = calculateCooldown()
+    if (initialDiff <= 0) return
+
+    const interval = setInterval(() => {
+      const remaining = calculateCooldown()
+      if (remaining <= 0) {
+        clearInterval(interval)
+      }
+    }, 1000)
+
+    return () => clearInterval(interval)
+  }, [nextAllowedAt])
 
   const effectiveUser = user ?? initialUser
   const isStagConnected = Boolean(effectiveUser?.stag_student_id)
@@ -100,7 +149,6 @@ const Profile = ({ user: initialUser }) => {
     const { value } = event.target
     setStagForm((prev) => ({ ...prev, [field]: value }))
     setStagErrors((prev) => ({ ...prev, [field]: '' }))
-    setConnectionMessage('')
   }
 
   const validateStagForm = () => {
@@ -133,7 +181,6 @@ const Profile = ({ user: initialUser }) => {
   const handleStagSubmit = async (event) => {
     event.preventDefault()
     setProfileError('')
-    setConnectionMessage('')
 
     const errors = validateStagForm()
     if (Object.keys(errors).length) {
@@ -150,7 +197,7 @@ const Profile = ({ user: initialUser }) => {
       })
 
       if (response.status === 'error') {
-        setConnectionMessage('We could not connect IS/STAG. Please check the values and try again.')
+        toast.error('We could not connect IS/STAG. Please check the values and try again.')
         return
       }
 
@@ -162,9 +209,9 @@ const Profile = ({ user: initialUser }) => {
       setStagForm(emptyStagForm)
       setStagErrors({})
       setSyncStatus('pending')
-      setConnectionMessage('IS/STAG connected. Syncing your schedule in the background...')
+      toast.success('IS/STAG connected. Syncing your schedule in the background...')
     } catch {
-      setConnectionMessage('We could not connect IS/STAG. Please check the values and try again.')
+      toast.error('We could not connect IS/STAG. Please check the values and try again.')
     } finally {
       setStagSubmitting(false)
     }
@@ -172,13 +219,12 @@ const Profile = ({ user: initialUser }) => {
 
   const handleDisconnectStag = async () => {
     setProfileError('')
-    setConnectionMessage('')
     setDisconnecting(true)
 
     try {
       const response = await api.disconnectStag()
       if (response.status === 'error') {
-        setConnectionMessage('We could not disconnect IS/STAG right now. Please try again.')
+        toast.error('We could not disconnect IS/STAG right now. Please try again.')
         return
       }
 
@@ -190,11 +236,46 @@ const Profile = ({ user: initialUser }) => {
       setStagForm(emptyStagForm)
       setStagErrors({})
       setSyncStatus(null)
-      setConnectionMessage('IS/STAG has been disconnected.')
+      setNextAllowedAt(null)
+      toast.success('IS/STAG has been disconnected.')
     } catch {
-      setConnectionMessage('We could not disconnect IS/STAG right now. Please try again.')
+      toast.error('We could not disconnect IS/STAG right now. Please try again.')
     } finally {
       setDisconnecting(false)
+    }
+  }
+
+  const handleResync = async () => {
+    setProfileError('')
+    setResyncLoading(true)
+
+    try {
+      const response = await api.resyncStag()
+
+      if (response.status === 'error') {
+        if (response.error === 'rate_limited') {
+          const nextAllowed = response.data?.next_allowed_at
+          const retryAfter = response.data?.retry_after_seconds
+          const retryMin = retryAfter ? Math.ceil(retryAfter / 60) : 30
+          if (nextAllowed) {
+            setNextAllowedAt(nextAllowed)
+          }
+          toast.error(`Sync was already triggered recently — try again in ${retryMin} minutes.`)
+        } else {
+          toast.error(response.error || 'Failed to trigger sync.')
+        }
+        return
+      }
+
+      if (response.data?.next_allowed_at) {
+        setNextAllowedAt(response.data.next_allowed_at)
+      }
+      toast.success('Sync started — refreshing your schedule in the background.')
+      setSyncStatus('pending')
+    } catch {
+      toast.error('Failed to trigger sync.')
+    } finally {
+      setResyncLoading(false)
     }
   }
 
@@ -287,12 +368,7 @@ const Profile = ({ user: initialUser }) => {
           </div>
         )}
 
-        {connectionMessage && (
-          <div className="flex items-start gap-2.5 px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg">
-            <ShieldCheck className="w-4 h-4 text-slate-600 shrink-0 mt-0.5" />
-            <p className="text-label-sm text-slate-700">{connectionMessage}</p>
-          </div>
-        )}
+
 
         {isStagConnected && syncStatus === 'pending' && (
           <div className="flex items-start gap-2.5 px-4 py-3 bg-blue-50 border border-blue-200 rounded-lg">
@@ -302,9 +378,19 @@ const Profile = ({ user: initialUser }) => {
         )}
 
         {isStagConnected && syncStatus === 'success' && (
-          <div className="flex items-start gap-2.5 px-4 py-3 bg-emerald-50 border border-emerald-200 rounded-lg">
-            <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-            <p className="text-label-sm text-emerald-700">Schedule synced successfully from IS/STAG.</p>
+          <div className="flex items-center justify-between gap-3 px-4 py-3 bg-emerald-50 border border-emerald-200 rounded-lg">
+            <div className="flex items-start gap-2.5">
+              <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+              <p className="text-label-sm text-emerald-700">Schedule synced successfully from IS/STAG.</p>
+            </div>
+            <button
+              type="button"
+              onClick={() => navigate('/dashboard')}
+              className="cursor-pointer shrink-0 inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-emerald-700 transition-colors"
+            >
+              <LayoutGrid className="w-3.5 h-3.5" />
+              Go to Dashboard
+            </button>
           </div>
         )}
 
@@ -444,15 +530,33 @@ const Profile = ({ user: initialUser }) => {
                   </div>
                 </div>
 
-                <button
-                  type="button"
-                  onClick={handleDisconnectStag}
-                  disabled={disconnecting}
-                  className="cursor-pointer inline-flex items-center justify-center gap-2 rounded-lg border border-red-200 bg-white px-4 py-2.5 text-sm font-semibold text-red-700 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-60"
-                >
-                  {disconnecting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Unlink2 className="h-4 w-4" />}
-                  Disconnect IS/STAG
-                </button>
+                <div className="flex flex-wrap gap-3">
+                  <button
+                    type="button"
+                    onClick={handleResync}
+                    disabled={resyncLoading || syncStatus === 'pending' || cooldownSecs > 0}
+                    className="cursor-pointer inline-flex items-center justify-center gap-2 rounded-lg bg-[#004ac6] px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#003ea8] disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    {resyncLoading ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <RefreshCw className="h-4 w-4" />
+                    )}
+                    {cooldownSecs > 0
+                      ? `Sync now (${Math.floor(cooldownSecs / 60)}:${(cooldownSecs % 60).toString().padStart(2, '0')})`
+                      : 'Sync now'}
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={handleDisconnectStag}
+                    disabled={disconnecting}
+                    className="cursor-pointer inline-flex items-center justify-center gap-2 rounded-lg border border-red-200 bg-white px-4 py-2.5 text-sm font-semibold text-red-700 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    {disconnecting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Unlink2 className="h-4 w-4" />}
+                    Disconnect IS/STAG
+                  </button>
+                </div>
               </div>
             )}
           </div>
