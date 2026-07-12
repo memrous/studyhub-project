@@ -1,9 +1,12 @@
 import { Link } from 'react-router-dom'
 import { Search } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { useAuth } from '../context/AuthContext'
+import LanguageSwitcher from './LanguageSwitcher'
 
 const Header = () => {
   const { user } = useAuth()
+  const { t } = useTranslation('common')
 
   return (
     <header className="h-16 px-8 bg-white border-b border-[#E2E8F0] flex items-center justify-between sticky top-0 z-10 shadow-sm font-inter">
@@ -12,15 +15,15 @@ const Header = () => {
         <Search className="w-4 h-4 text-outline absolute left-3 top-1/2 -translate-y-1/2" />
         <input
           type="text"
-          placeholder="Search subjects, tasks, or notes..."
+          placeholder={t('header.searchPlaceholder')}
           className="w-full pl-9 pr-4 py-2 bg-surface rounded-md border border-[#E2E8F0] text-body-md text-on-surface placeholder:text-outline focus:outline-none focus:border-outline focus:bg-white transition-colors"
         />
       </div>
 
       {/* Quick Actions & User Info */}
       <div className="flex items-center gap-5">
+         <LanguageSwitcher />
         <div className="border-l border-[#E2E8F0] h-6"></div>
-
         {/* Profile link */}
         <Link
           to="/profile"

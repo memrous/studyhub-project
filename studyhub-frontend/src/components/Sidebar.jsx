@@ -1,16 +1,18 @@
 import { NavLink } from 'react-router-dom'
 import { GraduationCap, LogOut } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { useAuth } from '../context/AuthContext'
 import CustomIcon from './CustomIcon'
 
 const NAV_ITEMS = [
-  { to: '/dashboard', customIcon: 'dashboard', label: 'Dashboard' },
-  { to: '/subjects',  customIcon: 'book',      label: 'Subjects'  },
-  { to: '/calendar',  customIcon: 'calendar',  label: 'Calendar'  },
-  { to: '/materials', customIcon: 'folder',    label: 'Resources' },
+  { to: '/dashboard', customIcon: 'dashboard', labelKey: 'sidebar.dashboard' },
+  { to: '/subjects',  customIcon: 'book',      labelKey: 'sidebar.subjects'  },
+  { to: '/calendar',  customIcon: 'calendar',  labelKey: 'sidebar.calendar'  },
+  { to: '/materials', customIcon: 'folder',    labelKey: 'sidebar.resources' },
 ]
 
 const Sidebar = () => {
+  const { t } = useTranslation('common')
   const { user, logout } = useAuth()
   const getClass = ({ isActive }) => {
     const base = 'flex items-center gap-3 px-3 py-2.5 rounded-md text-label-md transition-all cursor-pointer'
@@ -35,7 +37,7 @@ const Sidebar = () => {
 
         {/* Navigation Links */}
         <nav className="flex flex-col gap-1">
-          {NAV_ITEMS.map(({ to, icon: Icon, customIcon, label }) => (
+          {NAV_ITEMS.map(({ to, icon: Icon, customIcon, labelKey }) => (
             <NavLink key={to} to={to} className={getClass}>
               {({ isActive }) => (
                 <>
@@ -44,7 +46,7 @@ const Sidebar = () => {
                   ) : (
                     <Icon className={`w-4 h-4 ${getIconClass({ isActive })}`} />
                   )}
-                  {label}
+                  {t(labelKey)}
                 </>
               )}
             </NavLink>
@@ -56,10 +58,10 @@ const Sidebar = () => {
       <div className="flex flex-col gap-4">
         <div className="border-t border-[#E2E8F0]"></div>
         <NavLink to="/profile" className={getClass}>
-          {({ isActive }) => (
+          {() => (
             <>
               <CustomIcon name="profile" className="w-4 h-4" />
-              Profile
+              {t('sidebar.profile')}
             </>
           )}
         </NavLink>
@@ -77,19 +79,19 @@ const Sidebar = () => {
             </div>
           </div>
           <div className="flex items-center justify-between text-label-sm font-semibold pt-1 border-t border-slate-200">
-            <span className="text-slate-500">STAG Account</span>
+            <span className="text-slate-500">{t('sidebar.stagAccount')}</span>
             {user?.stag_student_id ? (
               <span className="flex items-center gap-1.5 text-green-600">
                 <span className="relative flex h-1.5 w-1.5">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-green-500"></span>
                 </span>
-                Connected
+                {t('sidebar.connected')}
               </span>
             ) : (
               <span className="flex items-center gap-1.5 text-red-500/80">
                 <span className="h-1.5 w-1.5 rounded-full bg-red-400"></span>
-                Not Connected
+                {t('sidebar.notConnected')}
               </span>
             )}
           </div>
@@ -101,7 +103,7 @@ const Sidebar = () => {
           className="w-full flex items-center gap-3 px-3 py-2 bg-red-50 hover:bg-red-100 text-red-600 rounded-md text-label-md transition-all cursor-pointer font-medium border border-red-200/50"
         >
           <LogOut className="w-4 h-4 text-red-600" />
-          Log Out
+          {t('sidebar.logout')}
         </button>
       </div>
     </aside>

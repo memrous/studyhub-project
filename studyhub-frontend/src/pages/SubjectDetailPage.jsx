@@ -1,4 +1,5 @@
 import { useNavigate, useParams, Navigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { useSubjects } from '../hooks/useSubjects'
 import { useEvents } from '../hooks/useEvents'
 import { useResources } from '../hooks/useResources'
@@ -6,6 +7,7 @@ import SubjectDetailView from '../components/SubjectDetailView'
 import PageState from '../components/PageState'
 
 const SubjectDetailPage = () => {
+  const { t } = useTranslation('common')
   const { subjectId } = useParams()
   const navigate = useNavigate()
   const { data: subjects, isLoading: subjectsLoading } = useSubjects()
@@ -15,7 +17,7 @@ const SubjectDetailPage = () => {
   const isLoading = subjectsLoading || eventsLoading || resourcesLoading
 
   if (isLoading) {
-    return <PageState variant="loading" title="Loading..." />
+    return <PageState variant="loading" title={t('loading')} />
   }
 
   const subject = subjects.find((s) => s.id === Number(subjectId)) || null

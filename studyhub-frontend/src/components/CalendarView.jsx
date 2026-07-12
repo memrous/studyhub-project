@@ -4,10 +4,12 @@ import {
   ChevronRight, 
   Plus
 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { useCalendarState, getEventStyle } from './calendar/useCalendarState'
 import CalendarGrid from './calendar/CalendarGrid'
 import EventModal from './calendar/EventModal'
 import EventDetailModal from './calendar/EventDetailModal'
+import { getLocaleFromLanguage } from '../utils/locale'
 
 const CalendarView = ({ 
   events: propEvents, 
@@ -19,8 +21,10 @@ const CalendarView = ({
   openEventId,        
   onCloseOpenEvent     
 }) => {
+  const { t, i18n } = useTranslation(['academic', 'dashboard'])
   const currentEvents = propEvents || []
   const currentSubjects = propSubjects || []
+  const locale = getLocaleFromLanguage(i18n.language)
 
   const {
     selectedDate,
@@ -85,7 +89,7 @@ const CalendarView = ({
         {/* Hlavička kalendáře */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-[#E2E8F0] pb-6 mb-6">
           <div className="flex flex-col gap-1.5">
-            <h1 className="text-headline-lg font-bold text-on-surface">Calendar</h1>
+            <h1 className="text-headline-lg font-bold text-on-surface">{t('academic:calendarView.title')}</h1>
             <div className="flex items-center gap-4">
               <span className="text-headline-md text-on-surface font-semibold capitalize">
                 {activeView === 'month' ? getMonthName(currentMonth) : getMonthName(selectedDate)}
@@ -109,22 +113,22 @@ const CalendarView = ({
 
           {/* Přepínání pohledů */}
           <div className="flex p-0.5 bg-[#F2F4F6] border border-[#E2E8F0] rounded-md shrink-0 self-stretch sm:self-auto justify-between sm:justify-start">
-            {['Month', 'Week', 'Day'].map((view) => (
+            {['month', 'week', 'day'].map((view) => (
               <button
                 key={view}
                 onClick={() => {
-                  setActiveView(view.toLowerCase())
-                  if (view.toLowerCase() === 'month') {
+                  setActiveView(view)
+                  if (view === 'month') {
                     setCurrentMonth(new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1))
                   }
                 }}
                 className={`px-4 py-1.5 rounded-sm text-label-md font-semibold transition-all cursor-pointer flex-1 sm:flex-none text-center ${
-                  activeView === view.toLowerCase()
+                  activeView === view
                     ? 'bg-white text-on-surface shadow-sm'
                     : 'text-on-surface-variant hover:text-on-surface'
                 }`}
               >
-                {view}
+                {t(`academic:calendarView.views.${view}`)}
               </button>
             ))}
           </div>
@@ -152,20 +156,20 @@ const CalendarView = ({
           className="w-full bg-[#004ac6] hover:bg-[#003ea8] active:scale-[0.98] text-white flex items-center justify-center gap-2 py-3 rounded-lg font-semibold shadow-md transition-all text-body-lg cursor-pointer"
         >
           <Plus className="w-5 h-5" />
-          Create New Event
+          {t('academic:calendarView.createNewEvent')}
         </button>
 
         {/* Přehled blížících se akcí */}
         <div className="bg-white border border-[#E2E8F0] p-5 rounded-lg shadow-ambient">
-          <h2 className="text-headline-md font-bold text-on-surface mb-4">Upcoming Events</h2>
+          <h2 className="text-headline-md font-bold text-on-surface mb-4">{t('academic:calendarView.upcomingEvents')}</h2>
           
           <div className="flex flex-col gap-3">
             {upcomingEventsList.length === 0 ? (
-              <p className="text-body-md text-[#737686] italic text-center py-4">No upcoming events filter matches.</p>
+              <p className="text-body-md text-[#737686] italic text-center py-4">{t('academic:calendarView.noUpcomingEvents')}</p>
             ) : (
               upcomingEventsList.map(event => {
                 const styleObj = getEventStyle(event.type)
-                const dateText = new Date(event.date).toLocaleDateString('cs-CZ', { 
+                const dateText = new Date(event.date).toLocaleDateString(locale, { 
                   month: 'short', 
                   day: 'numeric' 
                 })
@@ -201,7 +205,7 @@ const CalendarView = ({
 
         {/* Dynamické Checkboxy pro filtry */}
         <div className="bg-white border border-[#E2E8F0] p-5 rounded-lg shadow-ambient">
-          <h2 className="text-headline-md font-bold text-on-surface mb-4">Filter by Subject</h2>
+          <h2 className="text-headline-md font-bold text-on-surface mb-4">{t('academic:calendarView.filterBySubject')}</h2>
           
           <div className="flex flex-col gap-3">
             {SUBJECTS.map(subj => {
@@ -229,7 +233,7 @@ const CalendarView = ({
 
         {/* Legend / Vysvětlivky barev */}
         <div className="bg-white border border-[#E2E8F0] p-5 rounded-lg shadow-ambient">
-          <h2 className="text-headline-md font-bold text-on-surface mb-4">Event Types</h2>
+          <h2 className="text-headline-md font-bold text-on-surface mb-4">{t('academic:calendarView.eventTypesTitle')}</h2>
 
           <div className="flex flex-col gap-3.5">
             <div className="flex items-center gap-3">
@@ -237,8 +241,8 @@ const CalendarView = ({
                 <span className="w-1.5 h-1.5 rounded-full bg-[#004ac6]" />
               </span>
               <div className="flex flex-col">
-                <span className="text-body-md font-bold text-on-surface leading-none">Lectures & Labs</span>
-                <span className="text-[11px] text-[#737686] mt-0.5">Regular classes and seminars</span>
+                <span className="text-body-md font-bold text-on-surface leading-none">{t('academic:calendarView.eventTypeDescriptions.lectureLab.title')}</span>
+                <span className="text-[11px] text-[#737686] mt-0.5">{t('academic:calendarView.eventTypeDescriptions.lectureLab.description')}</span>
               </div>
             </div>
 
@@ -247,8 +251,8 @@ const CalendarView = ({
                 <span className="w-1.5 h-1.5 rounded-full bg-[#117a3a]" />
               </span>
               <div className="flex flex-col">
-                <span className="text-body-md font-bold text-on-surface leading-none">Assignments</span>
-                <span className="text-[11px] text-[#737686] mt-0.5">Homework and project milestones</span>
+                <span className="text-body-md font-bold text-on-surface leading-none">{t('academic:calendarView.eventTypeDescriptions.assignments.title')}</span>
+                <span className="text-[11px] text-[#737686] mt-0.5">{t('academic:calendarView.eventTypeDescriptions.assignments.description')}</span>
               </div>
             </div>
 
@@ -257,8 +261,8 @@ const CalendarView = ({
                 <span className="w-1.5 h-1.5 rounded-full bg-[#bc4800]" />
               </span>
               <div className="flex flex-col">
-                <span className="text-body-md font-bold text-on-surface leading-none">Tests & Quizzes</span>
-                <span className="text-[11px] text-[#737686] mt-0.5">Midterms, small tests and quizzes</span>
+                <span className="text-body-md font-bold text-on-surface leading-none">{t('academic:calendarView.eventTypeDescriptions.testsQuizzes.title')}</span>
+                <span className="text-[11px] text-[#737686] mt-0.5">{t('academic:calendarView.eventTypeDescriptions.testsQuizzes.description')}</span>
               </div>
             </div>
 
@@ -267,8 +271,8 @@ const CalendarView = ({
                 <span className="w-1.5 h-1.5 rounded-full bg-[#ba1a1a]" />
               </span>
               <div className="flex flex-col">
-                <span className="text-body-md font-bold text-on-surface leading-none">Exams & Deadlines</span>
-                <span className="text-[11px] text-[#ba1a1a] font-semibold mt-0.5">Final exams and strict deadlines</span>
+                <span className="text-body-md font-bold text-on-surface leading-none">{t('academic:calendarView.eventTypeDescriptions.examsDeadlines.title')}</span>
+                <span className="text-[11px] text-[#ba1a1a] font-semibold mt-0.5">{t('academic:calendarView.eventTypeDescriptions.examsDeadlines.description')}</span>
               </div>
             </div>
           </div>

@@ -1,11 +1,13 @@
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useSubjects } from '../hooks/useSubjects'
 import { useEvents } from '../hooks/useEvents'
 import CalendarView from '../components/CalendarView'
 import PageState from '../components/PageState'
 
 const CalendarPage = () => {
+  const { t } = useTranslation('common')
   const navigate = useNavigate()
   const location = useLocation()
   // openEventId may be passed via navigate('/calendar', { state: { openEventId } })
@@ -41,7 +43,7 @@ const CalendarPage = () => {
   }, [location.state?.openEventId, navigate, location.pathname])
 
   if (isLoading) {
-    return <PageState variant="loading" title="Loading..." />
+    return <PageState variant="loading" title={t('loading')} />
   }
 
   if (error) {
@@ -49,8 +51,8 @@ const CalendarPage = () => {
       <PageState
         variant="error"
         title={error}
-        description="Please try reloading the page."
-        actionLabel="Try again"
+        description={t('errorDescription')}
+        actionLabel={t('tryAgain')}
         onAction={reloadData}
       />
     )
@@ -60,8 +62,8 @@ const CalendarPage = () => {
     return (
       <PageState
         variant="empty"
-        title="No data"
-        description="The calendar does not contain any events yet."
+        title={t('noData')}
+        description={t('calendarEmptyDescription')}
       />
     )
   }

@@ -1,7 +1,9 @@
 import { Plus } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import DayCell from './DayCell'
 import { getEventStyle, formatDateKey } from './useCalendarState'
 import CustomIcon from '../CustomIcon'
+import { getLocaleFromLanguage } from '../../utils/locale'
 
 const CalendarGrid = ({
   activeView,
@@ -15,15 +17,17 @@ const CalendarGrid = ({
   hourlySlots,
   openCreateModal
 }) => {
+  const { t, i18n } = useTranslation(['academic', 'dashboard'])
+  const locale = getLocaleFromLanguage(i18n.language)
   return (
     <div className="flex flex-col w-full">
       {/* MĚSÍČNÍ POHLED */}
       {activeView === 'month' && (
         <div className="flex flex-col w-full">
           <div className="grid grid-cols-7 border-b border-[#E2E8F0] bg-[#F2F4F6] rounded-t-md text-center py-2">
-            {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(dayName => (
+            {['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'].map(dayName => (
               <span key={dayName} className="text-label-sm text-[#737686] font-bold">
-                {dayName}
+                {t(`academic:calendarGrid.days.${dayName}`)}
               </span>
             ))}
           </div>
@@ -51,10 +55,10 @@ const CalendarGrid = ({
           {/* Mobilní Agenda pod kalendářem */}
           <div className="sm:hidden mt-6 bg-[#F2F4F6] border border-[#E2E8F0] p-4 rounded-lg flex flex-col gap-3">
             <h3 className="text-label-md font-bold text-on-surface">
-              Agenda: {selectedDate.toLocaleDateString('cs-CZ', { day: 'numeric', month: 'short', year: 'numeric' })}
+              {t('academic:calendarGrid.agenda')} {selectedDate.toLocaleDateString(locale, { day: 'numeric', month: 'short', year: 'numeric' })}
             </h3>
             {selectedDayEvents.length === 0 ? (
-              <p className="text-body-md text-[#737686] italic">No events scheduled for this day.</p>
+              <p className="text-body-md text-[#737686] italic">{t('academic:calendarGrid.noEventsToday')}</p>
             ) : (
               <div className="flex flex-col gap-2.5">
                 {selectedDayEvents.map(event => {
@@ -77,7 +81,7 @@ const CalendarGrid = ({
                         </div>
                       </div>
                       <span className={`text-[9px] font-bold px-2 py-0.5 rounded-sm ${styleObj.bg} ${styleObj.text}`}>
-                        {event.type}
+                        {t(`dashboard:timetable.eventTypes.${event.type}`, event.type)}
                       </span>
                     </div>
                   )
@@ -95,14 +99,14 @@ const CalendarGrid = ({
             {currentWeekDays.map(day => {
               const isSelected = formatDateKey(selectedDate) === day.dateKey
               return (
-                <div 
-                  key={day.dateKey} 
-                  onClick={() => setSelectedDate(day.date)}
-                  className={`flex flex-col items-center justify-center gap-1 py-1 cursor-pointer transition-colors ${
-                    isSelected ? 'text-primary' : 'text-on-surface'
-                  }`}
-                >
-                  <span className="text-label-sm text-[#737686] font-bold uppercase">{day.dayName}</span>
+                  <div 
+                    key={day.dateKey} 
+                    onClick={() => setSelectedDate(day.date)}
+                    className={`flex flex-col items-center justify-center gap-1 py-1 cursor-pointer transition-colors ${
+                      isSelected ? 'text-primary' : 'text-on-surface'
+                    }`}
+                  >
+                  <span className="text-label-sm text-[#737686] font-bold uppercase">{t(`academic:calendarGrid.days.${day.dayName}`)}</span>
                   <span className={`w-8 h-8 rounded-full flex items-center justify-center text-label-md font-bold transition-all ${
                     isSelected 
                       ? 'bg-primary text-white shadow-sm' 
@@ -122,7 +126,7 @@ const CalendarGrid = ({
                 <div key={day.dateKey} className="p-3 flex flex-col gap-3 min-h-full bg-white hover:bg-slate-50/50 transition-colors">
                   {dayEvents.length === 0 ? (
                     <div className="flex-1 flex items-center justify-center text-[11px] text-[#c3c6d7] italic border-2 border-dashed border-[#eceef0] rounded-lg p-2 text-center select-none">
-                      No events
+                      {t('academic:calendarGrid.noEvents')}
                     </div>
                   ) : (
                     dayEvents
@@ -164,9 +168,9 @@ const CalendarGrid = ({
               </div>
               <div>
                 <h3 className=" text-headline-md font-bold text-on-surface capitalize">
-                  {selectedDate.toLocaleDateString('en-US', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
+                  {selectedDate.toLocaleDateString(locale, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
                 </h3>
-                <p className="text-body-md text-[#737686] mt-0.5">Your schedule and deadlines for today</p>
+                <p className="text-body-md text-[#737686] mt-0.5">{t('academic:calendarGrid.yourSchedule')}</p>
               </div>
             </div>
             
@@ -174,7 +178,7 @@ const CalendarGrid = ({
               onClick={openCreateModal}
               className="flex items-center gap-1.5 px-3 py-1.5 text-label-md bg-primary text-white rounded-md font-semibold hover:bg-primary/95 transition-colors cursor-pointer"
             >
-              <Plus className="w-4 h-4" /> Add Event
+              <Plus className="w-4 h-4" /> {t('academic:calendarGrid.addEvent')}
             </button>
           </div>
 
@@ -187,12 +191,12 @@ const CalendarGrid = ({
               })
 
               return (
-                <div key={hour} className="flex flex-col sm:flex-row gap-4 border-b border-[#eceef0] py-4 items-start ">
-                  <span className="w-12 text-label-sm font-bold text-[#737686] text-right pt-0.5">{hour}</span>
-                  
-                  <div className="flex-1 flex flex-col gap-2">
+                    <div key={hour} className="flex flex-col sm:flex-row gap-4 border-b border-[#eceef0] py-4 items-start ">
+                      <span className="w-12 text-label-sm font-bold text-[#737686] text-right pt-0.5">{hour}</span>
+                      
+                      <div className="flex-1 flex flex-col gap-2">
                     {slotEvents.length === 0 ? (
-                      <div className="text-[11px] text-[#c3c6d7] italic pt-1">Free schedule slot</div>
+                      <div className="text-[11px] text-[#c3c6d7] italic pt-1">{t('academic:calendarGrid.freeSlot')}</div>
                     ) : (
                       slotEvents.map(event => {
                         const styleObj = getEventStyle(event.type)
@@ -209,7 +213,7 @@ const CalendarGrid = ({
                               <div>
                                 <h4 className="text-label-md font-bold leading-tight">{event.title}</h4>
                                 <span className="text-[10px] flex items-center gap-1 mt-1 opacity-80">
-                                  <CustomIcon name="clock" className="w-3.5 h-3.5" /> {event.startTime} {event.endTime && `– ${event.endTime}`} ({event.type})
+                                  <CustomIcon name="clock" className="w-3.5 h-3.5" /> {event.startTime} {event.endTime && `– ${event.endTime}`} ({t(`dashboard:timetable.eventTypes.${event.type}`, event.type)})
                                 </span>
                               </div>
                             </div>

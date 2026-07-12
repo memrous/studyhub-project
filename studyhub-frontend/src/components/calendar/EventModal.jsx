@@ -1,5 +1,6 @@
 
 import { X } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 const EventModal = ({
   isOpen,
@@ -20,6 +21,7 @@ const EventModal = ({
   newDuration,
   setNewDuration,
 }) => {
+  const { t } = useTranslation(['academic', 'dashboard'])
   if (!isOpen) return null
 
   return (
@@ -27,7 +29,7 @@ const EventModal = ({
       <div className="bg-white rounded-lg shadow-2xl border border-[#E2E8F0] w-full max-w-md overflow-hidden relative font-inter">
         <div className="flex items-center justify-between px-6 py-4 border-b border-[#E2E8F0] bg-surface">
           <h2 className="text-headline-md font-bold text-on-surface">
-            {editingEventId ? 'Edit Event' : 'Create New Event'}
+            {editingEventId ? t('academic:eventModal.editTitle') : t('academic:eventModal.createTitle')}
           </h2>
           <button 
             onClick={onClose}
@@ -40,11 +42,11 @@ const EventModal = ({
         <form onSubmit={onSubmit} className="p-6 flex flex-col gap-4">
           
           <div className="flex flex-col gap-1.5">
-            <label className="text-label-md font-bold text-on-surface-variant">Event Title</label>
+            <label className="text-label-md font-bold text-on-surface-variant">{t('academic:eventModal.fields.eventTitle')}</label>
             <input 
               type="text" 
               required
-              placeholder="e.g. Database Systems Practical Test" 
+              placeholder={t('academic:eventModal.placeholders.eventTitle')} 
               value={newTitle}
               onChange={(e) => setNewTitle(e.target.value)}
               className="w-full px-3 py-2 bg-surface rounded-md border border-[#E2E8F0] text-body-md text-on-surface focus:outline-none focus:border-primary focus:bg-white transition-colors"
@@ -52,22 +54,22 @@ const EventModal = ({
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className="text-label-md font-bold text-on-surface-variant">Type</label>
+            <label className="text-label-md font-bold text-on-surface-variant">{t('academic:eventModal.fields.type')}</label>
             <select 
               value={newType}
               onChange={(e) => setNewType(e.target.value)}
               className="w-full px-3 py-2 bg-surface rounded-md border border-[#E2E8F0] text-body-md text-on-surface focus:outline-none focus:border-primary focus:bg-white transition-colors"
             >
-              <option value="Lecture">Lecture</option>
-              <option value="Lab">Lab</option>
-              <option value="Exam">Exam</option>
-              <option value="Deadline">Deadline</option>
-              <option value="Quiz">Quiz</option>
+              <option value="Lecture">{t('dashboard:timetable.eventTypes.Lecture')}</option>
+              <option value="Lab">{t('dashboard:timetable.eventTypes.Lab')}</option>
+              <option value="Exam">{t('dashboard:timetable.eventTypes.Exam')}</option>
+              <option value="Deadline">{t('dashboard:timetable.eventTypes.Deadline')}</option>
+              <option value="Quiz">{t('dashboard:timetable.eventTypes.Quiz')}</option>
             </select>
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className="text-label-md font-bold text-on-surface-variant">Subject</label>
+            <label className="text-label-md font-bold text-on-surface-variant">{t('academic:eventModal.fields.subject')}</label>
             <div className="grid grid-cols-2 gap-2">
               {SUBJECTS.map(subj => {
                 const isSelected = newSubject === subj.name
@@ -92,7 +94,7 @@ const EventModal = ({
 
           <div className="grid grid-cols-2 gap-4">
             <div className="flex flex-col gap-1.5">
-              <label className="text-label-md font-bold text-on-surface-variant">Date</label>
+              <label className="text-label-md font-bold text-on-surface-variant">{t('academic:eventModal.fields.date')}</label>
               <input 
                 type="date" 
                 required
@@ -102,7 +104,7 @@ const EventModal = ({
               />
             </div>
             <div className="flex flex-col gap-1.5">
-              <label className="text-label-md font-bold text-on-surface-variant">Start Time</label>
+              <label className="text-label-md font-bold text-on-surface-variant">{t('academic:eventModal.fields.startTime')}</label>
               <input 
                 type="time" 
                 required
@@ -114,18 +116,18 @@ const EventModal = ({
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className="text-label-md font-bold text-on-surface-variant">Duration (Minutes)</label>
+            <label className="text-label-md font-bold text-on-surface-variant">{t('academic:eventModal.fields.duration')}</label>
             <select 
               value={newDuration}
               onChange={(e) => setNewDuration(e.target.value)}
               className="w-full px-3 py-2 bg-surface rounded-md border border-[#E2E8F0] text-body-md text-on-surface focus:outline-none focus:border-primary focus:bg-white transition-colors"
             >
-              <option value="30">30 minutes</option>
-              <option value="60">1 hour</option>
-              <option value="90">1.5 hours</option>
-              <option value="120">2 hours</option>
-              <option value="180">3 hours</option>
-              <option value="0">Deadline (All Day)</option>
+              <option value="30">{t('academic:eventModal.durationOptions.30')}</option>
+              <option value="60">{t('academic:eventModal.durationOptions.60')}</option>
+              <option value="90">{t('academic:eventModal.durationOptions.90')}</option>
+              <option value="120">{t('academic:eventModal.durationOptions.120')}</option>
+              <option value="180">{t('academic:eventModal.durationOptions.180')}</option>
+              <option value="0">{t('academic:eventModal.durationOptions.0')}</option>
             </select>
           </div>
 
@@ -135,13 +137,13 @@ const EventModal = ({
               onClick={onClose}
               className="px-4 py-2 border border-[#E2E8F0] hover:bg-slate-50 text-label-md font-semibold text-on-surface-variant rounded-md transition-colors cursor-pointer"
             >
-              Cancel
+              {t('academic:eventModal.actions.cancel')}
             </button>
             <button
               type="submit"
               className="px-4 py-2 bg-[#004ac6] hover:bg-[#003ea8] text-white text-label-md font-semibold rounded-md shadow-sm transition-colors cursor-pointer"
             >
-              Save Event
+              {t('academic:eventModal.actions.save')}
             </button>
           </div>
 

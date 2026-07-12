@@ -1,0 +1,34 @@
+{
+  "language": {
+    "english": "Angličtina",
+    "czech": "Čeština"
+  },
+  "loading": "Načítání...",
+  "tryAgain": "Zkusit znovu",
+  "errorDescription": "Zkuste stránku znovu načíst.",
+  "syncingSchedule": "Synchronizuji rozvrh z IS/STAG...",
+  "syncingDescription": "Může to trvat několik sekund. Stránka se pak sama obnoví.",
+  "syncFailed": "Synchronizace se nezdařila",
+  "syncFailedDescription": "Rozvrh z IS/STAG se nepodařilo synchronizovat.",
+  "goToProfile": "Přejít do profilu",
+  "noData": "Žádná data",
+  "noDataDescription": "Zatím nejsou k dispozici žádné předměty, události ani materiály.",
+  "calendarEmptyDescription": "Kalendář zatím neobsahuje žádné události.",
+  "somethingWentWrong": "Něco se pokazilo",
+  "errorSafeState": "Zkuste stránku znovu načíst. Aplikace byla ponechána v bezpečném stavu.",
+  "reloadPage": "Znovu načíst stránku",
+  "header": {
+    "searchPlaceholder": "Hledat předměty, úkoly nebo poznámky..."
+  },
+  "sidebar": {
+    "dashboard": "Nástěnka",
+    "subjects": "Předměty",
+    "calendar": "Kalendář",
+    "resources": "Materiály",
+    "profile": "Profil",
+    "stagAccount": "Účet STAG",
+    "connected": "Připojeno",
+    "notConnected": "Nepřipojeno",
+    "logout": "Odhlásit se"
+  }
+}

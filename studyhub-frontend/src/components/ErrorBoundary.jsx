@@ -1,5 +1,6 @@
 import { Component } from 'react'
 import { AlertTriangle } from 'lucide-react'
+import { withTranslation } from 'react-i18next'
 
 class ErrorBoundary extends Component {
   constructor(props) {
@@ -21,6 +22,7 @@ class ErrorBoundary extends Component {
 
   render() {
     if (this.state.hasError) {
+      const { t } = this.props
       return (
         <div className="min-h-screen flex items-center justify-center bg-background px-4 font-inter">
           <div className="w-full max-w-md bg-white border border-[#E2E8F0] rounded-xl shadow-ambient p-8 text-center flex flex-col items-center gap-4">
@@ -28,9 +30,9 @@ class ErrorBoundary extends Component {
               <AlertTriangle className="w-6 h-6" />
             </div>
             <div className="flex flex-col gap-2">
-              <h1 className="text-headline-md font-semibold text-on-surface">Something went wrong</h1>
+              <h1 className="text-headline-md font-semibold text-on-surface">{t('somethingWentWrong')}</h1>
               <p className="text-body-md text-on-surface-variant">
-                Please try reloading the page. The application was kept in a safe state.
+                {t('errorSafeState')}
               </p>
             </div>
             <button
@@ -38,7 +40,7 @@ class ErrorBoundary extends Component {
               onClick={this.handleReload}
               className="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-[#004ac6] text-white text-label-md font-semibold hover:bg-[#003ea8] transition-colors"
             >
-              Reload page
+              {t('reloadPage')}
             </button>
           </div>
         </div>
@@ -49,4 +51,4 @@ class ErrorBoundary extends Component {
   }
 }
 
-export default ErrorBoundary
+export default withTranslation('common')(ErrorBoundary)

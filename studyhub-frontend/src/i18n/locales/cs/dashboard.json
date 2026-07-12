@@ -1,0 +1,103 @@
+{
+  "dashboardPage": {
+    "greeting": "Dobré ráno, {{name}}!",
+    "todayDeadlines": "Na dnešek máte <strong>{{count}} termínů</strong>. Jdeme na to!",
+    "todayDeadlinesMobile": "Dnes máte blížící se {{count}} termíny.",
+    "mySubjects": "Moje zapsané předměty",
+    "viewAll": "Zobrazit vše",
+    "loading": "Načítání...",
+    "syncing": "Synchronizuji rozvrh z IS/STAG...",
+    "syncingDescription": "Může to trvat několik sekund. Stránka se pak sama obnoví.",
+    "syncFailed": "Synchronizace se nezdařila",
+    "syncFailedDescription": "Rozvrh z IS/STAG se nepodařilo synchronizovat.",
+    "goToProfile": "Přejít do profilu",
+    "noData": "Žádná data",
+    "noDataDescription": "Zatím nejsou k dispozici žádné předměty, události ani materiály.",
+    "errorDescription": "Zkuste stránku znovu načíst.",
+    "tryAgain": "Zkusit znovu"
+  },
+  "stats": {
+    "activeSubjects": "Aktivní předměty",
+    "pendingTasks": "Čekající úkoly",
+    "upcomingExams": "Blížící se zkoušky"
+  },
+  "timetable": {
+    "titleMobile": "Dnešní rozvrh",
+    "titleDesktop": "Týdenní rozvrh",
+    "lecturer": "Vyučující:",
+    "subjectDescription": "Popis předmětu:",
+    "noClassesToday": "Na dnešek není naplánována žádná výuka.",
+    "noClasses": "Bez výuky",
+    "prev": "← Předchozí",
+    "current": "Aktuální",
+    "next": "Další →",
+    "openSubjectHub": "Otevřít předmět",
+    "fallbacks": {
+      "subjectCode": "GEN 101",
+      "room201": "Místnost 201",
+      "room105": "Místnost 105",
+      "mainHall": "Hlavní sál",
+      "unknownSubject": "Neznámý předmět",
+      "notSpecified": "Neuvedeno"
+    },
+    "days": {
+      "mon": "Po",
+      "tue": "Út",
+      "wed": "St",
+      "thu": "Čt",
+      "fri": "Pá"
+    },
+    "eventTypes": {
+      "Lecture": "Přednáška",
+      "Lab": "Cvičení",
+      "Assignment": "Zadání",
+      "Test": "Test",
+      "Quiz": "Kvíz",
+      "Exam": "Zkouška",
+      "Deadline": "Termín"
+    },
+    "creditsCompletion": "Kredity / ukončení:"
+  },
+  "deadlines": {
+    "urgent": "Naléhavé termíny",
+    "upcoming": "Nadcházející termíny",
+    "noUrgent": "Žádné naléhavé termíny.",
+    "noUpcoming": "Žádné nadcházející termíny.",
+    "dueToday": "Termín dnes",
+    "dueTomorrow": "Termín zítra",
+    "dueOnDate": "Termín {{date}}",
+    "dueInDays": "Termín za {{count}} dní",
+    "overdueByDays": "Po termínu o {{count}} dní",
+    "eventTypes": {
+      "Assignment": "Zadání",
+      "Test": "Test",
+      "Exam": "Zkouška"
+    }
+  },
+  "recentMaterials": {
+    "title": "Nedávné materiály",
+    "noResources": "Žádné materiály nejsou k dispozici.",
+    "attachment": "Příloha",
+    "resourceTypes": {
+      "PDF": "PDF",
+      "SLIDES": "Prezentace",
+      "LINK": "URL",
+      "NOTES": "Poznámky",
+      "default": "Dokument"
+    }
+  },
+  "subjectCard": {
+    "mandatory": "Povinný",
+    "elective": "Volitelný",
+    "credits_one": "{{count}} kredit",
+    "credits_few": "{{count}} kredity",
+    "credits_other": "{{count}} kreditů",
+    "deleteSubject": "Smazat předmět",
+    "deleteConfirm": "Opravdu chcete smazat předmět „{{name}}“?",
+    "openSubject": "Otevřít předmět",
+    "semester": {
+      "winter": "Zimní semestr",
+      "summer": "Letní semestr"
+    }
+  }
+}

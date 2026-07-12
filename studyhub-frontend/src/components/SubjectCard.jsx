@@ -1,9 +1,17 @@
 import { User, Trash2 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import CustomIcon from './CustomIcon'
 
 const SubjectIcon = () => <CustomIcon name="book" className="w-5 h-5" />
 
 const SubjectCard = ({ subject, onSelect, onDelete }) => {
+  const { t } = useTranslation('dashboard')
+
+  const getSemesterLabel = (semester) => {
+    if (semester === 'Winter') return t('subjectCard.semester.winter')
+    if (semester === 'Summer') return t('subjectCard.semester.summer')
+    return semester
+  }
   
   return (
     <div className="bg-white border border-[#E2E8F0] rounded-lg shadow-ambient hover:shadow-md transition-shadow flex flex-col p-5 gap-4 font-inter">
@@ -17,7 +25,7 @@ const SubjectCard = ({ subject, onSelect, onDelete }) => {
             ? 'bg-[#eeefff] text-[#004ac6]' 
             : 'bg-[#e6f4ea] text-emerald-700'
         }`}>
-          {subject.isMandatory ? 'Mandatory' : 'Elective'}
+          {subject.isMandatory ? t('subjectCard.mandatory') : t('subjectCard.elective')}
         </span>
       </div>
 
@@ -28,7 +36,7 @@ const SubjectCard = ({ subject, onSelect, onDelete }) => {
         </span>
         <span className="w-1 h-1 rounded-full bg-[#737686] shrink-0" />
         <span className="text-label-sm text-[#737686] font-semibold">
-          {subject.credits} Credits
+          {t('subjectCard.credits', { count: subject.credits })}
         </span>
       </div>
 
@@ -60,7 +68,7 @@ const SubjectCard = ({ subject, onSelect, onDelete }) => {
       {/* Semester Details & Open Button */}
       <div className="flex items-center justify-between mt-2 pt-3 border-t border-slate-100">
         <span className="text-label-sm text-[#737686] font-semibold">
-          {subject.semester} Semester
+          {getSemesterLabel(subject.semester)}
         </span>
         
         <div className="flex items-center gap-2">
@@ -68,12 +76,12 @@ const SubjectCard = ({ subject, onSelect, onDelete }) => {
             <button 
               onClick={(e) => {
                 e.stopPropagation();
-                if (window.confirm(`Are you sure you want to delete the subject "${subject.name}"?`)) {
+                if (window.confirm(t('subjectCard.deleteConfirm', { name: subject.name }))) {
                   onDelete(subject.id);
                 }
               }}
               className="text-[#737686] hover:text-red-600 hover:bg-red-50 p-2 rounded-md transition-all cursor-pointer border border-transparent hover:border-red-200"
-              title="Delete Subject"
+              title={t('subjectCard.deleteSubject')}
             >
               <Trash2 className="w-4 h-4" />
             </button>
@@ -82,7 +90,7 @@ const SubjectCard = ({ subject, onSelect, onDelete }) => {
             onClick={() => onSelect?.(subject)}
             className="bg-[#004ac6] hover:bg-[#003ea8] active:scale-[0.98] text-white font-semibold px-4 py-2 rounded-md text-label-md transition-all cursor-pointer shadow-sm flex items-center gap-1.5"
           >
-            Open Subject
+            {t('subjectCard.openSubject')}
           </button>
         </div>
       </div>

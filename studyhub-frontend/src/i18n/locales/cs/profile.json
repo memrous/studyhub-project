@@ -1,0 +1,84 @@
+{
+  "validation": {
+    "studentIdRequired": "Studentské ID je povinné.",
+    "usernameRequired": "Uživatelské jméno je povinné.",
+    "passwordRequired": "Heslo je povinné."
+  },
+  "loading": "Načítání...",
+  "unavailable": {
+    "title": "Údaje profilu nyní nejsou k dispozici.",
+    "hint": "Obnovte stránku nebo se přihlaste znovu."
+  },
+  "header": {
+    "badge": "Institucionální studentský účet"
+  },
+  "sections": {
+    "academicDetails": {
+      "title": "Studijní údaje",
+      "subtitle": "Oficiální údaje o studiu synchronizované ze systému STAG Univerzity Palackého."
+    },
+    "universityIntegration": {
+      "title": "Univerzitní integrace",
+      "subtitle": "Integrace STAGu a Moodlu jsou na jednom místě."
+    }
+  },
+  "academic": {
+    "university": "Univerzita",
+    "faculty": "Fakulta",
+    "studyProgram": "Studijní program",
+    "academicYear": "Ročník",
+    "defaults": {
+      "university": "Univerzita Palackého v Olomouci",
+      "faculty": "Přírodovědecká fakulta",
+      "studyProgram": "Aplikovaná informatika",
+      "academicYear": "1. ročník"
+    }
+  },
+  "stag": {
+    "status": {
+      "syncing": "Synchronizuji rozvrh z IS/STAG...",
+      "success": "Rozvrh byl úspěšně synchronizován z IS/STAG.",
+      "failed": "Synchronizace rozvrhu selhala. Zkontrolujte přihlašovací údaje do STAGu a zkuste to znovu."
+    },
+    "card": {
+      "title": "IS/STAG",
+      "subtitle": "Stav připojení k univerzitnímu systému",
+      "helper": "Pro připojení k IS/STAG zadejte své univerzitní přihlašovací údaje. Pokud chcete, můžete to udělat později."
+    },
+    "labels": {
+      "studentId": "Studentské ID",
+      "username": "Uživatelské jméno",
+      "password": "Heslo"
+    },
+    "connected": {
+      "connected": "PŘIPOJENO",
+      "notConnected": "NEPŘIPOJENO"
+    },
+    "actions": {
+      "connect": "Připojit IS/STAG",
+      "disconnect": "Odpojit IS/STAG",
+      "syncNow": "Synchronizovat teď",
+      "syncNowCountdown": "Synchronizovat teď ({{time}})",
+      "goToDashboard": "Přejít na nástěnku",
+      "cancel": "Zrušit"
+    },
+    "syncing": {
+      "background": "IS/STAG je připojen. Rozvrh se synchronizuje na pozadí...",
+      "started": "Synchronizace byla spuštěna a rozvrh se na pozadí obnovuje.",
+      "recentlyTriggered": "Synchronizace už byla nedávno spuštěna. Zkuste to znovu za {{minutes}} minut.",
+      "failed": "Synchronizaci se nepodařilo spustit."
+    }
+  },
+  "toast": {
+    "connectFailed": "IS/STAG se nepodařilo připojit. Zkontrolujte prosím údaje a zkuste to znovu.",
+    "disconnectFailed": "IS/STAG se nyní nepodařilo odpojit. Zkuste to prosím znovu.",
+    "disconnectSuccess": "IS/STAG bylo odpojeno."
+  },
+  "moodle": {
+    "title": "Moodle",
+    "subtitle": "Zástupný text pro budoucí integraci",
+    "body": "Integrace Moodlu je stále v přípravě. Toto je vizuální zástupný stav pro budoucnost.",
+    "action": "Již brzy",
+    "status": "NEPŘIPOJENO"
+  }
+}

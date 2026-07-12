@@ -1,0 +1,88 @@
+{
+  "page": {
+    "title": "Studijní materiály",
+    "subtitle": "Vyhledávejte, filtrujte a spravujte studijní materiály napříč všemi předměty."
+  },
+  "searchPlaceholder": "Hledat v materiálech...",
+  "recentTitle": "Nedávno přidané materiály",
+  "librariesTitle": "Knihovny studijních materiálů",
+  "filters": {
+    "subjectFallback": "Předmět",
+    "typeFallback": "Typ materiálu",
+    "allSubjects": "Všechny předměty",
+    "allTypes": "Všechny typy"
+  },
+  "sorts": {
+    "recent": "Řadit podle: Nejnovější",
+    "name": "Řadit podle: Název (A–Z)",
+    "type": "Řadit podle: Typ"
+  },
+  "typeLabels": {
+    "PDF": "PDF dokument",
+    "NOTES": "Poznámky / text",
+    "SLIDES": "Přednáškové snímky",
+    "RECORDING": "Videozáznam",
+    "LINK": "Externí odkaz",
+    "DOC": "Office dokument"
+  },
+  "typeShort": {
+    "PDF": "PDF",
+    "NOTES": "Pozn.",
+    "SLIDES": "Snímky",
+    "RECORDING": "Video",
+    "LINK": "Odkaz",
+    "DOC": "Dok."
+  },
+  "subjectFallback": "Obecné",
+  "modal": {
+    "title": "Nahrát studijní materiál",
+    "fields": {
+      "resourceTitle": "Název materiálu",
+      "subject": "Předmět",
+      "documentType": "Typ dokumentu",
+      "description": "Popis",
+      "addFrom": "Přidat z",
+      "chooseFile": "Vybrat soubor",
+      "webUrl": "Webová adresa"
+    },
+    "placeholders": {
+      "description": "Krátké poznámky k obsahu souboru...",
+      "webUrl": "https://example.com/material.pdf"
+    },
+    "sourceButtons": {
+      "local": "Váš počítač",
+      "url": "Webová adresa"
+    },
+    "actions": {
+      "cancel": "Zrušit",
+      "upload": "Nahrát",
+      "uploading": "Nahrávám..."
+    },
+    "errors": {
+      "uploadFailed": "Nahrání se nezdařilo. Zkuste to prosím znovu."
+    }
+  },
+  "defaults": {
+    "attachment": "Příloha",
+    "localDescription": "Nahraný studijní dokument.",
+    "urlDescription": "Odkaz na webový zdroj."
+  },
+  "actions": {
+    "open": "Otevřít",
+    "download": "Stáhnout",
+    "downloadFile": "Stáhnout soubor"
+  },
+  "openInNewTab": "Otevřít v novém panelu",
+  "preview": {
+    "loadingText": "Načítám textový obsah...",
+    "renderingDocument": "Vykresluji dokument...",
+    "failedRenderDocument": "Dokument se nepodařilo vykreslit",
+    "directPreviewLocalOffice": "Přímý náhled není pro místní Office dokumenty k dispozici.",
+    "pleaseDownload": "Soubor si prosím stáhněte a otevřete ve svém zařízení.",
+    "noPreview": "Pro tento typ souboru není náhled k dispozici."
+  },
+  "emptyState": {
+    "title": "Žádné materiály neodpovídají vašemu vyhledávání",
+    "description": "Zkuste upravit filtry nebo nahrát nový materiál."
+  }
+}

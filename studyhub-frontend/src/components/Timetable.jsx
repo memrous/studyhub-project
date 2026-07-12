@@ -1,6 +1,8 @@
 import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next'
 import { X } from 'lucide-react';
 import CustomIcon from './CustomIcon';
+import { getLocaleFromLanguage } from '../utils/locale'
 
 const TYPE_COLOR_MAP = {
   'Lecture': { border: 'border-[#004ac6]', bg: 'bg-[#eeefff]', text: 'text-[#004ac6]' },
@@ -14,9 +16,11 @@ const TYPE_COLOR_MAP = {
 };
 
 const Timetable = ({ events, subjects, onOpenSubject }) => {
+  const { t, i18n } = useTranslation('dashboard')
   const DEFAULT_DATE = useMemo(() => new Date(2026, 5, 7), []);
   const today = new Date(); 
   const todayStr = today.toISOString().split('T')[0];
+  const locale = getLocaleFromLanguage(i18n.language)
 
   const [currentDate, setCurrentDate] = useState(DEFAULT_DATE);
   const [selectedDetailEvent, setSelectedDetailEvent] = useState(null);
@@ -58,7 +62,7 @@ const Timetable = ({ events, subjects, onOpenSubject }) => {
     setCurrentDate(DEFAULT_DATE);
   };
 
-  const formattedDateRange = monday.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+  const formattedDateRange = monday.toLocaleDateString(locale, { month: 'long', year: 'numeric' });
 
   const formatDateKey = (date) => {
     const yyyy = date.getFullYear();
@@ -67,7 +71,8 @@ const Timetable = ({ events, subjects, onOpenSubject }) => {
     return `${yyyy}-${mm}-${dd}`;
   };
 
-  const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'].map((name, index) => {
+  const dayKeys = ['mon', 'tue', 'wed', 'thu', 'fri']
+  const days = dayKeys.map((dayKey, index) => {
     const dayDate = new Date(monday);
     dayDate.setDate(monday.getDate() + index);
     const dateStr = formatDateKey(dayDate);
@@ -79,18 +84,20 @@ const Timetable = ({ events, subjects, onOpenSubject }) => {
     const isToday = formatDateKey(today) === dateStr;
 
     return {
-      name,
+      name: t(`timetable.days.${dayKey}`),
       isToday,
       lectures: dayLectures
     };
   });
 
   // Mobile schedule calculations
-  const formattedToday = today.toLocaleDateString('en-US', { 
+  const formattedToday = today.toLocaleDateString(locale, { 
     weekday: 'short', 
     month: 'short', 
     day: 'numeric' 
   });
+
+  const renderEventType = (type) => t(`timetable.eventTypes.${type}`, type)
 
   const todayLectures = (events || [])
     .filter(e => e.type === 'Lecture' && e.date === todayStr)
@@ -101,22 +108,22 @@ const Timetable = ({ events, subjects, onOpenSubject }) => {
       {/* MOBILE LAYOUT: Today's Schedule */}
       <section className="flex lg:hidden flex-col gap-3 font-inter">
         <div className="flex justify-between items-center">
-          <h3 className="text-headline-md text-on-surface font-semibold">Today's Schedule</h3>
+          <h3 className="text-headline-md text-on-surface font-semibold">{t('timetable.titleMobile')}</h3>
           <span className="text-label-md text-[#004ac6] font-bold">{formattedToday}</span>
         </div>
 
         <div className="bg-white border border-[#E2E8F0] p-4 rounded-lg shadow-ambient flex flex-col gap-4">
           {todayLectures.length === 0 ? (
             <p className="text-body-md text-[#737686] italic text-center py-2">
-              No classes scheduled for today.
+              {t('timetable.noClassesToday')}
             </p>
           ) : (
             todayLectures.map(lec => {
               const subject = (subjects || []).find(s => s.id === lec.subjectId);
-              const subCode = subject ? subject.code : 'GEN 101';
+              const subCode = subject ? subject.code : t('timetable.fallbacks.subjectCode');
               const subName = subject ? subject.name : lec.title;
-              const subLecturer = subject ? subject.lecturer : '';
-              const roomInfo = subject ? (subject.code === 'KMI/DBS' ? 'Room 201' : 'Room 105') : 'Main Hall';
+              const subLecturer = subject ? subject.lecturer : t('timetable.fallbacks.notSpecified');
+              const roomInfo = subject ? (subject.code === 'KMI/DBS' ? t('timetable.fallbacks.room201') : t('timetable.fallbacks.room105')) : t('timetable.fallbacks.mainHall');
 
               return (
                 <div 
@@ -147,7 +154,7 @@ const Timetable = ({ events, subjects, onOpenSubject }) => {
       <section className="hidden lg:flex flex-col gap-4 font-inter text-on-surface">
         <div className="flex justify-between items-center">
           <div className="flex flex-col">
-            <h2 className="text-headline-md text-on-surface font-semibold">Weekly Timetable</h2>
+            <h2 className="text-headline-md text-on-surface font-semibold">{t('timetable.titleDesktop')}</h2>
             <span className="text-sm text-slate-500 capitalize">{formattedDateRange}</span>
           </div>
           
@@ -161,13 +168,13 @@ const Timetable = ({ events, subjects, onOpenSubject }) => {
                   : 'hover:bg-white text-slate-600 hover:text-slate-900 cursor-pointer'
               }`}
             >
-              ← Prev
+              {t('timetable.prev')}
             </button>
             <button 
               onClick={handleToday}
               className="px-2 py-1 text-xs font-bold rounded-md bg-white text-[#004ac6] border border-[#E2E8F0] shadow-sm cursor-pointer"
             >
-              Current
+              {t('timetable.current')}
             </button>
             <button 
               onClick={handleNextWeek}
@@ -178,7 +185,7 @@ const Timetable = ({ events, subjects, onOpenSubject }) => {
                   : 'hover:bg-white text-slate-600 hover:text-slate-900 cursor-pointer'
               }`}
             >
-              Next →
+              {t('timetable.next')}
             </button>
           </div>
         </div>
@@ -201,12 +208,12 @@ const Timetable = ({ events, subjects, onOpenSubject }) => {
               <div className="flex flex-col gap-2 min-h-[110px]">
                 {day.lectures.length === 0 ? (
                   <div className="bg-slate-50 border border-dashed border-slate-100 rounded-md flex-1 min-h-[96px] flex items-center justify-center text-[10px] text-slate-400 italic text-center p-1 select-none">
-                    No classes
+                    {t('timetable.noClasses')}
                   </div>
                 ) : (
                   day.lectures.map(lec => {
                     const subject = (subjects || []).find(s => s.id === lec.subjectId);
-                    const subCode = subject ? subject.code : 'GEN 101';
+                    const subCode = subject ? subject.code : t('timetable.fallbacks.subjectCode');
                     const subName = subject ? subject.name : lec.title;
                     
                     const colorConfig = TYPE_COLOR_MAP[lec.type] || TYPE_COLOR_MAP['default'];
@@ -249,7 +256,7 @@ const Timetable = ({ events, subjects, onOpenSubject }) => {
                     {selectedDetailEvent.code}
                   </span>
                   <span className={`text-xs font-bold px-2 py-0.5 rounded-sm bg-white/60 ${styleObj.text}`}>
-                    {selectedDetailEvent.type}
+                    {renderEventType(selectedDetailEvent.type)}
                   </span>
                 </div>
                 <button 
@@ -266,17 +273,17 @@ const Timetable = ({ events, subjects, onOpenSubject }) => {
                     {selectedDetailEvent.title || selectedDetailEvent.subject}
                   </h3>
                   <p className="text-body-md font-semibold text-primary mt-1">
-                    {targetSubject ? targetSubject.name : 'Unknown Subject'}
+                    {targetSubject ? targetSubject.name : t('timetable.fallbacks.unknownSubject')}
                   </p>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3 bg-[#F2F4F6] p-3 rounded-lg border border-[#E2E8F0]">
-                  <div className="flex items-center gap-2 text-on-surface-variant">
-                    <CustomIcon name="calendar" className="w-4 h-4 shrink-0" />
-                    <span className="text-label-md font-medium text-on-surface">
-                      {new Date(selectedDetailEvent.date).toLocaleDateString('cs-CZ', { day: 'numeric', month: 'short', year: 'numeric' })}
-                    </span>
-                  </div>
+              <div className="grid grid-cols-2 gap-3 bg-[#F2F4F6] p-3 rounded-lg border border-[#E2E8F0]">
+                <div className="flex items-center gap-2 text-on-surface-variant">
+                  <CustomIcon name="calendar" className="w-4 h-4 shrink-0" />
+                  <span className="text-label-md font-medium text-on-surface">
+                      {new Date(selectedDetailEvent.date).toLocaleDateString(locale, { day: 'numeric', month: 'short', year: 'numeric' })}
+                  </span>
+                </div>
                   <div className="flex items-center gap-2 text-on-surface-variant">
                     <CustomIcon name="clock" className="w-4 h-4 shrink-0" />
                     <span className="text-label-md font-medium text-on-surface text-xs md:text-sm">
@@ -288,18 +295,18 @@ const Timetable = ({ events, subjects, onOpenSubject }) => {
                 {targetSubject && (
                   <div className="flex flex-col gap-2.5 border-t border-[#E2E8F0] pt-4">
                     <div className="flex justify-between items-center text-body-md">
-                      <span className="text-[#737686] font-medium">Lecturer:</span>
-                      <span className="font-bold text-on-surface">{targetSubject.lecturer || 'Not specified'}</span>
+                      <span className="text-[#737686] font-medium">{t('timetable.lecturer')}</span>
+                      <span className="font-bold text-on-surface">{targetSubject.lecturer || t('timetable.fallbacks.notSpecified')}</span>
                     </div>
                     <div className="flex justify-between items-center text-body-md">
-                      <span className="text-[#737686] font-medium">Credits / Completion:</span>
+                      <span className="text-[#737686] font-medium">{t('timetable.creditsCompletion')}</span>
                       <span className="font-semibold text-on-surface">
                         {targetSubject.credits} STAG Credits ({targetSubject.completionType})
                       </span>
                     </div>
                     {targetSubject.description && (
                       <div className="flex flex-col gap-1 mt-1 bg-slate-50 p-2.5 rounded border border-slate-100">
-                        <span className="text-[11px] text-[#737686] font-bold uppercase tracking-wider">Subject Description:</span>
+                        <span className="text-[11px] text-[#737686] font-bold uppercase tracking-wider">{t('timetable.subjectDescription')}</span>
                         <p className="text-label-sm text-on-surface-variant leading-relaxed line-clamp-3">
                           {targetSubject.description}
                         </p>
@@ -319,7 +326,7 @@ const Timetable = ({ events, subjects, onOpenSubject }) => {
                     }}
                     className="w-full bg-[#004ac6] hover:bg-[#003ea8] text-white py-2 rounded-md font-semibold text-label-md transition-colors shadow-sm cursor-pointer text-center"
                   >
-                    Open Subject Hub
+                    {t('timetable.openSubjectHub')}
                   </button>
                 </div>
 

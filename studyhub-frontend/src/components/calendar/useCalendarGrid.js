@@ -1,4 +1,6 @@
 import { useState, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
+import { getLocaleFromLanguage } from '../../utils/locale'
 
 export const formatDateKey = (date) => {
   const yyyy = date.getFullYear()
@@ -8,6 +10,7 @@ export const formatDateKey = (date) => {
 }
 
 export const useCalendarGrid = () => {
+  const { i18n } = useTranslation()
   const [selectedDate, setSelectedDate] = useState(new Date()) 
   const [currentMonth, setCurrentMonth] = useState(new Date(new Date().getFullYear(), new Date().getMonth(), 1))
   const [activeView, setActiveView] = useState('month')
@@ -45,7 +48,8 @@ export const useCalendarGrid = () => {
   }
 
   const getMonthName = (date) => {
-    return date.toLocaleString('en-US', { month: 'long', year: 'numeric' })
+    const locale = getLocaleFromLanguage(i18n.language)
+    return date.toLocaleString(locale, { month: 'long', year: 'numeric' })
   }
 
   const gridDays = useMemo(() => {
@@ -103,7 +107,7 @@ export const useCalendarGrid = () => {
     startOfWeek.setDate(startOfWeek.getDate() - diff)
     
     const week = []
-    const dayNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    const dayNames = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
     for (let i = 0; i < 7; i++) {
       const dateObj = new Date(startOfWeek)
       dateObj.setDate(startOfWeek.getDate() + i)

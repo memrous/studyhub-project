@@ -1,36 +1,7 @@
 import { AlertCircle, Clock } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import CustomIcon from './CustomIcon'
-
-const getDeadlineLabel = (dateStr) => {
-  if (dateStr === '2026-12-20') return 'Due 20 December';
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const target = new Date(dateStr);
-  target.setHours(0, 0, 0, 0);
-  const diffTime = target.getTime() - today.getTime();
-  const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
-  
-  if (diffDays === 0) return 'Due Today';
-  if (diffDays === 1) return 'Due Tomorrow';
-  if (diffDays > 1) return `Due in ${diffDays} days`;
-  if (diffDays < 0) return `Overdue by ${Math.abs(diffDays)} days`;
-  return dateStr;
-};
-
-const getRelativeDaysLabel = (dateStr) => {
-  if (dateStr === '2026-12-20') return 'Due Dec 20';
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const target = new Date(dateStr);
-  target.setHours(0, 0, 0, 0);
-  const diffTime = target.getTime() - today.getTime();
-  const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
-  
-  if (diffDays === 0) return 'Due Today';
-  if (diffDays === 1) return 'Due Tomorrow';
-  if (diffDays > 1) return `Due in ${diffDays} days`;
-  return dateStr;
-};
+import { getLocaleFromLanguage } from '../utils/locale'
 
 const getTypeStyles = (type) => {
   switch (type) {
@@ -50,7 +21,44 @@ const getMobileUrgencyStyles = (type) => {
 };
 
 const Deadlines = ({ events, subjects, onDeadlineClick }) => {
+  const { t, i18n } = useTranslation('dashboard')
   const todayStr = new Date().toISOString().split('T')[0];
+  const locale = getLocaleFromLanguage(i18n.language)
+
+  const formatDueDate = (dateStr) =>
+    new Date(dateStr).toLocaleDateString(locale, { day: 'numeric', month: 'long' })
+
+  const getDeadlineLabel = (dateStr) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const target = new Date(dateStr);
+    target.setHours(0, 0, 0, 0);
+    const diffTime = target.getTime() - today.getTime();
+    const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
+    
+    if (diffDays === 0) return t('deadlines.dueToday')
+    if (diffDays === 1) return t('deadlines.dueTomorrow')
+    if (diffDays > 1) return t('deadlines.dueOnDate', { date: formatDueDate(dateStr) })
+    if (diffDays < 0) return t('deadlines.overdueByDays', { count: Math.abs(diffDays) })
+    return t('deadlines.dueOnDate', { date: formatDueDate(dateStr) })
+  };
+
+  const getRelativeDaysLabel = (dateStr) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const target = new Date(dateStr);
+    target.setHours(0, 0, 0, 0);
+    const diffTime = target.getTime() - today.getTime();
+    const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
+    
+    if (diffDays === 0) return t('deadlines.dueToday')
+    if (diffDays === 1) return t('deadlines.dueTomorrow')
+    if (diffDays > 1) return t('deadlines.dueOnDate', { date: formatDueDate(dateStr) })
+    if (diffDays < 0) return t('deadlines.overdueByDays', { count: Math.abs(diffDays) })
+    return t('deadlines.dueOnDate', { date: formatDueDate(dateStr) })
+  };
+
+  const renderTypeLabel = (type) => t(`deadlines.eventTypes.${type}`, type)
 
   // Desktop deadlines (up to 4)
   const upcomingDeadlines = (events || [])
@@ -68,12 +76,12 @@ const Deadlines = ({ events, subjects, onDeadlineClick }) => {
     <>
       {/* MOBILE LAYOUT: Urgent Deadlines */}
       <section className="flex lg:hidden flex-col gap-3 font-inter text-on-surface">
-        <h3 className="text-headline-md font-semibold">Urgent Deadlines</h3>
+        <h3 className="text-headline-md font-semibold">{t('deadlines.urgent')}</h3>
         
         <div className="flex flex-col gap-3">
           {urgentList.length === 0 ? (
-            <div className="bg-white border border-[#E2E8F0] p-4 rounded-lg text-center text-body-md text-[#737686] italic">
-              No urgent deadlines.
+              <div className="bg-white border border-[#E2E8F0] p-4 rounded-lg text-center text-body-md text-[#737686] italic">
+              {t('deadlines.noUrgent')}
             </div>
           ) : (
             urgentList.map(dl => {
@@ -104,7 +112,7 @@ const Deadlines = ({ events, subjects, onDeadlineClick }) => {
                     </div>
                   </div>
                   <span className={`text-[10px] font-bold px-2 py-1 rounded-sm shrink-0 border ${urgencyClass}`}>
-                    {dl.type}
+                    {renderTypeLabel(dl.type)}
                   </span>
                 </div>
               );
@@ -117,12 +125,12 @@ const Deadlines = ({ events, subjects, onDeadlineClick }) => {
       <div className="hidden lg:flex bg-white border border-[#E2E8F0] p-5 rounded-lg shadow-ambient flex-col gap-4 font-inter text-on-surface">
         <div className="flex items-center gap-2">
           <CustomIcon name="bell" className="w-5 h-5" />
-          <h2 className="text-headline-md font-semibold">Upcoming Deadlines</h2>
+          <h2 className="text-headline-md font-semibold">{t('deadlines.upcoming')}</h2>
         </div>
 
         <div className="flex flex-col gap-4">
           {upcomingDeadlines.length === 0 ? (
-            <p className="text-body-md text-[#737686] italic text-center py-2">No upcoming deadlines.</p>
+            <p className="text-body-md text-[#737686] italic text-center py-2">{t('deadlines.noUpcoming')}</p>
           ) : (
             upcomingDeadlines.map((dl, idx) => {
               const subject = (subjects || []).find(s => s.id === dl.subjectId);
@@ -149,7 +157,7 @@ const Deadlines = ({ events, subjects, onDeadlineClick }) => {
                       {getDeadlineLabel(dl.date)}
                     </span>
                     <span className={`text-[10px] font-bold tracking-wider ${styles.badgeBg} ${styles.badgeText} px-2 py-0.5 rounded-sm w-fit mt-1 uppercase`}>
-                      {dl.type}
+                      {renderTypeLabel(dl.type)}
                     </span>
                   </div>
                 </div>

@@ -1,6 +1,8 @@
+import { useTranslation } from 'react-i18next'
 import CustomIcon from './CustomIcon'
 
 const StatsRow = ({ subjects, events }) => {
+  const { t } = useTranslation('dashboard')
   const todayStr = new Date().toISOString().split('T')[0];
 
   const activeSubjectsCount = subjects.length;
@@ -24,7 +26,7 @@ const StatsRow = ({ subjects, events }) => {
           </div>
           <div className="mt-4">
             <span className="text-display font-semibold text-on-surface leading-none">{activeSubjectsCount}</span>
-            <span className="text-[10px] uppercase font-bold tracking-wider text-[#737686] block mt-1">Active Subjects</span>
+            <span className="text-[10px] uppercase font-bold tracking-wider text-[#737686] block mt-1">{t('stats.activeSubjects')}</span>
           </div>
         </div>
 
@@ -35,7 +37,7 @@ const StatsRow = ({ subjects, events }) => {
           </div>
           <div className="mt-4">
             <span className="text-display font-semibold text-on-surface leading-none">{pendingTasksCount}</span>
-            <span className="text-[10px] uppercase font-bold tracking-wider text-[#737686] block mt-1">Pending Tasks</span>
+            <span className="text-[10px] uppercase font-bold tracking-wider text-[#737686] block mt-1">{t('stats.pendingTasks')}</span>
           </div>
         </div>
 
@@ -46,7 +48,7 @@ const StatsRow = ({ subjects, events }) => {
           </div>
           <div className="mt-4">
             <span className="text-display font-semibold text-on-surface leading-none">{upcomingExamsCount}</span>
-            <span className="text-[10px] uppercase font-bold tracking-wider text-[#737686] block mt-1">Upcoming Exams</span>
+            <span className="text-[10px] uppercase font-bold tracking-wider text-[#737686] block mt-1">{t('stats.upcomingExams')}</span>
           </div>
         </div>
       </div>
@@ -59,7 +61,7 @@ const StatsRow = ({ subjects, events }) => {
             <CustomIcon name="book" className="w-6 h-6" />
           </div>
           <div className="flex flex-col">
-            <span className="text-label-sm text-[#737686] uppercase tracking-wider font-semibold">Active Subjects</span>
+            <span className="text-label-sm text-[#737686] uppercase tracking-wider font-semibold">{t('stats.activeSubjects')}</span>
             <span className="text-display text-on-surface leading-none mt-1">{activeSubjectsCount}</span>
           </div>
         </div>
@@ -70,7 +72,7 @@ const StatsRow = ({ subjects, events }) => {
             <CustomIcon name="planning" className="w-6 h-6" />
           </div>
           <div className="flex flex-col">
-            <span className="text-label-sm text-[#737686] uppercase tracking-wider font-semibold">Pending Tasks</span>
+            <span className="text-label-sm text-[#737686] uppercase tracking-wider font-semibold">{t('stats.pendingTasks')}</span>
             <span className="text-display text-on-surface leading-none mt-1">{pendingTasksCount}</span>
           </div>
         </div>
@@ -81,7 +83,7 @@ const StatsRow = ({ subjects, events }) => {
             <CustomIcon name="clock" className="w-6 h-6" />
           </div>
           <div className="flex flex-col">
-            <span className="text-label-sm text-[#737686] uppercase tracking-wider font-semibold">Upcoming Exams</span>
+            <span className="text-label-sm text-[#737686] uppercase tracking-wider font-semibold">{t('stats.upcomingExams')}</span>
             <span className="text-display text-on-surface leading-none mt-1">{upcomingExamsCount}</span>
           </div>
         </div>

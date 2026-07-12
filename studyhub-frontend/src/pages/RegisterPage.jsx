@@ -20,96 +20,119 @@ import {
   Building2,
   Check,
 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import CustomIcon from '../components/CustomIcon'
+import LanguageSwitcher from '../components/LanguageSwitcher'
 import { useAuth } from '../context/AuthContext'
 import httpClient from '../services/httpClient'
 import { checkAvailability } from '../services/api'
 
 
 const FEATURES = [
-  { icon: () => <CustomIcon name="book" className="w-5 h-5" />, text: 'Manage all your enrolled subjects and materials in one place.' },
-  { icon: CalendarDays, text: 'Visual calendar with deadlines, lectures, and exams.' },
-  { icon: BarChart3, text: 'Track your academic progress and upcoming credits.' },
+  { icon: () => <CustomIcon name="book" className="w-5 h-5" />, key: 'features.manageSubjects' },
+  { icon: CalendarDays, key: 'features.calendar' },
+  { icon: BarChart3, key: 'features.progress' },
 ]
 
 const ACADEMIC_YEARS = [
-  { value: '1', label: '1st Year' },
-  { value: '2', label: '2nd Year' },
-  { value: '3', label: '3rd Year' },
-  { value: '4', label: '4th Year' },
-  { value: '5', label: '5th Year' },
-  { value: '6', label: '6th Year' },
+  { value: '1' },
+  { value: '2' },
+  { value: '3' },
+  { value: '4' },
+  { value: '5' },
+  { value: '6' },
 ]
 
 const STEP_META = [
-  { title: 'Create your account', subtitle: 'Free for all university students.' },
-  { title: 'Tell us about your studies', subtitle: 'Select your university details.' },
-  { title: 'Connect your IS/STAG', subtitle: 'Securely sync your university schedule.' },
+  'step1',
+  'step2',
+  'step3',
 ]
 
 const getStrength = (pw) => {
-  if (!pw) return { level: 0, label: '', color: '' }
+  if (!pw) return { level: 0, color: '' }
   let score = 0
   if (pw.length >= 8) score++
   if (/[A-Z]/.test(pw)) score++
   if (/[0-9]/.test(pw)) score++
   if (/[^A-Za-z0-9]/.test(pw)) score++
   const map = [
-    { level: 0, label: '', color: '' },
-    { level: 1, label: 'Weak', color: 'bg-red-400' },
-    { level: 2, label: 'Fair', color: 'bg-amber-400' },
-    { level: 3, label: 'Good', color: 'bg-emerald-400' },
-    { level: 4, label: 'Strong', color: 'bg-emerald-500' },
+    { level: 0, color: '' },
+    { level: 1, color: 'bg-red-400' },
+    { level: 2, color: 'bg-amber-400' },
+    { level: 3, color: 'bg-emerald-400' },
+    { level: 4, color: 'bg-emerald-500' },
   ]
   return map[score] ?? map[0]
 }
 
 const validateStep1 = (form) => {
   const errors = {}
-  if (!form.name.trim()) errors.name = 'Full name is required.'
+  if (!form.name.trim()) errors.name = 'errors.nameRequired'
   if (!form.username || !form.username.trim()) {
-    errors.username = 'Username is required.'
+    errors.username = 'errors.usernameRequired'
   } else if (!/^[A-Za-z0-9-_]+$/.test(form.username)) {
-    errors.username = 'Username can only contain letters, numbers, dashes, and underscores.'
+    errors.username = 'errors.usernameInvalid'
   }
   if (!form.email.trim()) {
-    errors.email = 'Email is required.'
+    errors.email = 'errors.emailRequired'
   } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
-    errors.email = 'Enter a valid email address.'
+    errors.email = 'errors.emailInvalid'
   }
   if (!form.password) {
-    errors.password = 'Password is required.'
+    errors.password = 'errors.passwordRequired'
   } else if (form.password.length < 8) {
-    errors.password = 'Password must be at least 8 characters.'
+    errors.password = 'errors.passwordTooShort'
   }
   if (!form.confirmPassword) {
-    errors.confirmPassword = 'Please confirm your password.'
+    errors.confirmPassword = 'errors.confirmPasswordRequired'
   } else if (form.password !== form.confirmPassword) {
-    errors.confirmPassword = 'Passwords do not match.'
+    errors.confirmPassword = 'errors.passwordMismatch'
   }
   return errors
 }
 
 const validateStep2 = (form) => {
   const errors = {}
-  if (!form.university_id) errors.university_id = 'Please select your university.'
-  if (!form.faculty_id) errors.faculty_id = 'Please select your faculty.'
-  if (!form.study_program_id) errors.study_program_id = 'Please select your study program.'
-  if (!form.academic_year) errors.academic_year = 'Please select your academic year.'
+  if (!form.university_id) errors.university_id = 'errors.universityRequired'
+  if (!form.faculty_id) errors.faculty_id = 'errors.facultyRequired'
+  if (!form.study_program_id) errors.study_program_id = 'errors.studyProgramRequired'
+  if (!form.academic_year) errors.academic_year = 'errors.academicYearRequired'
   return errors
 }
 
 const validateStep3 = (form, connectStagLater) => {
   if (connectStagLater) return {}
   const errors = {}
-  if (!form.stag_student_id.trim()) errors.stag_student_id = 'STAG Student ID is required.'
-  if (!form.stag_username.trim()) errors.stag_username = 'STAG username is required.'
-  if (!form.stag_password) errors.stag_password = 'STAG password is required.'
+  if (!form.stag_student_id.trim()) errors.stag_student_id = 'errors.stagStudentIdRequired'
+  if (!form.stag_username.trim()) errors.stag_username = 'errors.stagUsernameRequired'
+  if (!form.stag_password) errors.stag_password = 'errors.stagPasswordRequired'
   return errors
+}
+
+const formatError = (t, error) => {
+  if (Array.isArray(error)) return t(error[0])
+  return error ? t(error) : ''
+}
+
+const getStrengthLabelKey = (level) => {
+  switch (level) {
+    case 1:
+      return 'register.passwordStrength.weak'
+    case 2:
+      return 'register.passwordStrength.fair'
+    case 3:
+      return 'register.passwordStrength.good'
+    case 4:
+      return 'register.passwordStrength.strong'
+    default:
+      return ''
+  }
 }
 
 const RegisterPage = () => {
   const { register, isAuthenticated, isLoading: authLoading } = useAuth()
+  const { t } = useTranslation('auth')
 
   const [currentStep, setCurrentStep] = useState(1)
   const [form, setForm] = useState({
@@ -310,6 +333,7 @@ const RegisterPage = () => {
   }
 
   const strength = getStrength(form.password)
+  const strengthLabelKey = getStrengthLabelKey(strength.level)
 
   // ── Style tokens ─────────────────────────────────────────────────
   const inputBase =
@@ -332,7 +356,10 @@ const RegisterPage = () => {
 
   // ── JSX ──────────────────────────────────────────────────────────
   return (
-    <div className="min-h-screen flex font-inter">
+    <div className="min-h-screen flex font-inter relative">
+      <div className="absolute top-4 right-4 sm:top-6 sm:right-6 z-20">
+        <LanguageSwitcher />
+      </div>
       {/* ─── Left branding panel (UNTOUCHED) ─────────────────────── */}
       <div
         className="hidden lg:flex lg:w-[480px] xl:w-[540px] shrink-0 flex-col justify-between p-12 relative overflow-hidden"
@@ -353,32 +380,32 @@ const RegisterPage = () => {
         <div className="relative z-10 flex flex-col gap-8">
           <div className="flex flex-col gap-3">
             <h1 className="text-4xl font-bold text-white leading-tight tracking-tight">
-              Start your academic<br />journey today.
+              {t('register.hero.headline')}
             </h1>
             <p className="text-blue-200 text-base leading-relaxed">
-              Create your free account and connect your STAG profile in minutes.
+              {t('register.hero.subtitle')}
             </p>
           </div>
 
           <div className="flex flex-col gap-4">
-            {FEATURES.map(({ icon: Icon, text }) => (
-              <div key={text} className="flex items-start gap-3">
+            {FEATURES.map(({ icon: Icon, key }) => (
+              <div key={key} className="flex items-start gap-3">
                 <div className="w-8 h-8 rounded-lg bg-white/15 border border-white/20 flex items-center justify-center shrink-0 mt-0.5">
                   <Icon className="w-4 h-4 text-blue-200" />
                 </div>
-                <p className="text-sm text-blue-100 leading-snug">{text}</p>
+                <p className="text-sm text-blue-100 leading-snug">{t(key)}</p>
               </div>
             ))}
           </div>
         </div>
 
         <p className="text-blue-300/60 text-xs relative z-10">
-          &copy; 2026 Palacký University Olomouc Academic Systems
+          {t('login.footerCopyright')}
         </p>
       </div>
 
       {/* ─── Right form panel ────────────────────────────────────── */}
-      <div className="flex-1 flex flex-col items-center justify-center bg-white px-6 py-12 overflow-y-auto">
+      <div className="flex-1 flex flex-col items-center justify-start lg:justify-center bg-white px-6 pt-20 pb-12 sm:pt-24 lg:pt-12 overflow-y-auto">
         <div className="w-full max-w-[400px] flex flex-col gap-7">
           {/* Mobile logo */}
           <div className="flex lg:hidden items-center gap-3">
@@ -392,7 +419,7 @@ const RegisterPage = () => {
           <div className="flex flex-col gap-2.5">
             <div className="flex items-center justify-between">
               <span className="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest">
-                Step {currentStep} of 3
+                {t('register.progress.step', { currentStep })}
               </span>
               <span className="text-[11px] font-bold text-[#004ac6]">{progressPercent}%</span>
             </div>
@@ -410,15 +437,19 @@ const RegisterPage = () => {
 
           {/* ── Step title ─────────────────────────────────────── */}
           <div className="flex flex-col gap-1.5">
-            <h2 className="text-2xl font-bold text-on-surface tracking-tight">{meta.title}</h2>
-            <p className="text-body-md text-on-surface-variant">{meta.subtitle}</p>
+            <h2 className="text-2xl font-bold text-on-surface tracking-tight">
+              {t(`register.stepMeta.${meta}.title`)}
+            </h2>
+            <p className="text-body-md text-on-surface-variant">
+              {t(`register.stepMeta.${meta}.subtitle`)}
+            </p>
           </div>
 
           {/* Server error */}
           {serverError && (
             <div className="flex items-start gap-2.5 px-4 py-3 bg-red-50 border border-red-200 rounded-lg">
               <AlertCircle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
-              <p className="text-label-sm text-red-700">{serverError}</p>
+              <p className="text-label-sm text-red-700">{t(serverError)}</p>
             </div>
           )}
 
@@ -431,7 +462,7 @@ const RegisterPage = () => {
                 {/* Full name */}
                 <div className="flex flex-col gap-1.5">
                   <label className="text-label-md font-semibold text-on-surface" htmlFor="reg-name">
-                    Full name
+                    {t('register.fields.name.label')}
                   </label>
                   <div className="relative">
                     <User className="w-4 h-4 text-outline absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
@@ -441,13 +472,13 @@ const RegisterPage = () => {
                       autoComplete="name"
                       value={form.name}
                       onChange={set('name')}
-                      placeholder="Anna Novakova"
+                      placeholder={t('register.fields.name.placeholder')}
                       className={errors.name ? inputErr : inputOk}
                     />
                   </div>
                   {errors.name && (
                     <p className="text-label-sm text-red-600 flex items-center gap-1">
-                      <AlertCircle className="w-3 h-3" /> {errors.name}
+                      <AlertCircle className="w-3 h-3" /> {formatError(t, errors.name)}
                     </p>
                   )}
                 </div>
@@ -455,7 +486,7 @@ const RegisterPage = () => {
                 {/* Username */}
                 <div className="flex flex-col gap-1.5">
                   <label className="text-label-md font-semibold text-on-surface" htmlFor="reg-username">
-                    Username
+                    {t('register.fields.username.label')}
                   </label>
                   <div className="relative">
                     <User className="w-4 h-4 text-outline absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
@@ -465,13 +496,13 @@ const RegisterPage = () => {
                       autoComplete="username"
                       value={form.username}
                       onChange={set('username')}
-                      placeholder="annap123"
+                      placeholder={t('register.fields.username.placeholder')}
                       className={errors.username ? inputErr : inputOk}
                     />
                   </div>
                   {errors.username && (
                     <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
-                      <AlertCircle className="w-3 h-3" /> {Array.isArray(errors.username) ? errors.username[0] : errors.username}
+                      <AlertCircle className="w-3 h-3" /> {formatError(t, errors.username)}
                     </p>
                   )}
                 </div>
@@ -479,7 +510,7 @@ const RegisterPage = () => {
                 {/* Email */}
                 <div className="flex flex-col gap-1.5">
                   <label className="text-label-md font-semibold text-on-surface" htmlFor="reg-email">
-                    Email address
+                    {t('register.fields.email.label')}
                   </label>
                   <div className="relative">
                     <Mail className="w-4 h-4 text-outline absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
@@ -489,13 +520,13 @@ const RegisterPage = () => {
                       autoComplete="email"
                       value={form.email}
                       onChange={set('email')}
-                      placeholder="you@university.cz"
+                      placeholder={t('register.fields.email.placeholder')}
                       className={errors.email ? inputErr : inputOk}
                     />
                   </div>
                   {errors.email && (
                     <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
-                      <AlertCircle className="w-3 h-3" /> {Array.isArray(errors.email) ? errors.email[0] : errors.email}
+                      <AlertCircle className="w-3 h-3" /> {formatError(t, errors.email)}
                     </p>
                   )}
                 </div>
@@ -503,7 +534,7 @@ const RegisterPage = () => {
                 {/* Password */}
                 <div className="flex flex-col gap-1.5">
                   <label className="text-label-md font-semibold text-on-surface" htmlFor="reg-password">
-                    Password
+                    {t('register.fields.password.label')}
                   </label>
                   <div className="relative">
                     <Lock className="w-4 h-4 text-outline absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
@@ -513,14 +544,14 @@ const RegisterPage = () => {
                       autoComplete="new-password"
                       value={form.password}
                       onChange={set('password')}
-                      placeholder="At least 8 characters"
+                      placeholder={t('register.fields.password.placeholder')}
                       className={`${errors.password ? inputErr : inputOk} pr-10`}
                     />
                     <button
                       type="button"
                       onClick={() => setShowPass((v) => !v)}
                       className="absolute right-3 top-1/2 -translate-y-1/2 text-outline hover:text-on-surface transition-colors"
-                      aria-label={showPass ? 'Hide password' : 'Show password'}
+                      aria-label={showPass ? t('register.aria.hidePassword') : t('register.aria.showPassword')}
                     >
                       {showPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
@@ -539,14 +570,14 @@ const RegisterPage = () => {
                         ))}
                       </div>
                       <span className="text-[11px] font-semibold text-on-surface-variant shrink-0">
-                        {strength.label}
+                        {strengthLabelKey ? t(strengthLabelKey) : ''}
                       </span>
                     </div>
                   )}
 
                   {errors.password && (
                     <p className="text-label-sm text-red-600 flex items-center gap-1">
-                      <AlertCircle className="w-3 h-3" /> {errors.password}
+                      <AlertCircle className="w-3 h-3" /> {formatError(t, errors.password)}
                     </p>
                   )}
                 </div>
@@ -554,7 +585,7 @@ const RegisterPage = () => {
                 {/* Confirm password */}
                 <div className="flex flex-col gap-1.5">
                   <label className="text-label-md font-semibold text-on-surface" htmlFor="reg-confirm">
-                    Confirm password
+                    {t('register.fields.confirmPassword.label')}
                   </label>
                   <div className="relative">
                     <Lock className="w-4 h-4 text-outline absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
@@ -564,14 +595,14 @@ const RegisterPage = () => {
                       autoComplete="new-password"
                       value={form.confirmPassword}
                       onChange={set('confirmPassword')}
-                      placeholder="Repeat your password"
+                      placeholder={t('register.fields.confirmPassword.placeholder')}
                       className={`${errors.confirmPassword ? inputErr : inputOk} pr-10`}
                     />
                     <button
                       type="button"
                       onClick={() => setShowConfirm((v) => !v)}
                       className="absolute right-3 top-1/2 -translate-y-1/2 text-outline hover:text-on-surface transition-colors"
-                      aria-label={showConfirm ? 'Hide password' : 'Show password'}
+                      aria-label={showConfirm ? t('register.aria.hidePassword') : t('register.aria.showPassword')}
                     >
                       {showConfirm ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
@@ -582,7 +613,7 @@ const RegisterPage = () => {
                   </div>
                   {errors.confirmPassword && (
                     <p className="text-label-sm text-red-600 flex items-center gap-1">
-                      <AlertCircle className="w-3 h-3" /> {errors.confirmPassword}
+                      <AlertCircle className="w-3 h-3" /> {formatError(t, errors.confirmPassword)}
                     </p>
                   )}
                 </div>
@@ -595,7 +626,7 @@ const RegisterPage = () => {
                 {/* University */}
                 <div className="flex flex-col gap-1.5">
                   <label className="text-label-md font-semibold text-on-surface" htmlFor="reg-university">
-                    University
+                    {t('register.fields.university.label')}
                   </label>
                   <div className="relative">
                     <Building2 className="w-4 h-4 text-outline absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
@@ -605,7 +636,7 @@ const RegisterPage = () => {
                       onChange={set('university_id')}
                       className={errors.university_id ? selectErr : selectOk}
                     >
-                      <option value="">Select university…</option>
+                      <option value="">{t('register.fields.university.placeholder')}</option>
                       {universities.map((u) => (
                         <option key={u.id} value={String(u.id)}>
                           {u.name}
@@ -616,7 +647,7 @@ const RegisterPage = () => {
                   </div>
                   {errors.university_id && (
                     <p className="text-label-sm text-red-600 flex items-center gap-1">
-                      <AlertCircle className="w-3 h-3" /> {errors.university_id}
+                      <AlertCircle className="w-3 h-3" /> {formatError(t, errors.university_id)}
                     </p>
                   )}
                 </div>
@@ -624,7 +655,7 @@ const RegisterPage = () => {
                 {/* Faculty */}
                 <div className="flex flex-col gap-1.5">
                   <label className="text-label-md font-semibold text-on-surface" htmlFor="reg-faculty">
-                    Faculty
+                    {t('register.fields.faculty.label')}
                   </label>
                   <div className="relative">
                     <CustomIcon name="book" className="w-4 h-4 text-outline absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
@@ -636,7 +667,9 @@ const RegisterPage = () => {
                       className={`${errors.faculty_id ? selectErr : selectOk} disabled:opacity-50 disabled:cursor-not-allowed`}
                     >
                       <option value="">
-                        {form.university_id ? 'Select faculty…' : 'Select a university first'}
+                        {form.university_id
+                          ? t('register.fields.faculty.placeholder')
+                          : t('register.fields.faculty.disabledPlaceholder')}
                       </option>
                       {faculties.map((f) => (
                         <option key={f.id} value={String(f.id)}>
@@ -648,7 +681,7 @@ const RegisterPage = () => {
                   </div>
                   {errors.faculty_id && (
                     <p className="text-label-sm text-red-600 flex items-center gap-1">
-                      <AlertCircle className="w-3 h-3" /> {errors.faculty_id}
+                      <AlertCircle className="w-3 h-3" /> {formatError(t, errors.faculty_id)}
                     </p>
                   )}
                 </div>
@@ -656,7 +689,7 @@ const RegisterPage = () => {
                 {/* Study Program */}
                 <div className="flex flex-col gap-1.5">
                   <label className="text-label-md font-semibold text-on-surface" htmlFor="reg-program">
-                    Study Program
+                    {t('register.fields.studyProgram.label')}
                   </label>
                   <div className="relative">
                     <GraduationCap className="w-4 h-4 text-outline absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
@@ -668,7 +701,9 @@ const RegisterPage = () => {
                       className={`${errors.study_program_id ? selectErr : selectOk} disabled:opacity-50 disabled:cursor-not-allowed`}
                     >
                       <option value="">
-                        {form.faculty_id ? 'Select study program…' : 'Select a faculty first'}
+                        {form.faculty_id
+                          ? t('register.fields.studyProgram.placeholder')
+                          : t('register.fields.studyProgram.disabledPlaceholder')}
                       </option>
                       {programs.map((p) => (
                         <option key={p.id} value={String(p.id)}>
@@ -680,7 +715,7 @@ const RegisterPage = () => {
                   </div>
                   {errors.study_program_id && (
                     <p className="text-label-sm text-red-600 flex items-center gap-1">
-                      <AlertCircle className="w-3 h-3" /> {errors.study_program_id}
+                      <AlertCircle className="w-3 h-3" /> {formatError(t, errors.study_program_id)}
                     </p>
                   )}
                 </div>
@@ -688,7 +723,7 @@ const RegisterPage = () => {
                 {/* Academic Year */}
                 <div className="flex flex-col gap-1.5">
                   <label className="text-label-md font-semibold text-on-surface" htmlFor="reg-year">
-                    Academic Year
+                    {t('register.fields.academicYear.label')}
                   </label>
                   <div className="relative">
                     <CalendarDays className="w-4 h-4 text-outline absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
@@ -698,10 +733,10 @@ const RegisterPage = () => {
                       onChange={set('academic_year')}
                       className={errors.academic_year ? selectErr : selectOk}
                     >
-                      <option value="">Select year…</option>
+                      <option value="">{t('register.fields.academicYear.placeholder')}</option>
                       {ACADEMIC_YEARS.map((y) => (
                         <option key={y.value} value={y.value}>
-                          {y.label}
+                          {t('register.academicYears', { count: Number(y.value), ordinal: true })}
                         </option>
                       ))}
                     </select>
@@ -709,7 +744,7 @@ const RegisterPage = () => {
                   </div>
                   {errors.academic_year && (
                     <p className="text-label-sm text-red-600 flex items-center gap-1">
-                      <AlertCircle className="w-3 h-3" /> {errors.academic_year}
+                      <AlertCircle className="w-3 h-3" /> {formatError(t, errors.academic_year)}
                     </p>
                   )}
                 </div>
@@ -728,9 +763,9 @@ const RegisterPage = () => {
                     className="mt-1 h-4 w-4 rounded border-[#CBD5E1] text-[#004ac6] focus:ring-[#004ac6]"
                   />
                   <span className="leading-relaxed">
-                    <span className="font-semibold">Connect IS/STAG later</span>
+                    <span className="font-semibold">{t('register.info.connectStagLaterTitle')}</span>
                     <span className="block text-on-surface-variant">
-                      You can skip STAG credentials for now and connect them from your profile later.
+                      {t('register.info.connectStagLaterDescription')}
                     </span>
                   </span>
                 </label>
@@ -740,26 +775,26 @@ const RegisterPage = () => {
                   <div className="rounded-2xl border border-[#E2E8F0] bg-slate-50/70 p-4 space-y-4">
                     <div className="flex items-center gap-2">
                       <IdCard className="w-4 h-4 text-[#004ac6]" />
-                      <h3 className="text-label-md font-semibold text-on-surface">STAG connection</h3>
+                      <h3 className="text-label-md font-semibold text-on-surface">{t('register.info.stagConnectionTitle')}</h3>
                     </div>
 
                     <div className="grid gap-4">
                       {/* STAG Student ID */}
                       <div className="flex flex-col gap-1.5">
                         <label className="text-label-md font-semibold text-on-surface" htmlFor="stag-student-id">
-                          STAG Student ID
+                          {t('register.fields.stagStudentId.label')}
                         </label>
                         <input
                           id="stag-student-id"
                           type="text"
                           value={form.stag_student_id}
                           onChange={set('stag_student_id')}
-                          placeholder="123456"
+                          placeholder={t('register.fields.stagStudentId.placeholder')}
                           className={errors.stag_student_id ? stagInputErr : stagInputOk}
                         />
                         {errors.stag_student_id && (
                           <p className="text-label-sm text-red-600 flex items-center gap-1">
-                            <AlertCircle className="w-3 h-3" /> {errors.stag_student_id}
+                            <AlertCircle className="w-3 h-3" /> {formatError(t, errors.stag_student_id)}
                           </p>
                         )}
                       </div>
@@ -767,19 +802,19 @@ const RegisterPage = () => {
                       {/* STAG Username */}
                       <div className="flex flex-col gap-1.5">
                         <label className="text-label-md font-semibold text-on-surface" htmlFor="stag-username">
-                          STAG Username
+                          {t('register.fields.stagUsername.label')}
                         </label>
                         <input
                           id="stag-username"
                           type="text"
                           value={form.stag_username}
                           onChange={set('stag_username')}
-                          placeholder="jnovak"
+                          placeholder={t('register.fields.stagUsername.placeholder')}
                           className={errors.stag_username ? stagInputErr : stagInputOk}
                         />
                         {errors.stag_username && (
                           <p className="text-label-sm text-red-600 flex items-center gap-1">
-                            <AlertCircle className="w-3 h-3" /> {errors.stag_username}
+                            <AlertCircle className="w-3 h-3" /> {formatError(t, errors.stag_username)}
                           </p>
                         )}
                       </div>
@@ -787,7 +822,7 @@ const RegisterPage = () => {
                       {/* STAG Password */}
                       <div className="flex flex-col gap-1.5">
                         <label className="text-label-md font-semibold text-on-surface" htmlFor="stag-password">
-                          STAG Password
+                          {t('register.fields.stagPassword.label')}
                         </label>
                         <div className="relative">
                           <KeyRound className="w-4 h-4 text-outline absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
@@ -796,21 +831,21 @@ const RegisterPage = () => {
                             type={showStagPass ? 'text' : 'password'}
                             value={form.stag_password}
                             onChange={set('stag_password')}
-                            placeholder="••••••••"
+                            placeholder={t('register.fields.stagPassword.placeholder')}
                             className={`${errors.stag_password ? stagInputErr : stagInputOk} pl-10 pr-10`}
                           />
                           <button
                             type="button"
                             onClick={() => setShowStagPass((v) => !v)}
                             className="absolute right-3 top-1/2 -translate-y-1/2 text-outline hover:text-on-surface transition-colors"
-                            aria-label={showStagPass ? 'Hide STAG password' : 'Show STAG password'}
+                            aria-label={showStagPass ? t('register.aria.hideStagPassword') : t('register.aria.showStagPassword')}
                           >
                             {showStagPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                           </button>
                         </div>
                         {errors.stag_password && (
                           <p className="text-label-sm text-red-600 flex items-center gap-1">
-                            <AlertCircle className="w-3 h-3" /> {errors.stag_password}
+                            <AlertCircle className="w-3 h-3" /> {formatError(t, errors.stag_password)}
                           </p>
                         )}
                       </div>
@@ -819,7 +854,7 @@ const RegisterPage = () => {
                 )}
 
                 <p className="text-xs text-slate-400 leading-relaxed">
-                  🔒 Your university credentials are encrypted and stored securely.
+                  {t('register.info.credentialsEncrypted')}
                 </p>
               </>
             )}
@@ -832,7 +867,7 @@ const RegisterPage = () => {
                   onClick={handleBack}
                   className="flex items-center justify-center gap-2 py-2.5 px-5 bg-[#F8F9FB] hover:bg-[#EEF1F5] border border-[#E2E8F0] text-on-surface font-semibold rounded-lg text-label-md transition-all cursor-pointer"
                 >
-                  <ArrowLeft className="w-4 h-4" /> Back
+                  <ArrowLeft className="w-4 h-4" /> {t('register.actions.back')}
                 </button>
               )}
 
@@ -844,9 +879,9 @@ const RegisterPage = () => {
                   className="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 bg-[#004ac6] hover:bg-[#003ea8] active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold rounded-lg text-label-md transition-all shadow-sm cursor-pointer"
                 >
                   {checking ? (
-                    <><Loader2 className="w-4 h-4 animate-spin" /> Checking…</>
+                    <><Loader2 className="w-4 h-4 animate-spin" /> {t('register.actions.checking')}</>
                   ) : (
-                    <>Continue <ArrowRight className="w-4 h-4" /></>
+                    <>{t('register.actions.continue')} <ArrowRight className="w-4 h-4" /></>
                   )}
                 </button>
               )}
@@ -858,9 +893,9 @@ const RegisterPage = () => {
                   className="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 bg-[#004ac6] hover:bg-[#003ea8] active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold rounded-lg text-label-md transition-all shadow-sm cursor-pointer"
                 >
                   {submitting ? (
-                    <><Loader2 className="w-4 h-4 animate-spin" /> Creating account</>
+                    <><Loader2 className="w-4 h-4 animate-spin" /> {t('register.actions.creatingAccount')}</>
                   ) : (
-                    <>Complete Registration <Check className="w-4 h-4" /></>
+                    <>{t('register.actions.completeRegistration')} <Check className="w-4 h-4" /></>
                   )}
                 </button>
               )}
@@ -869,9 +904,9 @@ const RegisterPage = () => {
 
           {/* Sign in link */}
           <p className="text-body-md text-on-surface-variant text-center">
-            Already have an account?{' '}
+            {t('register.links.haveAccount')}{' '}
             <Link to="/login" className="text-[#004ac6] font-semibold hover:underline">
-              Sign in
+              {t('register.links.signIn')}
             </Link>
           </p>
         </div>

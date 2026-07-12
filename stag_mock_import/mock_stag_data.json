@@ -15,14 +15,14 @@
     },
     {
       "katedra": "KIV",
-      "predmet": "OS",
+      "predmet": "OS", 
       "typAkceZkr": "Cv",
       "mistnost": "UI204",
       "denZkr": "St",
       "casOd": "14:00",
       "casDo": "15:35",
       "ucitel": {
-        "jmeno": "Petr",
+        "jmeno": "Filip",
         "prijmeni": "Černý"
       }
     }

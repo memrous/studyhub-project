@@ -1,0 +1,199 @@
+{
+  "subjectsView": {
+    "modalTitle": "Add Enrolled Subject",
+    "fields": {
+      "subjectName": "Subject Name",
+      "courseCode": "Course Code (STAG)",
+      "credits": "Credits",
+      "lecturer": "Lecturer / Professor",
+      "enrollmentBadge": "Enrollment Badge",
+      "semester": "Semester",
+      "completionType": "Completion Type",
+      "subjectDescription": "Subject Description"
+    },
+    "placeholders": {
+      "subjectName": "e.g. Database Systems",
+      "courseCode": "e.g. KMI/DBS",
+      "lecturer": "e.g. John Smith",
+      "description": "Describe the course curriculum..."
+    },
+    "defaults": {
+      "tba": "TBA",
+      "noDescriptionProvided": "No description provided."
+    },
+    "options": {
+      "mandatory": "Mandatory",
+      "elective": "Elective",
+      "exam": "Exam",
+      "credit": "Credit",
+      "creditPlusExam": "Credit + Exam"
+    },
+    "creditUnit_one": "Credit",
+    "creditUnit_other": "Credits",
+    "semesterOptions": {
+      "winter": "Winter Semester",
+      "summer": "Summer Semester"
+    },
+    "filters": {
+      "allSubjects": "All Subjects",
+      "mandatoryOnly": "Mandatory Only",
+      "electiveOnly": "Elective Only"
+    },
+    "sorts": {
+      "defaultOrder": "Default Order",
+      "nameAZ": "Name (A–Z)",
+      "courseCode": "Course Code",
+      "creditsHighLow": "Credits (High–Low)"
+    },
+    "fallbacks": {
+      "filter": "Filter",
+      "sort": "Sort"
+    },
+    "emptyState": {
+      "noDataTitle": "No data",
+      "noDataDescription": "You do not have any enrolled subjects yet.",
+      "noMatchingTitle": "No matching subjects",
+      "noMatchingDescription": "Try changing the filter or add a new subject."
+    },
+    "page": {
+      "title": "My Enrolled Subjects",
+      "subtitle": "Manage your academic curriculum, credits, and completion types connected with STAG.",
+      "footer": "© 2026 Palacký University Olomouc Academic Systems. STAG Integration Connected."
+    },
+    "actions": {
+      "cancel": "Cancel",
+      "saveSubject": "Save Subject"
+    }
+  },
+  "subjectDetail": {
+    "tabs": {
+      "overview": "Overview",
+      "materials": "Materials",
+      "assignments": "Assignments",
+      "testsExams": "Tests & Exams"
+    },
+    "backToSubjects": "Back to Subjects",
+    "noSubjectSelected": "No subject selected. Click back to select a subject.",
+    "goBack": "Go back",
+    "semesterLabel": "{{semester}} Semester",
+    "creditsLabel": "Credits",
+    "lecturerLabel": "Lecturer:",
+    "courseDescription": "Course Description",
+    "completionCriteria": "Completion Criteria",
+    "lecturerInCharge": "Lecturer In Charge",
+    "subjectDeadlines": "Subject Deadlines",
+    "noUpcomingDeadlines": "No upcoming deadlines.",
+    "materialsUploaded": "{{count}} materials uploaded for this subject",
+    "noMaterials": "No materials available for this subject yet.",
+    "attachment": "Attachment",
+    "uploaded": "Uploaded:",
+    "preview": "Preview",
+    "download": "Download",
+    "assignmentsTracked": "{{count}} assignments tracked",
+    "noAssignments": "No assignments listed for this subject.",
+    "deadline": "Deadline:",
+    "status": "Status:",
+    "statusOptions": {
+      "notStarted": "Not Started",
+      "inProgress": "In Progress",
+      "submitted": "Submitted",
+      "completed": "Completed",
+      "upcoming": "Upcoming"
+    },
+    "testsExamsTracked": "{{count}} tests and exams listed",
+    "noTestsExams": "No tests or exams scheduled.",
+    "date": "Date:",
+    "type": "Type:",
+    "dueToday": "Due Today",
+    "dueTomorrow": "Due Tomorrow",
+    "dueOnDate": "Due {{date}}",
+    "dueInDays": "Due in {{count}} days",
+    "overdueByDays": "Overdue by {{count}} days"
+  },
+  "calendarView": {
+    "title": "Calendar",
+    "views": {
+      "month": "Month",
+      "week": "Week",
+      "day": "Day"
+    },
+    "upcomingEvents": "Upcoming Events",
+    "noUpcomingEvents": "No upcoming events filter matches.",
+    "filterBySubject": "Filter by Subject",
+    "eventTypesTitle": "Event Types",
+    "createNewEvent": "Create New Event",
+    "eventTypeDescriptions": {
+      "lectureLab": {
+        "title": "Lectures & Labs",
+        "description": "Regular classes and seminars"
+      },
+      "assignments": {
+        "title": "Assignments",
+        "description": "Homework and project milestones"
+      },
+      "testsQuizzes": {
+        "title": "Tests & Quizzes",
+        "description": "Midterms, small tests and quizzes"
+      },
+      "examsDeadlines": {
+        "title": "Exams & Deadlines",
+        "description": "Final exams and strict deadlines"
+      }
+    }
+  },
+  "calendarGrid": {
+    "days": {
+      "mon": "Mon",
+      "tue": "Tue",
+      "wed": "Wed",
+      "thu": "Thu",
+      "fri": "Fri",
+      "sat": "Sat",
+      "sun": "Sun"
+    },
+    "agenda": "Agenda:",
+    "noEventsToday": "No events scheduled for this day.",
+    "noEvents": "No events",
+    "yourSchedule": "Your schedule and deadlines for today",
+    "addEvent": "Add Event",
+    "freeSlot": "Free schedule slot"
+  },
+  "eventModal": {
+    "createTitle": "Create New Event",
+    "editTitle": "Edit Event",
+    "fields": {
+      "eventTitle": "Event Title",
+      "type": "Type",
+      "subject": "Subject",
+      "date": "Date",
+      "startTime": "Start Time",
+      "duration": "Duration (Minutes)"
+    },
+    "placeholders": {
+      "eventTitle": "e.g. Database Systems Practical Test"
+    },
+    "durationOptions": {
+      "30": "30 minutes",
+      "60": "1 hour",
+      "90": "1.5 hours",
+      "120": "2 hours",
+      "180": "3 hours",
+      "0": "Deadline (All Day)"
+    },
+    "actions": {
+      "cancel": "Cancel",
+      "save": "Save Event"
+    }
+  },
+    "eventDetail": {
+    "unknownSubject": "Unknown Subject",
+    "lecturer": "Lecturer:",
+    "notSpecified": "Not specified",
+    "subjectDescription": "Subject Description:",
+    "creditsCompletion": "Credits / Completion:",
+    "openSubjectHub": "Open Subject Hub",
+    "editEvent": "Edit Event",
+    "deleteEvent": "Delete Event",
+    "areYouSure": "Are you sure?"
+  }
+}

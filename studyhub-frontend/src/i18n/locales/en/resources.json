@@ -1,0 +1,88 @@
+{
+  "page": {
+    "title": "Study Resources",
+    "subtitle": "Search, filter, and manage study materials across all of your subjects."
+  },
+  "searchPlaceholder": "Search resources...",
+  "recentTitle": "Recently Added Resources",
+  "librariesTitle": "Course Material Libraries",
+  "filters": {
+    "subjectFallback": "Subject",
+    "typeFallback": "Resource Type",
+    "allSubjects": "All Subjects",
+    "allTypes": "All Types"
+  },
+  "sorts": {
+    "recent": "Sort by: Recent",
+    "name": "Sort by: Name (A–Z)",
+    "type": "Sort by: Type"
+  },
+  "typeLabels": {
+    "PDF": "PDF Document",
+    "NOTES": "Notes / Text",
+    "SLIDES": "Lecture Slides",
+    "RECORDING": "Video Recording",
+    "LINK": "External Link",
+    "DOC": "Office Doc"
+  },
+  "typeShort": {
+    "PDF": "PDF",
+    "NOTES": "Notes",
+    "SLIDES": "Slides",
+    "RECORDING": "Video",
+    "LINK": "Link",
+    "DOC": "Doc"
+  },
+  "subjectFallback": "General",
+  "modal": {
+    "title": "Upload Study Resource",
+    "fields": {
+      "resourceTitle": "Resource Title",
+      "subject": "Subject",
+      "documentType": "Document Type",
+      "description": "Description",
+      "addFrom": "Add from",
+      "chooseFile": "Choose File",
+      "webUrl": "Web URL"
+    },
+    "placeholders": {
+      "description": "Short notes about the file content...",
+      "webUrl": "https://example.com/resource.pdf"
+    },
+    "sourceButtons": {
+      "local": "Your PC",
+      "url": "Web URL"
+    },
+    "actions": {
+      "cancel": "Cancel",
+      "upload": "Upload",
+      "uploading": "Uploading..."
+    },
+    "errors": {
+      "uploadFailed": "Upload failed. Please try again."
+    }
+  },
+  "defaults": {
+    "attachment": "Attachment",
+    "localDescription": "Uploaded course document.",
+    "urlDescription": "Web resource link."
+  },
+  "actions": {
+    "open": "Open",
+    "download": "Download",
+    "downloadFile": "Download File"
+  },
+  "openInNewTab": "Open in new tab",
+  "preview": {
+    "loadingText": "Loading text content...",
+    "renderingDocument": "Rendering document...",
+    "failedRenderDocument": "Failed to render document",
+    "directPreviewLocalOffice": "Direct preview is not available for local Office documents.",
+    "pleaseDownload": "Please download the file to view it on your device.",
+    "noPreview": "No preview is available for this file type."
+  },
+  "emptyState": {
+    "title": "No resources match your search criteria",
+    "description": "Try adjusting filters or upload a new resource."
+  }
+}

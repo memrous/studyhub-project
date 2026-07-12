@@ -1,5 +1,6 @@
 import { useState, useMemo, useRef, useEffect } from 'react'
 import { renderAsync } from 'docx-preview'
+import { useTranslation } from 'react-i18next'
 import {
   FileText,
   FileVideo,
@@ -51,18 +52,6 @@ const TYPE_CONFIG = {
 
 const getTypeConfig = (type) => TYPE_CONFIG[type] ?? TYPE_CONFIG['DOC']
 
-const formatBytes = (bytes) => {
-  if (bytes < 1024) return `${bytes} B`
-  const units = ['KB', 'MB', 'GB']
-  let size = bytes / 1024
-  let unitIndex = 0
-  while (size >= 1024 && unitIndex < units.length - 1) {
-    size /= 1024
-    unitIndex += 1
-  }
-  return `${size.toFixed(1)} ${units[unitIndex]}`
-}
-
 const getTypeFromFileName = (fileName) => {
   const ext = fileName.split('.').pop()?.toLowerCase() || ''
   if (['pdf'].includes(ext)) return 'PDF'
@@ -76,7 +65,6 @@ const getTypeFromFileName = (fileName) => {
 
 const getPreviewInfo = (resource) => {
   const rawUrl = resource.url || ""
-  const url = resolveResourceUrl(rawUrl)
   const source = resource.fileName || resource.file_name || rawUrl
   const ext = source.split(".").pop()?.toLowerCase() || ""
   const isRemote = /^https?:\/\//i.test(rawUrl)
@@ -102,7 +90,7 @@ const TagChip = ({ label }) => (
 )
 
 // ─── Recent Resource Card (horizontal compact) ───────────────
-const RecentCard = ({ resource, subjectName }) => {
+const RecentCard = ({ resource, subjectName, t }) => {
   const cfg = getTypeConfig(resource.type)
   const { Icon } = cfg
   return (
@@ -112,20 +100,20 @@ const RecentCard = ({ resource, subjectName }) => {
           <Icon className="w-4.5 h-4.5" />
         </div>
         <span className={`text-label-sm font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-sm ${cfg.badgeBg} ${cfg.badgeText}`}>
-          {resource.type}
+          {t(`resources:typeShort.${resource.type}`, resource.type)}
         </span>
       </div>
       <div>
         <p className="text-label-md font-bold text-on-surface leading-snug truncate">{resource.title}</p>
         <p className="text-[11px] text-[#737686] mt-0.5 truncate">{subjectName}</p>
       </div>
-      <p className="text-[11px] text-[#737686] mt-auto font-medium">{resource.size || 'Attachment'} • {resource.uploadDate}</p>
+      <p className="text-[11px] text-[#737686] mt-auto font-medium">{resource.size || t('resources:defaults.attachment')} • {resource.uploadDate}</p>
     </div>
   )
 }
 
 // ─── Full Resource Card ───────────────────────────────────────
-const ResourceCard = ({ resource, subjectName, onPreview }) => {
+const ResourceCard = ({ resource, subjectName, onPreview, t }) => {
   const cfg = getTypeConfig(resource.type)
   const { Icon } = cfg
   const isLink = resource.type === "LINK"
@@ -150,7 +138,7 @@ const ResourceCard = ({ resource, subjectName, onPreview }) => {
           <Icon className="w-4.5 h-4.5" />
         </div>
         <div className="flex flex-wrap gap-1 justify-end">
-          <TagChip label={resource.type} />
+          <TagChip label={t(`resources:typeShort.${resource.type}`, resource.type)} />
           {subCode(subjectName) && <TagChip label={subCode(subjectName)} />}
         </div>
       </div>
@@ -163,7 +151,7 @@ const ResourceCard = ({ resource, subjectName, onPreview }) => {
 
       {/* Footer: meta + actions */}
       <div className="flex items-center justify-between mt-auto pt-2 border-t border-[#f2f4f6]">
-        <span className="text-[11px] text-[#737686] font-medium truncate pr-2">{resource.size || 'Attachment'} • {displayDate}</span>
+        <span className="text-[11px] text-[#737686] font-medium truncate pr-2">{resource.size || t('resources:defaults.attachment')} • {displayDate}</span>
         <div className="flex items-center gap-3 shrink-0">
           {!isLink && (
             <a
@@ -174,7 +162,7 @@ const ResourceCard = ({ resource, subjectName, onPreview }) => {
               className="flex items-center gap-1 text-label-sm font-bold text-primary hover:text-[#003ea8] transition-colors cursor-pointer"
             >
               <Download className="w-3.5 h-3.5" />
-              <span>Download</span>
+              <span>{t('resources:actions.download')}</span>
             </a>
           )}
           <button
@@ -182,7 +170,7 @@ const ResourceCard = ({ resource, subjectName, onPreview }) => {
             className="flex items-center gap-1 text-label-sm font-bold text-primary hover:text-[#003ea8] transition-colors cursor-pointer bg-transparent border-0"
           >
             {isLink || !previewInfo.canPreview ? <ExternalLink className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
-            <span>Open</span>
+            <span>{t('resources:actions.open')}</span>
           </button>
         </div>
       </div>
@@ -202,6 +190,7 @@ const subCode = (subjName) => {
 
 // ─── Upload Modal ────────────────────────────────────────────
 const UploadModal = ({ onClose, onSave, subjects }) => {
+  const { t } = useTranslation('resources')
   const [form, setForm] = useState({
     title: '',
     subjectId: subjects[0]?.id || '',
@@ -226,7 +215,7 @@ const UploadModal = ({ onClose, onSave, subjects }) => {
       subjectId: Number(form.subjectId),
       title,
       type: sourceType === 'local' ? getTypeFromFileName(file.name) : form.type,
-      description: form.description || (sourceType === 'local' ? 'Uploaded course document.' : 'Web resource link.'),
+      description: form.description || (sourceType === 'local' ? t('resources:defaults.localDescription') : t('resources:defaults.urlDescription')),
     }
 
     if (sourceType === 'local') {
@@ -244,7 +233,7 @@ const UploadModal = ({ onClose, onSave, subjects }) => {
       onClose();
     } catch (err) {
       console.error(err);
-      setSubmitError(err.message || 'Upload failed. Please try again.')
+      setSubmitError(err.message || t('resources:modal.errors.uploadFailed'))
     } finally {
       setIsSubmitting(false)
     }
@@ -257,7 +246,7 @@ const UploadModal = ({ onClose, onSave, subjects }) => {
     <div className="fixed inset-0 bg-black/40 backdrop-blur-xs flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-lg shadow-2xl border border-[#E2E8F0] w-full max-w-md overflow-hidden font-inter">
         <div className="flex items-center justify-between px-6 py-4 border-b border-[#E2E8F0] bg-surface">
-          <h2 className="text-headline-md font-bold text-on-surface">Upload Study Resource</h2>
+          <h2 className="text-headline-md font-bold text-on-surface">{t('resources:modal.title')}</h2>
           <button onClick={onClose} disabled={isSubmitting} className="p-1 rounded-full hover:bg-[#E2E8F0] text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer bg-transparent border-0 disabled:opacity-50">
             <X className="w-5 h-5" />
           </button>
@@ -271,33 +260,35 @@ const UploadModal = ({ onClose, onSave, subjects }) => {
           )}
 
           <div className="flex flex-col gap-1.5">
-            <label className={labelCls}>Resource Title</label>
+            <label className={labelCls}>{t('resources:modal.fields.resourceTitle')}</label>
             <input required placeholder="e.g. SQL JOIN Cheat Sheet" value={form.title} onChange={set('title')} disabled={isSubmitting} className={inputCls} />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="flex flex-col gap-1.5">
-              <label className={labelCls}>Subject</label>
+              <label className={labelCls}>{t('resources:modal.fields.subject')}</label>
               <select value={form.subjectId} onChange={set('subjectId')} disabled={isSubmitting} className={inputCls}>
                 {subjects.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
               </select>
             </div>
             <div className="flex flex-col gap-1.5">
-              <label className={labelCls}>Document Type</label>
+              <label className={labelCls}>{t('resources:modal.fields.documentType')}</label>
               <select value={form.type} onChange={set('type')} disabled={isSubmitting} className={inputCls}>
-                {['PDF', 'NOTES', 'SLIDES', 'RECORDING', 'LINK', 'DOC'].map(t => <option key={t} value={t}>{t}</option>)}
+                {['PDF', 'NOTES', 'SLIDES', 'RECORDING', 'LINK', 'DOC'].map(type => (
+                  <option key={type} value={type}>{t(`resources:typeLabels.${type}`)}</option>
+                ))}
               </select>
             </div>
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className={labelCls}>Description</label>
-            <textarea rows={2} placeholder="Short notes about the file content..." value={form.description} onChange={set('description')} disabled={isSubmitting} className={`${inputCls} resize-none`} />
+            <label className={labelCls}>{t('resources:modal.fields.description')}</label>
+            <textarea rows={2} placeholder={t('resources:modal.placeholders.description')} value={form.description} onChange={set('description')} disabled={isSubmitting} className={`${inputCls} resize-none`} />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="flex flex-col gap-1.5">
-              <label className={labelCls}>Add from</label>
+              <label className={labelCls}>{t('resources:modal.fields.addFrom')}</label>
               <div className="flex gap-2">
                 <button
                   type="button"
@@ -305,7 +296,7 @@ const UploadModal = ({ onClose, onSave, subjects }) => {
                   onClick={() => setSourceType('local')}
                   className={`px-3 py-2 rounded-md border transition-colors ${sourceType === 'local' ? 'border-primary bg-[#eef3ff] text-primary' : 'border-[#E2E8F0] bg-white text-on-surface'} disabled:opacity-50`}
                 >
-                  Your PC
+                  {t('resources:modal.sourceButtons.local')}
                 </button>
                 <button
                   type="button"
@@ -313,7 +304,7 @@ const UploadModal = ({ onClose, onSave, subjects }) => {
                   onClick={() => setSourceType('url')}
                   className={`px-3 py-2 rounded-md border transition-colors ${sourceType === 'url' ? 'border-primary bg-[#eef3ff] text-primary' : 'border-[#E2E8F0] bg-white text-on-surface'} disabled:opacity-50`}
                 >
-                  Web URL
+                  {t('resources:modal.sourceButtons.url')}
                 </button>
               </div>
             </div>
@@ -321,7 +312,7 @@ const UploadModal = ({ onClose, onSave, subjects }) => {
 
           {sourceType === 'local' ? (
             <div className="flex flex-col gap-1.5">
-              <label className={labelCls}>Choose File</label>
+              <label className={labelCls}>{t('resources:modal.fields.chooseFile')}</label>
               <input
                 type="file"
                 disabled={isSubmitting}
@@ -332,7 +323,7 @@ const UploadModal = ({ onClose, onSave, subjects }) => {
             </div>
           ) : (
             <div className="flex flex-col gap-1.5">
-              <label className={labelCls}>Web URL</label>
+              <label className={labelCls}>{t('resources:modal.fields.webUrl')}</label>
               <input
                 type="url"
                 disabled={isSubmitting}
@@ -345,7 +336,7 @@ const UploadModal = ({ onClose, onSave, subjects }) => {
           )}
 
           <div className="flex gap-3 justify-end pt-2 border-t border-[#E2E8F0] mt-1">
-            <button type="button" onClick={onClose} disabled={isSubmitting} className="px-4 py-2 border border-[#E2E8F0] rounded-md text-label-md font-semibold text-on-surface-variant hover:bg-slate-50 transition-colors cursor-pointer bg-transparent disabled:opacity-50">Cancel</button>
+            <button type="button" onClick={onClose} disabled={isSubmitting} className="px-4 py-2 border border-[#E2E8F0] rounded-md text-label-md font-semibold text-on-surface-variant hover:bg-slate-50 transition-colors cursor-pointer bg-transparent disabled:opacity-50">{t('resources:modal.actions.cancel')}</button>
             <button
               type="submit"
               disabled={isSubmitting}
@@ -355,12 +346,12 @@ const UploadModal = ({ onClose, onSave, subjects }) => {
                 <>
                   <svg className="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                   </svg>
-                  <span>Uploading...</span>
+                  <span>{t('resources:modal.actions.uploading')}</span>
                 </>
               ) : (
-                'Upload'
+                t('resources:modal.actions.upload')
               )}
             </button>
           </div>
@@ -372,6 +363,7 @@ const UploadModal = ({ onClose, onSave, subjects }) => {
 
 // ─── Dropdown helper ─────────────────────────────────────────
 const ResourcePreviewModal = ({ resource, onClose }) => {
+  const { t } = useTranslation('resources')
   const [textContent, setTextContent] = useState('')
   const [loadingText, setLoadingText] = useState(false)
   const [textError, setTextError] = useState(null)
@@ -383,22 +375,29 @@ const ResourcePreviewModal = ({ resource, onClose }) => {
   const url = resolveResourceUrl(resource?.url || "")
 
   useEffect(() => {
-    if (previewInfo.type === 'text' && url) {
+    if (previewInfo.type !== 'text' || !url) return
+
+    let active = true
+    const loadText = async () => {
       setLoadingText(true)
       setTextError(null)
-      fetch(url)
-        .then((res) => {
-          if (!res.ok) throw new Error('Failed to load text file.')
-          return res.text()
-        })
-        .then((text) => {
-          setTextContent(text)
-          setLoadingText(false)
-        })
-        .catch((err) => {
-          setTextError(err.message)
-          setLoadingText(false)
-        })
+      try {
+        const res = await fetch(url)
+        if (!res.ok) throw new Error('Failed to load text file.')
+        const text = await res.text()
+        if (!active) return
+        setTextContent(text)
+      } catch (err) {
+        if (!active) return
+        setTextError(err.message)
+      } finally {
+        if (active) setLoadingText(false)
+      }
+    }
+
+    void loadText()
+    return () => {
+      active = false
     }
   }, [previewInfo.type, url])
 
@@ -458,7 +457,7 @@ const ResourcePreviewModal = ({ resource, onClose }) => {
               className="flex items-center gap-1.5 px-3 py-1.5 border border-[#E2E8F0] hover:bg-[#F2F4F6] rounded-md text-label-sm font-semibold text-slate-700 transition-colors"
             >
               <Download className="w-3.5 h-3.5" />
-              <span>Download</span>
+              <span>{t('resources:actions.download')}</span>
             </a>
             <button
               onClick={onClose}
@@ -493,7 +492,7 @@ const ResourcePreviewModal = ({ resource, onClose }) => {
               <div className="w-full h-full overflow-auto p-6 bg-white self-stretch text-left">
                 {loadingText ? (
                   <div className="flex items-center justify-center h-full">
-                    <span className="text-slate-500 font-medium">Loading text content...</span>
+                    <span className="text-slate-500 font-medium">{t('resources:preview.loadingText')}</span>
                   </div>
                 ) : textError ? (
                   <div className="flex items-center justify-center h-full text-red-500 font-medium">
@@ -520,18 +519,18 @@ const ResourcePreviewModal = ({ resource, onClose }) => {
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                       </svg>
-                      <span className="text-sm font-medium text-slate-600">Rendering document...</span>
+                      <span className="text-sm font-medium text-slate-600">{t('resources:preview.renderingDocument')}</span>
                     </div>
                   </div>
                 )}
                 {docxError && (
                   <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-8">
                     <File className="w-12 h-12 text-red-400 mb-3" />
-                    <p className="text-body-md text-red-600 font-semibold mb-1">Failed to render document</p>
+                    <p className="text-body-md text-red-600 font-semibold mb-1">{t('resources:preview.failedRenderDocument')}</p>
                     <p className="text-sm text-slate-500 mb-4">{docxError}</p>
                     <a href={url} download className="px-4 py-2 bg-[#004ac6] hover:bg-[#003ea8] text-white rounded-md text-label-md font-semibold transition-colors flex items-center gap-2 shadow-sm">
                       <Download className="w-4 h-4" />
-                      <span>Download File</span>
+                      <span>{t('resources:actions.downloadFile')}</span>
                     </a>
                   </div>
                 )}
@@ -546,15 +545,15 @@ const ResourcePreviewModal = ({ resource, onClose }) => {
             {previewInfo.type === 'office-local' && (
               <div className="flex flex-col items-center justify-center text-center p-8">
                 <File className="w-16 h-16 text-slate-400 mb-4" />
-                <p className="text-body-md text-on-surface font-semibold mb-2">Direct preview is not available for local Office documents.</p>
-                <p className="text-sm text-slate-500 mb-4">Please download the file to view it on your device.</p>
+                <p className="text-body-md text-on-surface font-semibold mb-2">{t('resources:preview.directPreviewLocalOffice')}</p>
+                <p className="text-sm text-slate-500 mb-4">{t('resources:preview.pleaseDownload')}</p>
                 <a
                   href={url}
                   download
                   className="px-4 py-2 bg-[#004ac6] hover:bg-[#003ea8] text-white rounded-md text-label-md font-semibold transition-colors flex items-center gap-2 shadow-sm"
                 >
                   <Download className="w-4 h-4" />
-                  <span>Download File</span>
+                  <span>{t('resources:actions.downloadFile')}</span>
                 </a>
               </div>
             )}
@@ -562,14 +561,14 @@ const ResourcePreviewModal = ({ resource, onClose }) => {
             {previewInfo.type === 'unsupported' && (
               <div className="flex flex-col items-center justify-center text-center p-8">
                 <File className="w-16 h-16 text-slate-400 mb-4" />
-                <p className="text-body-md text-on-surface mb-4">No preview is available for this file type.</p>
+                <p className="text-body-md text-on-surface mb-4">{t('resources:preview.noPreview')}</p>
                 <a
                   href={url}
                   target="_blank"
                   rel="noreferrer"
                   className="px-4 py-2 bg-[#004ac6] hover:bg-[#003ea8] text-white rounded-md text-label-md font-semibold transition-colors shadow-sm"
                 >
-                  Open in new tab
+                  {t('resources:openInNewTab')}
                 </a>
               </div>
             )}
@@ -621,6 +620,7 @@ const Dropdown = ({ label, icon: Icon, options, value, onChange }) => {
 
 // ─── Main ResourcesView Component ────────────────────────────
 const ResourcesView = ({ resources, subjects, onUploadResource }) => {
+  const { t } = useTranslation('resources')
   const [searchQuery, setSearchQuery]   = useState('')
   const [subjectFilter, setSubjectFilter] = useState('all')
   const [typeFilter, setTypeFilter]     = useState('all')
@@ -629,24 +629,24 @@ const ResourcesView = ({ resources, subjects, onUploadResource }) => {
   const [previewResource, setPreviewResource] = useState(null)
 
   const SUBJECT_OPTIONS = useMemo(() => [
-    { value: 'all', label: 'All Subjects' },
+    { value: 'all', label: t('resources:filters.allSubjects') },
     ...subjects.map(s => ({ value: String(s.id), label: s.name })),
-  ], [subjects])
+  ], [subjects, t])
 
   const TYPE_OPTIONS = [
-    { value: 'all',       label: 'All Types' },
-    { value: 'PDF',       label: 'PDF Document' },
-    { value: 'NOTES',     label: 'Notes / Text' },
-    { value: 'SLIDES',    label: 'Lecture Slides' },
-    { value: 'RECORDING', label: 'Video Recording' },
-    { value: 'LINK',      label: 'External Link' },
-    { value: 'DOC',       label: 'Office Doc' },
+    { value: 'all',       label: t('resources:filters.allTypes') },
+    { value: 'PDF',       label: t('resources:typeLabels.PDF') },
+    { value: 'NOTES',     label: t('resources:typeLabels.NOTES') },
+    { value: 'SLIDES',    label: t('resources:typeLabels.SLIDES') },
+    { value: 'RECORDING', label: t('resources:typeLabels.RECORDING') },
+    { value: 'LINK',      label: t('resources:typeLabels.LINK') },
+    { value: 'DOC',       label: t('resources:typeLabels.DOC') },
   ]
   
   const SORT_OPTIONS = [
-    { value: 'recent', label: 'Sort by: Recent' },
-    { value: 'name',   label: 'Sort by: Name (A–Z)' },
-    { value: 'type',   label: 'Sort by: Type' },
+    { value: 'recent', label: t('resources:sorts.recent') },
+    { value: 'name',   label: t('resources:sorts.name') },
+    { value: 'type',   label: t('resources:sorts.type') },
   ]
 
   const filtered = useMemo(() => {
@@ -688,9 +688,9 @@ const ResourcesView = ({ resources, subjects, onUploadResource }) => {
   }, [filtered, subjects])
 
   const isFiltering = subjectFilter !== 'all' || typeFilter !== 'all' || searchQuery.trim()
-  const subjectLabel = SUBJECT_OPTIONS.find(o => o.value === subjectFilter)?.label ?? 'Subject'
-  const typeLabel    = TYPE_OPTIONS.find(o => o.value === typeFilter)?.label ?? 'Resource Type'
-  const sortLabel    = SORT_OPTIONS.find(o => o.value === sortKey)?.label ?? 'Sort by: Recent'
+  const subjectLabel = SUBJECT_OPTIONS.find(o => o.value === subjectFilter)?.label ?? t('resources:filters.subjectFallback')
+  const typeLabel    = TYPE_OPTIONS.find(o => o.value === typeFilter)?.label ?? t('resources:filters.typeFallback')
+  const sortLabel    = SORT_OPTIONS.find(o => o.value === sortKey)?.label ?? t('resources:sorts.recent')
 
   return (
     <>
@@ -699,8 +699,8 @@ const ResourcesView = ({ resources, subjects, onUploadResource }) => {
         {/* Page Header */}
         <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 flex-wrap">
           <div className="flex flex-col gap-1">
-            <h1 className="text-display text-on-surface">Study Resources</h1>
-            <p className="text-body-md text-[#737686]">Global search and filters across all subject materials and files.</p>
+            <h1 className="text-display text-on-surface">{t('resources:page.title')}</h1>
+            <p className="text-body-md text-[#737686]">{t('resources:page.subtitle')}</p>
           </div>
 
           {/* Controls row */}
@@ -710,7 +710,7 @@ const ResourcesView = ({ resources, subjects, onUploadResource }) => {
               <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#737686]" />
               <input
                 type="text"
-                placeholder="Search resources..."
+                placeholder={t('resources:searchPlaceholder')}
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
                 className="pl-8 pr-3 py-1.5 bg-white border border-[#E2E8F0] rounded-md text-body-md text-on-surface placeholder:text-[#737686] focus:outline-none focus:border-primary focus:bg-white transition-colors w-44 shadow-ambient"
@@ -727,7 +727,7 @@ const ResourcesView = ({ resources, subjects, onUploadResource }) => {
           <section className="flex flex-col gap-4">
             <div className="flex items-center gap-2">
               <History className="w-4 h-4 text-[#737686]" />
-              <h2 className="text-headline-md font-bold text-on-surface">Recently Added Resources</h2>
+              <h2 className="text-headline-md font-bold text-on-surface">{t('resources:recentTitle')}</h2>
             </div>
             <div className="flex flex-wrap gap-4">
               {recentResources.map(r => {
@@ -736,7 +736,8 @@ const ResourcesView = ({ resources, subjects, onUploadResource }) => {
                   <RecentCard 
                     key={r.id} 
                     resource={r} 
-                    subjectName={subObj ? subObj.name : 'General'} 
+                    subjectName={subObj ? subObj.name : t('resources:subjectFallback')} 
+                    t={t}
                   />
                 );
               })}
@@ -750,13 +751,13 @@ const ResourcesView = ({ resources, subjects, onUploadResource }) => {
             <div className="w-12 h-12 bg-[#eeefff] text-primary rounded-full flex items-center justify-center">
               <CustomIcon name="book" className="w-6 h-6" />
             </div>
-            <p className="text-headline-md font-semibold text-on-surface">No resources match your search criteria</p>
-            <p className="text-body-md text-[#737686]">Try adjusting filters or upload a new resource.</p>
+            <p className="text-headline-md font-semibold text-on-surface">{t('resources:emptyState.title')}</p>
+            <p className="text-body-md text-[#737686]">{t('resources:emptyState.description')}</p>
           </div>
         ) : (
           <section className="flex flex-col gap-10">
             {!isFiltering && (
-              <h2 className="text-headline-md font-bold text-on-surface -mb-6">Course Material Libraries</h2>
+              <h2 className="text-headline-md font-bold text-on-surface -mb-6">{t('resources:librariesTitle')}</h2>
             )}
 
             {grouped.map(({ subject, items }) => (
@@ -773,12 +774,13 @@ const ResourcesView = ({ resources, subjects, onUploadResource }) => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
                   {items.map(r => (
                     <ResourceCard 
-                      key={r.id} 
-                      resource={r} 
-                      subjectName={subject.name}
-                      onPreview={(res) => setPreviewResource(res)}
-                    />
-                  ))}
+                    key={r.id} 
+                    resource={r} 
+                    subjectName={subject.name}
+                    t={t}
+                    onPreview={(res) => setPreviewResource(res)}
+                  />
+                ))}
                 </div>
               </div>
             ))}
@@ -789,7 +791,7 @@ const ResourcesView = ({ resources, subjects, onUploadResource }) => {
       {/* Floating Action Button */}
       <button
         onClick={() => setIsModalOpen(true)}
-        title="Upload Resource"
+        title={t('resources:modal.title')}
         className="fixed lg:bottom-8 bottom-20 right-8 w-14 h-14 bg-[#004ac6] hover:bg-[#003ea8] active:scale-95 text-white rounded-full shadow-xl flex items-center justify-center transition-all z-30 cursor-pointer"
       >
         <Plus className="w-6 h-6" />

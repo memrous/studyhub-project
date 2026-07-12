@@ -1,0 +1,200 @@
+{
+  "subjectsView": {
+    "modalTitle": "Přidat zapsaný předmět",
+    "fields": {
+      "subjectName": "Název předmětu",
+      "courseCode": "Kód předmětu (STAG)",
+      "credits": "Kredity",
+      "lecturer": "Vyučující / profesor",
+      "enrollmentBadge": "Typ zápisu",
+      "semester": "Semestr",
+      "completionType": "Typ ukončení",
+      "subjectDescription": "Popis předmětu"
+    },
+    "placeholders": {
+      "subjectName": "např. Databázové systémy",
+      "courseCode": "např. KMI/DBS",
+      "lecturer": "např. Jan Novák",
+      "description": "Popište osnovu předmětu..."
+    },
+    "defaults": {
+      "tba": "Bude doplněno",
+      "noDescriptionProvided": "Popis nebyl zadán."
+    },
+    "options": {
+      "mandatory": "Povinný",
+      "elective": "Volitelný",
+      "exam": "Zkouška",
+      "credit": "Kredit",
+      "creditPlusExam": "Kredit + zkouška"
+    },
+    "creditUnit_one": "kredit",
+    "creditUnit_few": "kredity",
+    "creditUnit_other": "kreditů",
+    "semesterOptions": {
+      "winter": "Zimní semestr",
+      "summer": "Letní semestr"
+    },
+    "filters": {
+      "allSubjects": "Všechny předměty",
+      "mandatoryOnly": "Pouze povinné",
+      "electiveOnly": "Pouze volitelné"
+    },
+    "sorts": {
+      "defaultOrder": "Výchozí řazení",
+      "nameAZ": "Název (A–Z)",
+      "courseCode": "Kód předmětu",
+      "creditsHighLow": "Kredity (sestupně)"
+    },
+    "fallbacks": {
+      "filter": "Filtr",
+      "sort": "Řazení"
+    },
+    "emptyState": {
+      "noDataTitle": "Žádná data",
+      "noDataDescription": "Zatím nemáte žádné zapsané předměty.",
+      "noMatchingTitle": "Žádné odpovídající předměty",
+      "noMatchingDescription": "Zkuste upravit filtr nebo přidat nový předmět."
+    },
+    "page": {
+      "title": "Moje zapsané předměty",
+      "subtitle": "Spravujte studijní plán, kredity a typy ukončení propojené se STAGem.",
+      "footer": "© 2026 Palacký University Olomouc Academic Systems. Napojení na STAG je aktivní."
+    },
+    "actions": {
+      "cancel": "Zrušit",
+      "saveSubject": "Uložit předmět"
+    }
+  },
+  "subjectDetail": {
+    "tabs": {
+      "overview": "Přehled",
+      "materials": "Materiály",
+      "assignments": "Zadání",
+      "testsExams": "Testy a zkoušky"
+    },
+    "backToSubjects": "Zpět na předměty",
+    "noSubjectSelected": "Není vybraný žádný předmět. Klikněte zpět a vyberte předmět.",
+    "goBack": "Vrátit se",
+    "semesterLabel": "{{semester}} semestr",
+    "creditsLabel": "Kredity",
+    "lecturerLabel": "Vyučující:",
+    "courseDescription": "Popis předmětu",
+    "completionCriteria": "Podmínky ukončení",
+    "lecturerInCharge": "Garant předmětu",
+    "subjectDeadlines": "Termíny předmětu",
+    "noUpcomingDeadlines": "Žádné nadcházející termíny.",
+    "materialsUploaded": "Pro tento předmět jsou nahrány {{count}} materiály",
+    "noMaterials": "Pro tento předmět zatím nejsou k dispozici žádné materiály.",
+    "attachment": "Příloha",
+    "uploaded": "Nahráno:",
+    "preview": "Náhled",
+    "download": "Stáhnout",
+    "assignmentsTracked": "Sledováno {{count}} zadání",
+    "noAssignments": "Pro tento předmět nejsou uvedena žádná zadání.",
+    "deadline": "Termín:",
+    "status": "Stav:",
+    "statusOptions": {
+      "notStarted": "Nezahájeno",
+      "inProgress": "Probíhá",
+      "submitted": "Odevzdáno",
+      "completed": "Dokončeno",
+      "upcoming": "Nadcházející"
+    },
+    "testsExamsTracked": "Uvedeno {{count}} testů a zkoušek",
+    "noTestsExams": "Nebyly naplánovány žádné testy ani zkoušky.",
+    "date": "Datum:",
+    "type": "Typ:",
+    "dueToday": "Termín dnes",
+    "dueTomorrow": "Termín zítra",
+    "dueOnDate": "Termín {{date}}",
+    "dueInDays": "Termín za {{count}} dní",
+    "overdueByDays": "Po termínu o {{count}} dní"
+  },
+  "calendarView": {
+    "title": "Kalendář",
+    "views": {
+      "month": "Měsíc",
+      "week": "Týden",
+      "day": "Den"
+    },
+    "upcomingEvents": "Nadcházející události",
+    "noUpcomingEvents": "Nenalezeny žádné nadcházející události odpovídající filtru.",
+    "filterBySubject": "Filtrovat podle předmětu",
+    "eventTypesTitle": "Typy událostí",
+    "createNewEvent": "Vytvořit událost",
+    "eventTypeDescriptions": {
+      "lectureLab": {
+        "title": "Přednášky a cvičení",
+        "description": "Běžná výuka a semináře"
+      },
+      "assignments": {
+        "title": "Zadání",
+        "description": "Domácí úkoly a milníky projektu"
+      },
+      "testsQuizzes": {
+        "title": "Testy a kvízy",
+        "description": "Průběžné testy, malé testy a kvízy"
+      },
+      "examsDeadlines": {
+        "title": "Zkoušky a termíny",
+        "description": "Závěrečné zkoušky a pevné termíny"
+      }
+    }
+  },
+  "calendarGrid": {
+    "days": {
+      "mon": "Po",
+      "tue": "Út",
+      "wed": "St",
+      "thu": "Čt",
+      "fri": "Pá",
+      "sat": "So",
+      "sun": "Ne"
+    },
+    "agenda": "Program:",
+    "noEventsToday": "Na tento den nejsou naplánované žádné události.",
+    "noEvents": "Žádné události",
+    "yourSchedule": "Váš rozvrh a termíny na dnešek",
+    "addEvent": "Přidat událost",
+    "freeSlot": "Volný časový blok"
+  },
+  "eventModal": {
+    "createTitle": "Vytvořit událost",
+    "editTitle": "Upravit událost",
+    "fields": {
+      "eventTitle": "Název události",
+      "type": "Typ",
+      "subject": "Předmět",
+      "date": "Datum",
+      "startTime": "Čas začátku",
+      "duration": "Doba trvání (minuty)"
+    },
+    "placeholders": {
+      "eventTitle": "např. Praktický test z databází"
+    },
+    "durationOptions": {
+      "30": "30 minut",
+      "60": "1 hodina",
+      "90": "1,5 hodiny",
+      "120": "2 hodiny",
+      "180": "3 hodiny",
+      "0": "Termín (celý den)"
+    },
+    "actions": {
+      "cancel": "Zrušit",
+      "save": "Uložit událost"
+    }
+  },
+  "eventDetail": {
+    "unknownSubject": "Neznámý předmět",
+    "lecturer": "Vyučující:",
+    "notSpecified": "Neuvedeno",
+    "subjectDescription": "Popis předmětu:",
+    "creditsCompletion": "Kredity / ukončení:",
+    "openSubjectHub": "Otevřít předmět",
+    "editEvent": "Upravit událost",
+    "deleteEvent": "Smazat událost",
+    "areYouSure": "Jste si jistí?"
+  }
+}

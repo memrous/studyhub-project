@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useQueryClient } from '@tanstack/react-query'
+import { Trans, useTranslation } from 'react-i18next'
 import CustomIcon from '../components/CustomIcon'
 import * as api from '../services/api'
 import { useAppState } from '../context/AppStateContext'
@@ -20,6 +21,7 @@ const DashboardPage = () => {
   const navigate = useNavigate()
   const { user } = useAuth()
   const { todayStr } = useAppState()
+  const { t } = useTranslation(['dashboard', 'common'])
 
   const { data: subjects, isLoading: subjectsLoading, error: subjectsError, refetch: refetchSubjects } = useSubjects()
   const { data: events, isLoading: eventsLoading, error: eventsError, refetch: refetchEvents } = useEvents()
@@ -91,7 +93,7 @@ const DashboardPage = () => {
   ).length
 
   if (isLoading) {
-    return <PageState variant="loading" title="Loading..." />
+    return <PageState variant="loading" title={t('common:loading')} />
   }
 
   if (error) {
@@ -99,8 +101,8 @@ const DashboardPage = () => {
       <PageState
         variant="error"
         title={error}
-        description="Please try reloading the page."
-        actionLabel="Try again"
+        description={t('common:errorDescription')}
+        actionLabel={t('common:tryAgain')}
         onAction={reloadData}
       />
     )
@@ -112,8 +114,8 @@ const DashboardPage = () => {
       return (
         <PageState
           variant="loading"
-          title="Syncing schedule from IS/STAG..."
-          description="This may take a few seconds. The page will automatically refresh."
+          title={t('common:syncingSchedule')}
+          description={t('common:syncingDescription')}
         />
       )
     }
@@ -123,9 +125,9 @@ const DashboardPage = () => {
       return (
         <PageState
           variant="error"
-          title="Sync failed"
-          description="Failed to sync your schedule from IS/STAG."
-          actionLabel="Go to Profile"
+          title={t('common:syncFailed')}
+          description={t('common:syncFailedDescription')}
+          actionLabel={t('common:goToProfile')}
           onAction={() => navigate('/profile')}
         />
       )
@@ -135,8 +137,8 @@ const DashboardPage = () => {
     return (
       <PageState
         variant="empty"
-        title="No data"
-        description="No subjects, events, or resources are available yet."
+        title={t('common:noData')}
+        description={t('common:noDataDescription')}
       />
     )
   }
@@ -156,13 +158,18 @@ const DashboardPage = () => {
 
         {/* Greetings */}
         <div className="flex flex-col gap-2">
-          <h1 className="text-display text-on-surface">Good morning, {user.name}!</h1>
+          <h1 className="text-display text-on-surface">{t('dashboardPage.greeting', { name: user.name })}</h1>
           <div className="flex items-center gap-2 text-body-md text-on-surface-variant font-medium">
             <div className="w-5 h-5 bg-[#ffdad6] text-[#ba1a1a] flex items-center justify-center rounded-sm">
               <CustomIcon name="calendar" className="w-3.5 h-3.5" />
             </div>
             <span>
-              You have <strong className="text-on-surface font-semibold">{todayDeadlinesCount} deadlines</strong> today. Time to dive in!
+              <Trans
+                t={t}
+                i18nKey="dashboardPage.todayDeadlines"
+                values={{ count: todayDeadlinesCount }}
+                components={{ strong: <strong className="text-on-surface font-semibold" /> }}
+              />
             </span>
           </div>
         </div>
@@ -182,12 +189,12 @@ const DashboardPage = () => {
             {/* Subjects Section */}
             <section className="flex flex-col gap-4">
               <div className="flex justify-between items-center">
-                <h2 className="text-headline-md text-on-surface font-semibold">My Enrolled Subjects</h2>
+                <h2 className="text-headline-md text-on-surface font-semibold">{t('dashboardPage.mySubjects')}</h2>
                 <button
                   onClick={() => navigate('/subjects')}
                   className="text-label-md text-primary hover:underline font-semibold bg-transparent border-0 cursor-pointer"
                 >
-                  View All
+                  {t('dashboardPage.viewAll')}
                 </button>
               </div>
 
@@ -218,9 +225,9 @@ const DashboardPage = () => {
         {/* Greeting Header */}
         <div className="flex items-center justify-between bg-white border border-[#E2E8F0] p-4 rounded-lg shadow-ambient">
           <div className="flex-1 min-w-0 pr-3">
-            <h2 className="text-headline-lg-mobile text-on-surface font-semibold">Good morning, {user.name}!</h2>
+            <h2 className="text-headline-lg-mobile text-on-surface font-semibold">{t('dashboardPage.greeting', { name: user.name })}</h2>
             <p className="text-body-md text-on-surface-variant mt-1.5 leading-snug">
-              You have {todayDeadlinesCount} deadlines approaching today.
+              {t('dashboardPage.todayDeadlinesMobile', { count: todayDeadlinesCount })}
             </p>
           </div>
           <img
@@ -239,12 +246,12 @@ const DashboardPage = () => {
         {/* Mobile Subjects List */}
         <section className="flex flex-col gap-3">
           <div className="flex justify-between items-center">
-            <h3 className="text-headline-md text-on-surface font-semibold">My Subjects</h3>
+            <h3 className="text-headline-md text-on-surface font-semibold">{t('dashboardPage.mySubjects')}</h3>
             <button
               onClick={() => navigate('/subjects')}
               className="text-label-md text-primary font-semibold bg-transparent border-0 cursor-pointer"
             >
-              View all
+              {t('dashboardPage.viewAll')}
             </button>
           </div>
 
@@ -261,7 +268,7 @@ const DashboardPage = () => {
                   </div>
                   <div>
                     <h4 className="text-label-md text-on-surface font-semibold">{sub.name}</h4>
-                    <span className="text-label-sm text-[#737686] block mt-0.5">Lecturer: {sub.lecturer}</span>
+                    <span className="text-label-sm text-[#737686] block mt-0.5">{t('timetable.lecturer')} {sub.lecturer}</span>
                   </div>
                 </div>
                 <span className="text-[11px] font-bold bg-[#eeefff] text-[#004ac6] px-2 py-0.5 rounded-sm shrink-0 font-geist">

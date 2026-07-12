@@ -1,17 +1,19 @@
 import { FileText, ExternalLink, Download } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import CustomIcon from './CustomIcon'
 
-const getResourceTypeStyles = (type) => {
+const getResourceTypeStyles = (type, t) => {
   switch (type) {
-    case 'PDF': return { bg: 'bg-red-50 text-red-600', label: 'PDF' };
-    case 'SLIDES': return { bg: 'bg-blue-50 text-blue-600', label: 'Slides' };
-    case 'LINK': return { bg: 'bg-emerald-50 text-emerald-600', label: 'URL' };
-    case 'NOTES': return { bg: 'bg-indigo-50 text-indigo-600', label: 'Notes' };
-    default: return { bg: 'bg-slate-50 text-slate-600', label: 'Doc' };
+    case 'PDF': return { bg: 'bg-red-50 text-red-600', label: t('recentMaterials.resourceTypes.PDF') };
+    case 'SLIDES': return { bg: 'bg-blue-50 text-blue-600', label: t('recentMaterials.resourceTypes.SLIDES') };
+    case 'LINK': return { bg: 'bg-emerald-50 text-emerald-600', label: t('recentMaterials.resourceTypes.LINK') };
+    case 'NOTES': return { bg: 'bg-indigo-50 text-indigo-600', label: t('recentMaterials.resourceTypes.NOTES') };
+    default: return { bg: 'bg-slate-50 text-slate-600', label: t('recentMaterials.resourceTypes.default') };
   }
 };
 
 const RecentMaterials = ({ resources, subjects }) => {
+  const { t } = useTranslation('dashboard')
   // Desktop materials (up to 3)
   const recentListDesktop = [...(resources || [])]
     .sort((a, b) => (b.uploadedAt || '').localeCompare(a.uploadedAt || ''))
@@ -26,18 +28,18 @@ const RecentMaterials = ({ resources, subjects }) => {
     <>
       {/* MOBILE LAYOUT: Recent Materials */}
       <section className="flex lg:hidden flex-col gap-3 font-inter text-on-surface">
-        <h3 className="text-headline-md font-semibold">Recent Materials</h3>
+        <h3 className="text-headline-md font-semibold">{t('recentMaterials.title')}</h3>
         
         <div className="flex flex-col gap-3">
           {recentListMobile.length === 0 ? (
             <div className="bg-white border border-[#E2E8F0] p-4 rounded-lg text-center text-body-md text-[#737686] italic">
-              No resources available.
+              {t('recentMaterials.noResources')}
             </div>
           ) : (
             recentListMobile.map(res => {
               const subject = (subjects || []).find(s => s.id === res.subjectId);
               const subCode = subject ? subject.code : '';
-              const styles = getResourceTypeStyles(res.type);
+              const styles = getResourceTypeStyles(res.type, t);
               const isExternal = res.type === 'LINK';
 
               return (
@@ -78,17 +80,17 @@ const RecentMaterials = ({ resources, subjects }) => {
       <div className="hidden lg:flex bg-white border border-[#E2E8F0] p-5 rounded-lg shadow-ambient flex-col gap-4 relative font-inter text-on-surface">
         <div className="flex items-center gap-2">
           <CustomIcon name="folder" className="w-5 h-5" />
-          <h2 className="text-headline-md font-semibold">Recent Materials</h2>
+          <h2 className="text-headline-md font-semibold">{t('recentMaterials.title')}</h2>
         </div>
 
         <div className="flex flex-col gap-3">
           {recentListDesktop.length === 0 ? (
-            <p className="text-body-md text-[#737686] italic text-center py-2">No resources available.</p>
+            <p className="text-body-md text-[#737686] italic text-center py-2">{t('recentMaterials.noResources')}</p>
           ) : (
             recentListDesktop.map(res => {
               const subject = (subjects || []).find(s => s.id === res.subjectId);
               const subName = subject ? subject.name : '';
-              const styles = getResourceTypeStyles(res.type);
+              const styles = getResourceTypeStyles(res.type, t);
               const isExternal = res.type === 'LINK';
 
               return (
@@ -107,7 +109,7 @@ const RecentMaterials = ({ resources, subjects }) => {
                       {res.title}
                     </h4>
                     <span className="text-label-sm text-[#737686]">
-                      {res.size || 'Attachment'} • {styles.label} {subName && `• ${subName}`}
+                      {res.size || t('recentMaterials.attachment')} • {styles.label} {subName && `• ${subName}`}
                     </span>
                   </div>
                 </a>

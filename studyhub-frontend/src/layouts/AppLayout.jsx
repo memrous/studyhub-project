@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Outlet, NavLink } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { 
   X, 
   GraduationCap, 
@@ -8,29 +9,31 @@ import {
 } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import CustomIcon from '../components/CustomIcon'
+import LanguageSwitcher from '../components/LanguageSwitcher'
 
 // Desktop Components
 import Sidebar from '../components/Sidebar'
 import Header from '../components/Header'
 
 const MOBILE_NAV_ITEMS = [
-  { to: '/dashboard', customIcon: 'dashboard', label: 'Dashboard' },
-  { to: '/subjects',  customIcon: 'book',      label: 'Subjects'  },
-  { to: '/calendar',  customIcon: 'calendar',  label: 'Calendar'  },
-  { to: '/materials', customIcon: 'folder',    label: 'Resources' },
+  { to: '/dashboard', customIcon: 'dashboard', labelKey: 'sidebar.dashboard' },
+  { to: '/subjects',  customIcon: 'book',      labelKey: 'sidebar.subjects'  },
+  { to: '/calendar',  customIcon: 'calendar',  labelKey: 'sidebar.calendar'  },
+  { to: '/materials', customIcon: 'folder',    labelKey: 'sidebar.resources' },
 ]
 
 const MOBILE_DRAWER_ITEMS = [
-  { to: '/dashboard', customIcon: 'dashboard', label: 'Dashboard' },
-  { to: '/subjects',  customIcon: 'book',      label: 'Subjects'  },
-  { to: '/calendar',  customIcon: 'calendar',  label: 'Calendar'  },
-  { to: '/materials', customIcon: 'folder',    label: 'Resources' },
-  { to: '/profile',   customIcon: 'profile',   label: 'Profile'   },
+  { to: '/dashboard', customIcon: 'dashboard', labelKey: 'sidebar.dashboard' },
+  { to: '/subjects',  customIcon: 'book',      labelKey: 'sidebar.subjects'  },
+  { to: '/calendar',  customIcon: 'calendar',  labelKey: 'sidebar.calendar'  },
+  { to: '/materials', customIcon: 'folder',    labelKey: 'sidebar.resources' },
+  { to: '/profile',   customIcon: 'profile',   labelKey: 'sidebar.profile'   },
 ]
 
 const AppLayout = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const { user, logout } = useAuth()
+  const { t } = useTranslation('common')
 
   const getDrawerLinkClass = ({ isActive }) => {
     const base = 'flex items-center gap-3 px-3 py-2.5 rounded-md text-label-md transition-all cursor-pointer'
@@ -78,10 +81,7 @@ const AppLayout = () => {
             </button>
             <span className="font-geist font-bold text-lg text-on-surface tracking-tight">StudyHub</span>
           </div>
-          <button className="p-1 text-on-surface-variant hover:text-on-surface relative">
-            <CustomIcon name="bell" className="w-5 h-5" />
-            <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-error rounded-full"></span>
-          </button>
+          <LanguageSwitcher />
         </header>
 
         <main className="p-4 flex flex-col gap-6">
@@ -90,7 +90,7 @@ const AppLayout = () => {
 
         {/* Mobile Bottom Nav inline */}
         <nav className="fixed bottom-0 left-0 right-0 h-16 bg-white border-t border-[#E2E8F0] flex justify-around items-center px-2 z-40 shadow-[0_-2px_10px_0_rgba(0,0,0,0.04)] font-inter">
-          {MOBILE_NAV_ITEMS.map(({ to, icon: Icon, customIcon, label }) => (
+          {MOBILE_NAV_ITEMS.map(({ to, icon: Icon, customIcon, labelKey }) => (
             <NavLink key={to} to={to}>
               {({ isActive }) => (
                 <div className={`flex flex-col items-center gap-1 transition-colors cursor-pointer ${
@@ -107,7 +107,7 @@ const AppLayout = () => {
                       <Icon className="w-4 h-4" />
                     )}
                   </div>
-                  <span className="text-[10px] font-bold tracking-tight">{label}</span>
+                  <span className="text-[10px] font-bold tracking-tight">{t(labelKey)}</span>
                 </div>
               )}
             </NavLink>
@@ -147,7 +147,7 @@ const AppLayout = () => {
               </div>
 
               <nav className="flex flex-col gap-1">
-                {MOBILE_DRAWER_ITEMS.map(({ to, icon: Icon, customIcon, label }) => (
+                {MOBILE_DRAWER_ITEMS.map(({ to, icon: Icon, customIcon, labelKey }) => (
                   <NavLink
                     key={to}
                     to={to}
@@ -161,7 +161,7 @@ const AppLayout = () => {
                         ) : (
                           <Icon className={`w-4 h-4 ${getDrawerIconClass({ isActive })}`} />
                         )}
-                        {label}
+                        {t(labelKey)}
                       </>
                     )}
                   </NavLink>
@@ -185,19 +185,19 @@ const AppLayout = () => {
                     </div>
                   </div>
                   <div className="flex items-center justify-between text-label-sm font-semibold pt-1 border-t border-slate-200">
-                    <span className="text-slate-500">STAG Account</span>
+                    <span className="text-slate-500">{t('sidebar.stagAccount')}</span>
                     {user?.stag_student_id ? (
                       <span className="flex items-center gap-1.5 text-green-600">
                         <span className="relative flex h-1.5 w-1.5">
                           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                           <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-green-500"></span>
                         </span>
-                          Connected
+                          {t('sidebar.connected')}
                       </span>
                     ) : (
                       <span className="flex items-center gap-1.5 text-red-500/80">
                         <span className="h-1.5 w-1.5 rounded-full bg-red-400"></span>
-                         Not Connected
+                         {t('sidebar.notConnected')}
                       </span>
                     )}
                   </div>
@@ -211,7 +211,7 @@ const AppLayout = () => {
                   className="w-full flex items-center gap-3 px-3 py-2 bg-red-50 hover:bg-red-100 text-red-600 rounded-md text-label-md transition-all cursor-pointer font-medium border border-red-200/50"
                 >
                   <LogOut className="w-4 h-4 text-red-600" />
-                  Log Out
+                  {t('sidebar.logout')}
                 </button>
               </div>
             )}

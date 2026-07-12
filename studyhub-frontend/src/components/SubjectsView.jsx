@@ -7,11 +7,13 @@ import {
   ChevronDown,
   Check,
 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import SubjectCard from './SubjectCard'
 import CustomIcon from './CustomIcon'
 
 // ─── Create Subject Modal ────────────────────────────────────
 const CreateSubjectModal = ({ onClose, onSave }) => {
+  const { t } = useTranslation(['academic', 'dashboard'])
   const [form, setForm] = useState({
     code: '',
     name: '',
@@ -34,9 +36,9 @@ const CreateSubjectModal = ({ onClose, onSave }) => {
       name: form.name,
       credits: Number(form.credits),
       isMandatory: form.isMandatory === 'Mandatory',
-      lecturer: form.lecturer || 'TBA',
+      lecturer: form.lecturer || t('academic:subjectsView.defaults.tba'),
       semester: form.semester,
-      description: form.description || 'No description provided.',
+      description: form.description || t('academic:subjectsView.defaults.noDescriptionProvided'),
       completionType: form.completionType,
     })
     onClose()
@@ -50,7 +52,7 @@ const CreateSubjectModal = ({ onClose, onSave }) => {
       <div className="bg-white rounded-lg shadow-2xl border border-[#E2E8F0] w-full max-w-lg overflow-hidden font-inter">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-[#E2E8F0] bg-surface">
-          <h2 className="text-headline-md font-bold text-on-surface">Add Enrolled Subject</h2>
+          <h2 className="text-headline-md font-bold text-on-surface">{t('academic:subjectsView.modalTitle')}</h2>
           <button onClick={onClose} className="p-1 rounded-full hover:bg-[#E2E8F0] text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer">
             <X className="w-5 h-5" />
           </button>
@@ -59,68 +61,72 @@ const CreateSubjectModal = ({ onClose, onSave }) => {
         <form onSubmit={handleSubmit} className="p-6 flex flex-col gap-4 max-h-[75vh] overflow-y-auto">
           {/* Name */}
           <div className="flex flex-col gap-1.5">
-            <label className={labelCls}>Subject Name</label>
-            <input required placeholder="e.g. Database Systems" value={form.name} onChange={set('name')} className={inputCls} />
+            <label className={labelCls}>{t('academic:subjectsView.fields.subjectName')}</label>
+            <input required placeholder={t('academic:subjectsView.placeholders.subjectName')} value={form.name} onChange={set('name')} className={inputCls} />
           </div>
 
           {/* Code + Credits */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="flex flex-col gap-1.5">
-              <label className={labelCls}>Course Code (STAG)</label>
-              <input required placeholder="e.g. KMI/DBS" value={form.code} onChange={set('code')} className={inputCls} />
+              <label className={labelCls}>{t('academic:subjectsView.fields.courseCode')}</label>
+              <input required placeholder={t('academic:subjectsView.placeholders.courseCode')} value={form.code} onChange={set('code')} className={inputCls} />
             </div>
             <div className="flex flex-col gap-1.5">
-              <label className={labelCls}>Credits</label>
+              <label className={labelCls}>{t('academic:subjectsView.fields.credits')}</label>
               <select value={form.credits} onChange={set('credits')} className={inputCls}>
-                {[2, 3, 4, 5, 6, 7, 8, 10].map(c => <option key={c} value={c}>{c} Credits</option>)}
+                {[2, 3, 4, 5, 6, 7, 8, 10].map(c => (
+                  <option key={c} value={c}>
+                    {t(`academic:subjectsView.creditUnit`, { count: c })}
+                  </option>
+                ))}
               </select>
             </div>
           </div>
 
           {/* Lecturer */}
           <div className="flex flex-col gap-1.5">
-            <label className={labelCls}>Lecturer / Professor</label>
-            <input placeholder="e.g. John Smith" value={form.lecturer} onChange={set('lecturer')} className={inputCls} />
+            <label className={labelCls}>{t('academic:subjectsView.fields.lecturer')}</label>
+            <input placeholder={t('academic:subjectsView.placeholders.lecturer')} value={form.lecturer} onChange={set('lecturer')} className={inputCls} />
           </div>
 
           {/* Category + Semester */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="flex flex-col gap-1.5">
-              <label className={labelCls}>Enrollment Badge</label>
+              <label className={labelCls}>{t('academic:subjectsView.fields.enrollmentBadge')}</label>
               <select value={form.isMandatory} onChange={set('isMandatory')} className={inputCls}>
-                <option>Mandatory</option>
-                <option>Elective</option>
+                <option value="Mandatory">{t('dashboard:subjectCard.mandatory')}</option>
+                <option value="Elective">{t('dashboard:subjectCard.elective')}</option>
               </select>
             </div>
             <div className="flex flex-col gap-1.5">
-              <label className={labelCls}>Semester</label>
+              <label className={labelCls}>{t('academic:subjectsView.fields.semester')}</label>
               <select value={form.semester} onChange={set('semester')} className={inputCls}>
-                <option value="Winter">Winter Semester</option>
-                <option value="Summer">Summer Semester</option>
+                <option value="Winter">{t('dashboard:subjectCard.semester.winter')}</option>
+                <option value="Summer">{t('dashboard:subjectCard.semester.summer')}</option>
               </select>
             </div>
           </div>
 
           {/* Completion Type */}
           <div className="flex flex-col gap-1.5">
-            <label className={labelCls}>Completion Type</label>
+            <label className={labelCls}>{t('academic:subjectsView.fields.completionType')}</label>
             <select value={form.completionType} onChange={set('completionType')} className={inputCls}>
-              <option value="Exam">Exam</option>
-              <option value="Credit">Credit</option>
-              <option value="Credit + Exam">Credit + Exam</option>
+              <option value="Exam">{t('academic:subjectsView.options.exam')}</option>
+              <option value="Credit">{t('academic:subjectsView.options.credit')}</option>
+              <option value="Credit + Exam">{t('academic:subjectsView.options.creditPlusExam')}</option>
             </select>
           </div>
 
           {/* Description */}
           <div className="flex flex-col gap-1.5">
-            <label className={labelCls}>Subject Description</label>
-            <textarea rows={3} placeholder="Describe the course curriculum..." value={form.description} onChange={set('description')} className={`${inputCls} resize-none`} />
+            <label className={labelCls}>{t('academic:subjectsView.fields.subjectDescription')}</label>
+            <textarea rows={3} placeholder={t('academic:subjectsView.placeholders.description')} value={form.description} onChange={set('description')} className={`${inputCls} resize-none`} />
           </div>
 
           {/* Actions */}
           <div className="flex flex-col sm:flex-row gap-3 justify-end pt-4 border-t border-[#E2E8F0] mt-2">
-            <button type="button" onClick={onClose} className="w-full sm:w-auto px-4 py-2 border border-[#E2E8F0] rounded-md text-label-md font-semibold text-on-surface-variant hover:bg-slate-50 transition-colors cursor-pointer">Cancel</button>
-            <button type="submit" className="w-full sm:w-auto px-4 py-2 bg-[#004ac6] hover:bg-[#003ea8] text-white rounded-md text-label-md font-semibold shadow-sm transition-colors cursor-pointer">Save Subject</button>
+            <button type="button" onClick={onClose} className="w-full sm:w-auto px-4 py-2 border border-[#E2E8F0] rounded-md text-label-md font-semibold text-on-surface-variant hover:bg-slate-50 transition-colors cursor-pointer">{t('academic:subjectsView.actions.cancel')}</button>
+            <button type="submit" className="w-full sm:w-auto px-4 py-2 bg-[#004ac6] hover:bg-[#003ea8] text-white rounded-md text-label-md font-semibold shadow-sm transition-colors cursor-pointer">{t('academic:subjectsView.actions.saveSubject')}</button>
           </div>
         </form>
       </div>
@@ -171,21 +177,22 @@ const Dropdown = ({ label, icon: Icon, options, value, onChange }) => {
 
 // ─── Main SubjectsView Component ─────────────────────────────
 const SubjectsView = ({ subjects, onSelectSubject, onAddSubject, onDeleteSubject }) => {
+  const { t } = useTranslation(['academic', 'dashboard'])
   const [filterType, setFilterType] = useState('all')     // 'all' | 'Mandatory' | 'Elective'
   const [sortKey, setSortKey] = useState('default')       // 'default' | 'name' | 'code' | 'credits'
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   const FILTER_OPTIONS = [
-    { value: 'all',       label: 'All Subjects' },
-    { value: 'Mandatory', label: 'Mandatory Only' },
-    { value: 'Elective',  label: 'Elective Only' },
+    { value: 'all',       label: t('academic:subjectsView.filters.allSubjects') },
+    { value: 'Mandatory', label: t('academic:subjectsView.filters.mandatoryOnly') },
+    { value: 'Elective',  label: t('academic:subjectsView.filters.electiveOnly') },
   ]
 
   const SORT_OPTIONS = [
-    { value: 'default',  label: 'Default Order' },
-    { value: 'name',     label: 'Name (A–Z)' },
-    { value: 'code',     label: 'Course Code' },
-    { value: 'credits',  label: 'Credits (High–Low)' },
+    { value: 'default',  label: t('academic:subjectsView.sorts.defaultOrder') },
+    { value: 'name',     label: t('academic:subjectsView.sorts.nameAZ') },
+    { value: 'code',     label: t('academic:subjectsView.sorts.courseCode') },
+    { value: 'credits',  label: t('academic:subjectsView.sorts.creditsHighLow') },
   ]
 
   const displayed = useMemo(() => {
@@ -205,8 +212,8 @@ const SubjectsView = ({ subjects, onSelectSubject, onAddSubject, onDeleteSubject
     return list
   }, [subjects, filterType, sortKey])
 
-  const filterLabel = FILTER_OPTIONS.find(o => o.value === filterType)?.label ?? 'Filter'
-  const sortLabel   = SORT_OPTIONS.find(o => o.value === sortKey)?.label ?? 'Sort'
+  const filterLabel = FILTER_OPTIONS.find(o => o.value === filterType)?.label ?? t('academic:subjectsView.fallbacks.filter')
+  const sortLabel   = SORT_OPTIONS.find(o => o.value === sortKey)?.label ?? t('academic:subjectsView.fallbacks.sort')
 
   return (
     <>
@@ -215,8 +222,8 @@ const SubjectsView = ({ subjects, onSelectSubject, onAddSubject, onDeleteSubject
         {/* Page Header */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex flex-col gap-1 min-w-0">
-            <h1 className="text-display text-on-surface">My Enrolled Subjects</h1>
-            <p className="text-body-md text-[#737686]">Manage your academic curriculum, credits, and completion types connected with STAG.</p>
+            <h1 className="text-display text-on-surface">{t('academic:subjectsView.page.title')}</h1>
+            <p className="text-body-md text-[#737686]">{t('academic:subjectsView.page.subtitle')}</p>
           </div>
 
           {/* Filter + Sort Controls */}
@@ -249,12 +256,14 @@ const SubjectsView = ({ subjects, onSelectSubject, onAddSubject, onDeleteSubject
               <CustomIcon name="book" className="w-6 h-6" />
             </div>
             <p className="text-headline-md font-semibold text-on-surface">
-              {subjects.length === 0 ? 'No data' : 'No matching subjects'}
+              {subjects.length === 0
+                ? t('academic:subjectsView.emptyState.noDataTitle')
+                : t('academic:subjectsView.emptyState.noMatchingTitle')}
             </p>
             <p className="text-body-md text-[#737686]">
               {subjects.length === 0
-                ? 'You do not have any enrolled subjects yet.'
-                : 'Try changing the filter or add a new subject.'}
+                ? t('academic:subjectsView.emptyState.noDataDescription')
+                : t('academic:subjectsView.emptyState.noMatchingDescription')}
             </p>
           </div>
         ) : (
@@ -266,14 +275,14 @@ const SubjectsView = ({ subjects, onSelectSubject, onAddSubject, onDeleteSubject
         )}
 
         <footer className="text-center text-body-md text-[#737686] pt-4 border-t border-[#E2E8F0]">
-          © 2026 Palacký University Olomouc Academic Systems. STAG Integration Connected.
+          {t('academic:subjectsView.page.footer')}
         </footer>
       </div>
 
       {/* Floating Action Button */}
       <button
         onClick={() => setIsModalOpen(true)}
-        title="Add Enrolled Subject"
+        title={t('academic:subjectsView.modalTitle')}
         className="fixed lg:bottom-8 bottom-20 right-8 w-14 h-14 bg-[#004ac6] hover:bg-[#003ea8] active:scale-95 text-white rounded-full shadow-xl flex items-center justify-center transition-all z-30 cursor-pointer"
       >
         <Plus className="w-6 h-6" />

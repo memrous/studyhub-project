@@ -18,17 +18,17 @@ const LS_AUTH = 'studyhub:auth'
 const getAuthErrorMessage = (error) => {
   switch (error) {
     case 'invalid_credentials':
-      return 'Invalid email or password. Please try again.'
+      return 'errors.invalidCredentials'
     case 'email_exists':
-      return 'An account with this email already exists.'
+      return 'errors.emailExists'
     case 'network_error':
-      return 'Network error. Please try again.'
+      return 'errors.networkError'
     case 'server_error':
-      return 'Server error. Please try again.'
+      return 'errors.serverError'
     case 'unauthorized':
-      return 'Session expired. Please log in again.'
+      return 'errors.unauthorized'
     default:
-      return 'Something went wrong. Please try again.'
+      return 'errors.generic'
   }
 }
 

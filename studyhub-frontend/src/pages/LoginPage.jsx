@@ -12,27 +12,30 @@ import {
   ArrowRight,
   Loader2,
 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import CustomIcon from '../components/CustomIcon'
+import LanguageSwitcher from '../components/LanguageSwitcher'
 import { useAuth } from '../context/AuthContext'
 
 // ── Left brand panel feature list ────────────────────────────────
 const FEATURES = [
-  { icon: () => <CustomIcon name="book" className="w-5 h-5" />, text: 'Manage all your enrolled subjects and materials in one place.' },
-  { icon: CalendarDays, text: 'Visual calendar with deadlines, lectures, and exams.' },
-  { icon: BarChart3,    text: 'Track your academic progress and upcoming credits.' },
+  { icon: () => <CustomIcon name="book" className="w-5 h-5" />, key: 'features.manageSubjects' },
+  { icon: CalendarDays, key: 'features.calendar' },
+  { icon: BarChart3, key: 'features.progress' },
 ]
 
 // ── Form field validation ─────────────────────────────────────────
 const validate = (email, password) => {
   const errors = {}
-  if (!email.trim())                          errors.email    = 'Email is required.'
-  else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors.email = 'Enter a valid email address.'
-  if (!password)                              errors.password = 'Password is required.'
+  if (!email.trim()) errors.email = 'errors.emailRequired'
+  else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors.email = 'errors.invalidEmail'
+  if (!password) errors.password = 'errors.passwordRequired'
   return errors
 }
 
 const LoginPage = () => {
   const { login, isAuthenticated, isLoading: authLoading } = useAuth()
+  const { t } = useTranslation('auth')
 
   const [email,       setEmail]       = useState('')
   const [password,    setPassword]    = useState('')
@@ -74,7 +77,10 @@ const LoginPage = () => {
   const inputErr = `${inputBase} border-red-400 focus:border-red-500 bg-red-50`
 
   return (
-    <div className="min-h-screen flex font-inter">
+    <div className="min-h-screen flex font-inter relative">
+      <div className="absolute top-4 right-4 sm:top-6 sm:right-6 z-20">
+        <LanguageSwitcher />
+      </div>
 
       {/* ── Left brand panel (desktop only) ───────────────────── */}
       <div className="hidden lg:flex lg:w-[480px] xl:w-[540px] shrink-0 flex-col justify-between p-12 relative overflow-hidden"
@@ -98,20 +104,25 @@ const LoginPage = () => {
         <div className="relative z-10 flex flex-col gap-8">
           <div className="flex flex-col gap-3">
             <h1 className="text-4xl font-bold text-white leading-tight tracking-tight">
-              Your academic life,<br />organized.
+              {t('login.headline').split('\n').map((line, index, lines) => (
+                <span key={`${line}-${index}`}>
+                  {line}
+                  {index < lines.length - 1 ? <br /> : null}
+                </span>
+              ))}
             </h1>
             <p className="text-blue-200 text-base leading-relaxed">
-              Connect your STAG account and take full control of your university journey.
+              {t('login.subtitle')}
             </p>
           </div>
 
           <div className="flex flex-col gap-4">
-            {FEATURES.map(({ icon: Icon, text }) => (
-              <div key={text} className="flex items-start gap-3">
+            {FEATURES.map(({ icon: Icon, key }) => (
+              <div key={key} className="flex items-start gap-3">
                 <div className="w-8 h-8 rounded-lg bg-white/15 border border-white/20 flex items-center justify-center shrink-0 mt-0.5">
                   <Icon className="w-4 h-4 text-blue-200" />
                 </div>
-                <p className="text-sm text-blue-100 leading-snug">{text}</p>
+                <p className="text-sm text-blue-100 leading-snug">{t(key)}</p>
               </div>
             ))}
           </div>
@@ -119,12 +130,12 @@ const LoginPage = () => {
 
         {/* Footer credit */}
         <p className="text-blue-300/60 text-xs relative z-10">
-          © 2026 Palacký University Olomouc Academic Systems
+          {t('login.footerCopyright')}
         </p>
       </div>
 
       {/* ── Right form panel ──────────────────────────────────── */}
-      <div className="flex-1 flex flex-col items-center justify-center bg-white px-6 py-12">
+      <div className="flex-1 flex flex-col items-center justify-start lg:justify-center bg-white px-6 pt-20 pb-12 sm:pt-24 lg:pt-12">
         <div className="w-full max-w-[400px] flex flex-col gap-8">
 
           {/* Mobile logo (hidden on desktop) */}
@@ -137,15 +148,15 @@ const LoginPage = () => {
 
           {/* Heading */}
           <div className="flex flex-col gap-1.5">
-            <h2 className="text-2xl font-bold text-on-surface tracking-tight">Welcome back</h2>
-            <p className="text-body-md text-on-surface-variant">Sign in to your student account.</p>
+            <h2 className="text-2xl font-bold text-on-surface tracking-tight">{t('login.welcomeBack')}</h2>
+            <p className="text-body-md text-on-surface-variant">{t('login.welcomeSubtitle')}</p>
           </div>
 
           {/* Mock credentials hint */}
           <div className="flex items-start gap-2.5 px-4 py-3 bg-[#eeefff] border border-[#c5caff] rounded-lg">
             <AlertCircle className="w-4 h-4 text-[#004ac6] shrink-0 mt-0.5" />
             <p className="text-label-sm text-[#004ac6] leading-snug">
-              <span className="font-bold">Demo credentials: </span>
+              <span className="font-bold">{t('login.demoCredentials.label')} </span>
               student@studyhub.cz · password
             </p>
           </div>
@@ -154,7 +165,7 @@ const LoginPage = () => {
           {serverError && (
             <div className="flex items-start gap-2.5 px-4 py-3 bg-red-50 border border-red-200 rounded-lg">
               <AlertCircle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
-              <p className="text-label-sm text-red-700">{serverError}</p>
+              <p className="text-label-sm text-red-700">{t(serverError)}</p>
             </div>
           )}
 
@@ -164,7 +175,7 @@ const LoginPage = () => {
             {/* Email */}
             <div className="flex flex-col gap-1.5">
               <label className="text-label-md font-semibold text-on-surface" htmlFor="login-email">
-                Email address
+                {t('login.fields.email.label')}
               </label>
               <div className="relative">
                 <Mail className="w-4 h-4 text-outline absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
@@ -174,13 +185,13 @@ const LoginPage = () => {
                   autoComplete="email"
                   value={email}
                   onChange={(e) => { setEmail(e.target.value); setErrors((p) => ({ ...p, email: '' })) }}
-                  placeholder="you@university.cz"
+                  placeholder={t('login.fields.email.placeholder')}
                   className={errors.email ? inputErr : inputOk}
                 />
               </div>
               {errors.email && (
                 <p className="text-label-sm text-red-600 flex items-center gap-1">
-                  <AlertCircle className="w-3 h-3" /> {errors.email}
+                  <AlertCircle className="w-3 h-3" /> {t(errors.email)}
                 </p>
               )}
             </div>
@@ -189,7 +200,7 @@ const LoginPage = () => {
             <div className="flex flex-col gap-1.5">
               <div className="flex items-center justify-between">
                 <label className="text-label-md font-semibold text-on-surface" htmlFor="login-password">
-                  Password
+                  {t('login.fields.password.label')}
                 </label>
               </div>
               <div className="relative">
@@ -200,21 +211,21 @@ const LoginPage = () => {
                   autoComplete="current-password"
                   value={password}
                   onChange={(e) => { setPassword(e.target.value); setErrors((p) => ({ ...p, password: '' })) }}
-                  placeholder="••••••••"
+                  placeholder={t('login.fields.password.placeholder')}
                   className={`${errors.password ? inputErr : inputOk} pr-10`}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPass((v) => !v)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-outline hover:text-on-surface transition-colors"
-                  aria-label={showPass ? 'Hide password' : 'Show password'}
+                  aria-label={showPass ? t('login.aria.hidePassword') : t('login.aria.showPassword')}
                 >
                   {showPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
               {errors.password && (
                 <p className="text-label-sm text-red-600 flex items-center gap-1">
-                  <AlertCircle className="w-3 h-3" /> {errors.password}
+                  <AlertCircle className="w-3 h-3" /> {t(errors.password)}
                 </p>
               )}
             </div>
@@ -226,18 +237,18 @@ const LoginPage = () => {
               className="w-full flex items-center justify-center gap-2 py-2.5 px-4 bg-[#004ac6] hover:bg-[#003ea8] active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold rounded-lg text-label-md transition-all shadow-sm mt-1 cursor-pointer"
             >
               {submitting ? (
-                <><Loader2 className="w-4 h-4 animate-spin" /> Signing in…</>
+                <><Loader2 className="w-4 h-4 animate-spin" /> {t('login.actions.signingIn')}</>
               ) : (
-                <>Sign in <ArrowRight className="w-4 h-4" /></>
+                <>{t('login.actions.signIn')} <ArrowRight className="w-4 h-4" /></>
               )}
             </button>
           </form>
 
           {/* Register link */}
           <p className="text-body-md text-on-surface-variant text-center">
-            Don't have an account?{' '}
+            {t('login.links.noAccount')}{' '}
             <Link to="/register" className="text-[#004ac6] font-semibold hover:underline">
-              Create one
+              {t('login.links.createOne')}
             </Link>
           </p>
         </div>

@@ -1,0 +1,102 @@
+{
+  "dashboardPage": {
+    "greeting": "Good morning, {{name}}!",
+    "todayDeadlines": "You have <strong>{{count}} deadlines</strong> today. Time to dive in!",
+    "todayDeadlinesMobile": "You have {{count}} deadlines approaching today.",
+    "mySubjects": "My Enrolled Subjects",
+    "viewAll": "View All",
+    "loading": "Loading...",
+    "syncing": "Syncing schedule from IS/STAG...",
+    "syncingDescription": "This may take a few seconds. The page will automatically refresh.",
+    "syncFailed": "Sync failed",
+    "syncFailedDescription": "Failed to sync your schedule from IS/STAG.",
+    "goToProfile": "Go to Profile",
+    "noData": "No data",
+    "noDataDescription": "No subjects, events, or resources are available yet.",
+    "errorDescription": "Please try reloading the page.",
+    "tryAgain": "Try again"
+  },
+  "stats": {
+    "activeSubjects": "Active Subjects",
+    "pendingTasks": "Pending Tasks",
+    "upcomingExams": "Upcoming Exams"
+  },
+  "timetable": {
+    "titleMobile": "Today's Schedule",
+    "titleDesktop": "Weekly Timetable",
+    "lecturer": "Lecturer:",
+    "subjectDescription": "Subject Description:",
+    "noClassesToday": "No classes scheduled for today.",
+    "noClasses": "No classes",
+    "prev": "← Prev",
+    "current": "Current",
+    "next": "Next →",
+    "openSubjectHub": "Open Subject Hub",
+    "fallbacks": {
+      "subjectCode": "GEN 101",
+      "room201": "Room 201",
+      "room105": "Room 105",
+      "mainHall": "Main Hall",
+      "unknownSubject": "Unknown Subject",
+      "notSpecified": "Not specified"
+    },
+    "days": {
+      "mon": "Mon",
+      "tue": "Tue",
+      "wed": "Wed",
+      "thu": "Thu",
+      "fri": "Fri"
+    },
+    "eventTypes": {
+      "Lecture": "Lecture",
+      "Lab": "Lab",
+      "Assignment": "Assignment",
+      "Test": "Test",
+      "Quiz": "Quiz",
+      "Exam": "Exam",
+      "Deadline": "Deadline"
+    },
+    "creditsCompletion": "Credits / Completion:"
+  },
+  "deadlines": {
+    "urgent": "Urgent Deadlines",
+    "upcoming": "Upcoming Deadlines",
+    "noUrgent": "No urgent deadlines.",
+    "noUpcoming": "No upcoming deadlines.",
+    "dueToday": "Due Today",
+    "dueTomorrow": "Due Tomorrow",
+    "dueOnDate": "Due {{date}}",
+    "dueInDays": "Due in {{count}} days",
+    "overdueByDays": "Overdue by {{count}} days",
+    "eventTypes": {
+      "Assignment": "Assignment",
+      "Test": "Test",
+      "Exam": "Exam"
+    }
+  },
+  "recentMaterials": {
+    "title": "Recent Materials",
+    "noResources": "No resources available.",
+    "attachment": "Attachment",
+    "resourceTypes": {
+      "PDF": "PDF",
+      "SLIDES": "Slides",
+      "LINK": "URL",
+      "NOTES": "Notes",
+      "default": "Doc"
+    }
+  },
+  "subjectCard": {
+    "mandatory": "Mandatory",
+    "elective": "Elective",
+    "credits_one": "{{count}} Credit",
+    "credits_other": "{{count}} Credits",
+    "deleteSubject": "Delete Subject",
+    "deleteConfirm": "Are you sure you want to delete the subject \"{{name}}\"?",
+    "openSubject": "Open Subject",
+    "semester": {
+      "winter": "Winter Semester",
+      "summer": "Summer Semester"
+    }
+  }
+}

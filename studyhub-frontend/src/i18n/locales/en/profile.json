@@ -1,0 +1,84 @@
+{
+  "validation": {
+    "studentIdRequired": "Student ID is required.",
+    "usernameRequired": "Username is required.",
+    "passwordRequired": "Password is required."
+  },
+  "loading": "Loading...",
+  "unavailable": {
+    "title": "Profile data is not available right now.",
+    "hint": "Please refresh the page or sign in again."
+  },
+  "header": {
+    "badge": "Institutional Student Account"
+  },
+  "sections": {
+    "academicDetails": {
+      "title": "Academic Details",
+      "subtitle": "Official curriculum details synced from Palacky University STAG system."
+    },
+    "universityIntegration": {
+      "title": "University integration",
+      "subtitle": "We separate STAG and Moodle integration in one place."
+    }
+  },
+  "academic": {
+    "university": "University",
+    "faculty": "Faculty",
+    "studyProgram": "Study Program",
+    "academicYear": "Academic Year",
+    "defaults": {
+      "university": "Palacky University Olomouc",
+      "faculty": "Faculty of Science",
+      "studyProgram": "Applied Informatics",
+      "academicYear": "1st Year"
+    }
+  },
+  "stag": {
+    "status": {
+      "syncing": "Syncing your schedule from IS/STAG...",
+      "success": "Schedule synced successfully from IS/STAG.",
+      "failed": "Schedule sync failed. Check your STAG credentials and try reconnecting."
+    },
+    "card": {
+      "title": "IS/STAG",
+      "subtitle": "University system connection status",
+      "helper": "To connect to IS/STAG, enter your university login credentials. If you want, you can do this later."
+    },
+    "labels": {
+      "studentId": "Student ID",
+      "username": "Username",
+      "password": "Password"
+    },
+    "connected": {
+      "connected": "CONNECTED",
+      "notConnected": "NOT CONNECTED"
+    },
+    "actions": {
+      "connect": "Connect IS/STAG",
+      "disconnect": "Disconnect IS/STAG",
+      "syncNow": "Sync now",
+      "syncNowCountdown": "Sync now ({{time}})",
+      "goToDashboard": "Go to Dashboard",
+      "cancel": "Cancel"
+    },
+    "syncing": {
+      "background": "IS/STAG connected. Syncing your schedule in the background...",
+      "started": "Sync started — refreshing your schedule in the background.",
+      "recentlyTriggered": "Sync was already triggered recently — try again in {{minutes}} minutes.",
+      "failed": "Failed to trigger sync."
+    }
+  },
+  "toast": {
+    "connectFailed": "We could not connect IS/STAG. Please check the values and try again.",
+    "disconnectFailed": "We could not disconnect IS/STAG right now. Please try again.",
+    "disconnectSuccess": "IS/STAG has been disconnected."
+  },
+  "moodle": {
+    "title": "Moodle",
+    "subtitle": "Placeholder for future integration",
+    "body": "Moodle integration is still in preparation. This is a visual placeholder for the future state.",
+    "action": "Coming soon",
+    "status": "NOT CONNECTED"
+  }
+}
