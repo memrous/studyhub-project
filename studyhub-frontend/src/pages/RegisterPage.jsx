@@ -337,17 +337,17 @@ const RegisterPage = () => {
 
   // ── Style tokens ─────────────────────────────────────────────────
   const inputBase =
-    'w-full pl-10 pr-4 py-2.5 bg-[#F8F9FB] rounded-lg border text-body-md text-on-surface focus:outline-none focus:bg-white transition-colors'
+    'w-full pl-10 pr-4 py-2.5 bg-[#F8F9FB] rounded-lg border text-body-md text-gray-900 focus:outline-none focus:bg-white transition-colors'
   const inputOk = `${inputBase} border-[#E2E8F0] focus:border-[#004ac6]`
   const inputErr = `${inputBase} border-red-400 focus:border-red-500 bg-red-50`
 
   const selectBase =
-    'w-full pl-10 pr-10 py-2.5 bg-[#F8F9FB] rounded-lg border text-body-md text-on-surface focus:outline-none focus:bg-white transition-colors appearance-none cursor-pointer'
+    'w-full pl-10 pr-10 py-2.5 bg-[#F8F9FB] rounded-lg border text-body-md text-gray-900 focus:outline-none focus:bg-white transition-colors appearance-none cursor-pointer'
   const selectOk = `${selectBase} border-[#E2E8F0] focus:border-[#004ac6]`
   const selectErr = `${selectBase} border-red-400 focus:border-red-500 bg-red-50`
 
   const stagInputBase =
-    'w-full px-4 py-2.5 bg-[#F8F9FB] rounded-lg border text-body-md text-on-surface focus:outline-none focus:bg-white transition-colors'
+    'w-full px-4 py-2.5 bg-[#F8F9FB] rounded-lg border text-body-md text-gray-900 focus:outline-none focus:bg-white transition-colors'
   const stagInputOk = `${stagInputBase} border-[#E2E8F0] focus:border-[#004ac6]`
   const stagInputErr = `${stagInputBase} border-red-400 focus:border-red-500 bg-red-50`
 
@@ -412,13 +412,13 @@ const RegisterPage = () => {
             <div className="w-9 h-9 bg-[#004ac6] rounded-xl flex items-center justify-center">
               <GraduationCap className="w-5 h-5 text-white" />
             </div>
-            <span className="font-geist font-bold text-xl text-on-surface tracking-tight">StudyHub</span>
+            <span className="font-geist font-bold text-xl text-gray-900 tracking-tight">StudyHub</span>
           </div>
 
           {/* ── Progress indicator ─────────────────────────────── */}
           <div className="flex flex-col gap-2.5">
             <div className="flex items-center justify-between">
-              <span className="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest">
+              <span className="text-[11px] font-bold text-gray-500 uppercase tracking-widest">
                 {t('register.progress.step', { currentStep })}
               </span>
               <span className="text-[11px] font-bold text-[#004ac6]">{progressPercent}%</span>
@@ -437,10 +437,10 @@ const RegisterPage = () => {
 
           {/* ── Step title ─────────────────────────────────────── */}
           <div className="flex flex-col gap-1.5">
-            <h2 className="text-2xl font-bold text-on-surface tracking-tight">
+            <h2 className="text-2xl font-bold text-gray-900 tracking-tight">
               {t(`register.stepMeta.${meta}.title`)}
             </h2>
-            <p className="text-body-md text-on-surface-variant">
+            <p className="text-body-md text-gray-500">
               {t(`register.stepMeta.${meta}.subtitle`)}
             </p>
           </div>
@@ -461,11 +461,11 @@ const RegisterPage = () => {
               <>
                 {/* Full name */}
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-label-md font-semibold text-on-surface" htmlFor="reg-name">
+                  <label className="text-label-md font-semibold text-gray-900" htmlFor="reg-name">
                     {t('register.fields.name.label')}
                   </label>
                   <div className="relative">
-                    <User className="w-4 h-4 text-outline absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    <User className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                     <input
                       id="reg-name"
                       type="text"
@@ -485,11 +485,11 @@ const RegisterPage = () => {
 
                 {/* Username */}
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-label-md font-semibold text-on-surface" htmlFor="reg-username">
+                  <label className="text-label-md font-semibold text-gray-900" htmlFor="reg-username">
                     {t('register.fields.username.label')}
                   </label>
                   <div className="relative">
-                    <User className="w-4 h-4 text-outline absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    <User className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                     <input
                       id="reg-username"
                       type="text"
@@ -509,11 +509,11 @@ const RegisterPage = () => {
 
                 {/* Email */}
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-label-md font-semibold text-on-surface" htmlFor="reg-email">
+                  <label className="text-label-md font-semibold text-gray-900" htmlFor="reg-email">
                     {t('register.fields.email.label')}
                   </label>
                   <div className="relative">
-                    <Mail className="w-4 h-4 text-outline absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    <Mail className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                     <input
                       id="reg-email"
                       type="email"
@@ -533,11 +533,11 @@ const RegisterPage = () => {
 
                 {/* Password */}
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-label-md font-semibold text-on-surface" htmlFor="reg-password">
+                  <label className="text-label-md font-semibold text-gray-900" htmlFor="reg-password">
                     {t('register.fields.password.label')}
                   </label>
                   <div className="relative">
-                    <Lock className="w-4 h-4 text-outline absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    <Lock className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                     <input
                       id="reg-password"
                       type={showPass ? 'text' : 'password'}
@@ -550,7 +550,7 @@ const RegisterPage = () => {
                     <button
                       type="button"
                       onClick={() => setShowPass((v) => !v)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-outline hover:text-on-surface transition-colors"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-900 transition-colors"
                       aria-label={showPass ? t('register.aria.hidePassword') : t('register.aria.showPassword')}
                     >
                       {showPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -569,7 +569,7 @@ const RegisterPage = () => {
                           />
                         ))}
                       </div>
-                      <span className="text-[11px] font-semibold text-on-surface-variant shrink-0">
+                      <span className="text-[11px] font-semibold text-gray-500 shrink-0">
                         {strengthLabelKey ? t(strengthLabelKey) : ''}
                       </span>
                     </div>
@@ -584,11 +584,11 @@ const RegisterPage = () => {
 
                 {/* Confirm password */}
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-label-md font-semibold text-on-surface" htmlFor="reg-confirm">
+                  <label className="text-label-md font-semibold text-gray-900" htmlFor="reg-confirm">
                     {t('register.fields.confirmPassword.label')}
                   </label>
                   <div className="relative">
-                    <Lock className="w-4 h-4 text-outline absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    <Lock className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                     <input
                       id="reg-confirm"
                       type={showConfirm ? 'text' : 'password'}
@@ -601,7 +601,7 @@ const RegisterPage = () => {
                     <button
                       type="button"
                       onClick={() => setShowConfirm((v) => !v)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-outline hover:text-on-surface transition-colors"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-900 transition-colors"
                       aria-label={showConfirm ? t('register.aria.hidePassword') : t('register.aria.showPassword')}
                     >
                       {showConfirm ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -625,11 +625,11 @@ const RegisterPage = () => {
               <>
                 {/* University */}
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-label-md font-semibold text-on-surface" htmlFor="reg-university">
+                  <label className="text-label-md font-semibold text-gray-900" htmlFor="reg-university">
                     {t('register.fields.university.label')}
                   </label>
                   <div className="relative">
-                    <Building2 className="w-4 h-4 text-outline absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    <Building2 className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                     <select
                       id="reg-university"
                       value={form.university_id}
@@ -643,7 +643,7 @@ const RegisterPage = () => {
                         </option>
                       ))}
                     </select>
-                    <ChevronDown className="w-4 h-4 text-outline absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    <ChevronDown className="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                   </div>
                   {errors.university_id && (
                     <p className="text-label-sm text-red-600 flex items-center gap-1">
@@ -654,11 +654,11 @@ const RegisterPage = () => {
 
                 {/* Faculty */}
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-label-md font-semibold text-on-surface" htmlFor="reg-faculty">
+                  <label className="text-label-md font-semibold text-gray-900" htmlFor="reg-faculty">
                     {t('register.fields.faculty.label')}
                   </label>
                   <div className="relative">
-                    <CustomIcon name="book" className="w-4 h-4 text-outline absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    <CustomIcon name="book" className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                     <select
                       id="reg-faculty"
                       value={form.faculty_id}
@@ -677,7 +677,7 @@ const RegisterPage = () => {
                         </option>
                       ))}
                     </select>
-                    <ChevronDown className="w-4 h-4 text-outline absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    <ChevronDown className="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                   </div>
                   {errors.faculty_id && (
                     <p className="text-label-sm text-red-600 flex items-center gap-1">
@@ -688,11 +688,11 @@ const RegisterPage = () => {
 
                 {/* Study Program */}
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-label-md font-semibold text-on-surface" htmlFor="reg-program">
+                  <label className="text-label-md font-semibold text-gray-900" htmlFor="reg-program">
                     {t('register.fields.studyProgram.label')}
                   </label>
                   <div className="relative">
-                    <GraduationCap className="w-4 h-4 text-outline absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    <GraduationCap className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                     <select
                       id="reg-program"
                       value={form.study_program_id}
@@ -711,7 +711,7 @@ const RegisterPage = () => {
                         </option>
                       ))}
                     </select>
-                    <ChevronDown className="w-4 h-4 text-outline absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    <ChevronDown className="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                   </div>
                   {errors.study_program_id && (
                     <p className="text-label-sm text-red-600 flex items-center gap-1">
@@ -722,11 +722,11 @@ const RegisterPage = () => {
 
                 {/* Academic Year */}
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-label-md font-semibold text-on-surface" htmlFor="reg-year">
+                  <label className="text-label-md font-semibold text-gray-900" htmlFor="reg-year">
                     {t('register.fields.academicYear.label')}
                   </label>
                   <div className="relative">
-                    <CalendarDays className="w-4 h-4 text-outline absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    <CalendarDays className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                     <select
                       id="reg-year"
                       value={form.academic_year}
@@ -740,7 +740,7 @@ const RegisterPage = () => {
                         </option>
                       ))}
                     </select>
-                    <ChevronDown className="w-4 h-4 text-outline absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    <ChevronDown className="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                   </div>
                   {errors.academic_year && (
                     <p className="text-label-sm text-red-600 flex items-center gap-1">
@@ -755,7 +755,7 @@ const RegisterPage = () => {
             {currentStep === 3 && (
               <>
                 {/* Connect STAG later checkbox */}
-                <label className="flex items-start gap-3 rounded-xl border border-[#E2E8F0] bg-[#F8F9FB] px-4 py-3 text-sm text-on-surface cursor-pointer">
+                <label className="flex items-start gap-3 rounded-xl border border-[#E2E8F0] bg-[#F8F9FB] px-4 py-3 text-sm text-gray-900 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={connectStagLater}
@@ -764,7 +764,7 @@ const RegisterPage = () => {
                   />
                   <span className="leading-relaxed">
                     <span className="font-semibold">{t('register.info.connectStagLaterTitle')}</span>
-                    <span className="block text-on-surface-variant">
+                    <span className="block text-gray-500">
                       {t('register.info.connectStagLaterDescription')}
                     </span>
                   </span>
@@ -775,13 +775,13 @@ const RegisterPage = () => {
                   <div className="rounded-2xl border border-[#E2E8F0] bg-slate-50/70 p-4 space-y-4">
                     <div className="flex items-center gap-2">
                       <IdCard className="w-4 h-4 text-[#004ac6]" />
-                      <h3 className="text-label-md font-semibold text-on-surface">{t('register.info.stagConnectionTitle')}</h3>
+                      <h3 className="text-label-md font-semibold text-gray-900">{t('register.info.stagConnectionTitle')}</h3>
                     </div>
 
                     <div className="grid gap-4">
                       {/* STAG Student ID */}
                       <div className="flex flex-col gap-1.5">
-                        <label className="text-label-md font-semibold text-on-surface" htmlFor="stag-student-id">
+                        <label className="text-label-md font-semibold text-gray-900" htmlFor="stag-student-id">
                           {t('register.fields.stagStudentId.label')}
                         </label>
                         <input
@@ -801,7 +801,7 @@ const RegisterPage = () => {
 
                       {/* STAG Username */}
                       <div className="flex flex-col gap-1.5">
-                        <label className="text-label-md font-semibold text-on-surface" htmlFor="stag-username">
+                        <label className="text-label-md font-semibold text-gray-900" htmlFor="stag-username">
                           {t('register.fields.stagUsername.label')}
                         </label>
                         <input
@@ -821,11 +821,11 @@ const RegisterPage = () => {
 
                       {/* STAG Password */}
                       <div className="flex flex-col gap-1.5">
-                        <label className="text-label-md font-semibold text-on-surface" htmlFor="stag-password">
+                        <label className="text-label-md font-semibold text-gray-900" htmlFor="stag-password">
                           {t('register.fields.stagPassword.label')}
                         </label>
                         <div className="relative">
-                          <KeyRound className="w-4 h-4 text-outline absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                          <KeyRound className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                           <input
                             id="stag-password"
                             type={showStagPass ? 'text' : 'password'}
@@ -837,7 +837,7 @@ const RegisterPage = () => {
                           <button
                             type="button"
                             onClick={() => setShowStagPass((v) => !v)}
-                            className="absolute right-3 top-1/2 -translate-y-1/2 text-outline hover:text-on-surface transition-colors"
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-900 transition-colors"
                             aria-label={showStagPass ? t('register.aria.hideStagPassword') : t('register.aria.showStagPassword')}
                           >
                             {showStagPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -865,7 +865,7 @@ const RegisterPage = () => {
                 <button
                   type="button"
                   onClick={handleBack}
-                  className="flex items-center justify-center gap-2 py-2.5 px-5 bg-[#F8F9FB] hover:bg-[#EEF1F5] border border-[#E2E8F0] text-on-surface font-semibold rounded-lg text-label-md transition-all cursor-pointer"
+                  className="flex items-center justify-center gap-2 py-2.5 px-5 bg-[#F8F9FB] hover:bg-[#EEF1F5] border border-[#E2E8F0] text-gray-900 font-semibold rounded-lg text-label-md transition-all cursor-pointer"
                 >
                   <ArrowLeft className="w-4 h-4" /> {t('register.actions.back')}
                 </button>
@@ -903,7 +903,7 @@ const RegisterPage = () => {
           </form>
 
           {/* Sign in link */}
-          <p className="text-body-md text-on-surface-variant text-center">
+          <p className="text-body-md text-gray-500 text-center">
             {t('register.links.haveAccount')}{' '}
             <Link to="/login" className="text-[#004ac6] font-semibold hover:underline">
               {t('register.links.signIn')}

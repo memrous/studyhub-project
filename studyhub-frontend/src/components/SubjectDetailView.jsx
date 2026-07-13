@@ -72,20 +72,20 @@ const OverviewTab = ({ subject, events }) => {
       {/* Left column */}
       <div className="flex flex-col gap-6">
         {/* Subject Description Card */}
-        <div className="bg-white border border-[#E2E8F0] rounded-lg shadow-ambient p-6 flex flex-col gap-4">
+        <div className="bg-surface border border-outline-variant rounded-lg shadow-ambient p-6 flex flex-col gap-4">
             <div className="flex items-center gap-2">
             <Info className="w-4 h-4 text-primary shrink-0" />
             <h3 className="text-label-md font-bold text-on-surface">{t('academic:subjectDetail.courseDescription')}</h3>
           </div>
-          <p className="text-body-md text-[#434655] leading-relaxed">{subject.description}</p>
+          <p className="text-body-md text-on-surface-variant leading-relaxed">{subject.description}</p>
           
           <div className="grid grid-cols-2 gap-3 mt-2">
-            <div className="bg-[#F2F4F6] border border-[#E2E8F0] rounded-md p-4">
-              <p className="text-label-sm text-[#737686] uppercase tracking-wider font-bold mb-1">{t('academic:subjectDetail.completionCriteria')}</p>
+            <div className="bg-surface-container-low border border-outline-variant rounded-md p-4">
+              <p className="text-label-sm text-on-surface-variant uppercase tracking-wider font-bold mb-1">{t('academic:subjectDetail.completionCriteria')}</p>
               <p className="text-headline-md font-bold text-on-surface">{renderCompletionType(subject.completionType, t)}</p>
             </div>
-            <div className="bg-[#F2F4F6] border border-[#E2E8F0] rounded-md p-4">
-              <p className="text-label-sm text-[#737686] uppercase tracking-wider font-bold mb-1">{t('academic:subjectDetail.lecturerInCharge')}</p>
+            <div className="bg-surface-container-low border border-outline-variant rounded-md p-4">
+              <p className="text-label-sm text-on-surface-variant uppercase tracking-wider font-bold mb-1">{t('academic:subjectDetail.lecturerInCharge')}</p>
               <p className="text-headline-md font-bold text-on-surface">{subject.lecturer}</p>
             </div>
           </div>
@@ -94,34 +94,34 @@ const OverviewTab = ({ subject, events }) => {
 
       {/* Right column: Upcoming deadlines */}
       <div className="flex flex-col gap-5">
-        <div className="bg-white border border-[#E2E8F0] rounded-lg shadow-ambient p-5 flex flex-col gap-4">
+        <div className="bg-surface border border-outline-variant rounded-lg shadow-ambient p-5 flex flex-col gap-4">
           <div className="flex items-center gap-2">
-            <CalendarDays className="w-4 h-4 text-[#bc4800]" />
+            <CalendarDays className="w-4 h-4 text-warning" />
             <h3 className="text-label-md font-bold text-on-surface">{t('academic:subjectDetail.subjectDeadlines')}</h3>
           </div>
           
           <div className="flex flex-col gap-4">
             {upcomingDeadlines.length === 0 ? (
-              <p className="text-body-md text-[#737686] italic text-center py-4">{t('academic:subjectDetail.noUpcomingDeadlines')}</p>
+              <p className="text-body-md text-on-surface-variant italic text-center py-4">{t('academic:subjectDetail.noUpcomingDeadlines')}</p>
             ) : (
               upcomingDeadlines.map((dl, idx) => {
                 const isCritical = dl.date === todayStr || dl.type === 'Exam';
                 return (
                   <div key={dl.id} className="flex gap-3 items-start relative pl-4">
                     <div className={`absolute left-[4px] top-[7px] w-2 h-2 rounded-full ${
-                      isCritical ? 'bg-red-600' : 'bg-slate-400'
+                      isCritical ? 'bg-red-600' : 'bg-surface-container'
                     }`} />
                     {idx < upcomingDeadlines.length - 1 && (
-                      <div className="absolute left-[7px] top-[15px] bottom-[-20px] w-[1px] bg-[#E2E8F0]" />
+                      <div className="absolute left-[7px] top-[15px] bottom-[-20px] w-[1px] bg-surface-container" />
                     )}
                     <div className="pb-2">
                       <p className={`text-label-sm font-extrabold uppercase tracking-wider ${
-                        isCritical ? 'text-error' : 'text-slate-500'
+                        isCritical ? 'text-error' : 'text-on-surface-variant'
                       }`}>
                         {getRelativeDaysLabel(dl.date, t)}
                       </p>
                       <p className="text-label-md font-bold text-on-surface mt-0.5">{dl.title}</p>
-                      <span className="text-[10px] text-slate-500 font-semibold uppercase">
+                      <span className="text-[10px] text-on-surface-variant font-semibold uppercase">
                         {t(`dashboard:deadlines.eventTypes.${dl.type}`, dl.type)}
                       </span>
                     </div>
@@ -144,11 +144,11 @@ const MaterialsTab = ({ subject, resources }) => {
   return (
     <div className="flex flex-col gap-4 max-w-4xl">
       <div className="flex justify-between items-center">
-        <p className="text-body-md text-[#737686]">{t('academic:subjectDetail.materialsUploaded', { count: subjectResources.length })}</p>
+        <p className="text-body-md text-on-surface-variant">{t('academic:subjectDetail.materialsUploaded', { count: subjectResources.length })}</p>
       </div>
 
       {subjectResources.length === 0 ? (
-        <div className="bg-white border border-[#E2E8F0] rounded-lg p-12 text-center text-body-md text-[#737686] italic shadow-ambient">
+        <div className="bg-surface border border-outline-variant rounded-lg p-12 text-center text-body-md text-on-surface-variant italic shadow-ambient">
           {t('academic:subjectDetail.noMaterials')}
         </div>
       ) : (
@@ -160,15 +160,15 @@ const MaterialsTab = ({ subject, resources }) => {
             return (
               <div 
                 key={res.id} 
-                className="bg-white border border-[#E2E8F0] rounded-lg shadow-ambient p-4 flex items-center justify-between gap-4 hover:shadow-md transition-shadow"
+                className="bg-surface border border-outline-variant rounded-lg shadow-ambient p-4 flex items-center justify-between gap-4 hover:shadow-md transition-shadow"
               >
                 <div className="flex items-center gap-3 min-w-0">
-                  <div className="w-10 h-10 bg-slate-100 text-slate-700 flex items-center justify-center rounded-md shrink-0">
+                  <div className="w-10 h-10 bg-surface-container-low text-on-surface-variant flex items-center justify-center rounded-md shrink-0">
                     <Icon className="w-5 h-5" />
                   </div>
                   <div className="min-w-0">
                     <h4 className="text-label-md font-bold text-on-surface leading-tight truncate">{res.title}</h4>
-                    <p className="text-[11px] text-[#737686] mt-0.5 truncate">
+                    <p className="text-[11px] text-on-surface-variant mt-0.5 truncate">
                       {res.description} • {res.size || t('academic:subjectDetail.attachment')} • {t('academic:subjectDetail.uploaded')} {res.uploadDate}
                     </p>
                   </div>
@@ -179,7 +179,7 @@ const MaterialsTab = ({ subject, resources }) => {
                     href={res.url}
                     target={isLink ? '_blank' : '_self'}
                     rel="noreferrer"
-                    className="flex items-center gap-1.5 px-3 py-1.5 border border-[#E2E8F0] hover:bg-[#F2F4F6] rounded-md text-label-md font-semibold text-slate-700 transition-colors cursor-pointer"
+                    className="flex items-center gap-1.5 px-3 py-1.5 border border-outline-variant hover:bg-surface-container-low rounded-md text-label-md font-semibold text-on-surface-variant transition-colors cursor-pointer"
                   >
                     {isLink ? <ExternalLink className="w-3.5 h-3.5" /> : <Download className="w-3.5 h-3.5" />}
                     <span>{isLink ? t('academic:subjectDetail.preview') : t('academic:subjectDetail.download')}</span>
@@ -201,10 +201,10 @@ const AssignmentsTab = ({ subject, events, onUpdateStatus }) => {
 
   return (
     <div className="flex flex-col gap-4 max-w-4xl">
-      <p className="text-body-md text-[#737686]">{t('academic:subjectDetail.assignmentsTracked', { count: subjectAssignments.length })}</p>
+      <p className="text-body-md text-on-surface-variant">{t('academic:subjectDetail.assignmentsTracked', { count: subjectAssignments.length })}</p>
       
       {subjectAssignments.length === 0 ? (
-        <div className="bg-white border border-[#E2E8F0] rounded-lg p-12 text-center text-body-md text-[#737686] italic shadow-ambient">
+        <div className="bg-surface border border-outline-variant rounded-lg p-12 text-center text-body-md text-on-surface-variant italic shadow-ambient">
           {t('academic:subjectDetail.noAssignments')}
         </div>
       ) : (
@@ -214,21 +214,21 @@ const AssignmentsTab = ({ subject, events, onUpdateStatus }) => {
             return (
               <div 
                 key={asgn.id} 
-                className="bg-white border border-[#E2E8F0] rounded-lg shadow-ambient p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+                className="bg-surface border border-outline-variant rounded-lg shadow-ambient p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
               >
                 <div className="min-w-0">
                   <h4 className="text-label-md font-bold text-on-surface leading-tight truncate">{asgn.title}</h4>
-                  <p className="text-[11px] text-[#737686] mt-0.5">
+                  <p className="text-[11px] text-on-surface-variant mt-0.5">
                     {t('academic:subjectDetail.deadline')} {asgn.date} ({getRelativeDaysLabel(asgn.date, t)})
                   </p>
                 </div>
                 
                 <div className="flex items-center gap-3 shrink-0 self-end sm:self-auto">
-                  <span className="text-[11px] font-bold text-slate-500 uppercase">{t('academic:subjectDetail.status')}</span>
+                  <span className="text-[11px] font-bold text-on-surface-variant uppercase">{t('academic:subjectDetail.status')}</span>
                   <select 
                     value={asgn.status || 'Not Started'} 
                     onChange={(e) => onUpdateStatus(asgn.id, e.target.value)}
-                    className="px-2.5 py-1 bg-surface border border-[#E2E8F0] rounded-md text-label-md font-semibold text-on-surface focus:outline-none focus:border-primary cursor-pointer transition-colors"
+                    className="px-2.5 py-1 bg-surface border border-outline-variant rounded-md text-label-md font-semibold text-on-surface focus:outline-none focus:border-primary cursor-pointer transition-colors"
                   >
                     <option value="Not Started">{t('academic:subjectDetail.statusOptions.notStarted')}</option>
                     <option value="In Progress">{t('academic:subjectDetail.statusOptions.inProgress')}</option>
@@ -237,7 +237,7 @@ const AssignmentsTab = ({ subject, events, onUpdateStatus }) => {
                   {isSubmitted ? (
                     <CheckCheck className="w-5 h-5 text-emerald-600" />
                   ) : (
-                    <Circle className="w-5 h-5 text-slate-300" />
+                    <Circle className="w-5 h-5 text-on-surface-variant" />
                   )}
                 </div>
               </div>
@@ -258,10 +258,10 @@ const TestsExamsTab = ({ subject, events, onUpdateStatus }) => {
 
   return (
     <div className="flex flex-col gap-4 max-w-4xl">
-      <p className="text-body-md text-[#737686]">{t('academic:subjectDetail.testsExamsTracked', { count: subjectExams.length })}</p>
+      <p className="text-body-md text-on-surface-variant">{t('academic:subjectDetail.testsExamsTracked', { count: subjectExams.length })}</p>
       
       {subjectExams.length === 0 ? (
-        <div className="bg-white border border-[#E2E8F0] rounded-lg p-12 text-center text-body-md text-[#737686] italic shadow-ambient">
+        <div className="bg-surface border border-outline-variant rounded-lg p-12 text-center text-body-md text-on-surface-variant italic shadow-ambient">
           {t('academic:subjectDetail.noTestsExams')}
         </div>
       ) : (
@@ -271,21 +271,21 @@ const TestsExamsTab = ({ subject, events, onUpdateStatus }) => {
             return (
               <div 
                 key={exam.id} 
-                className="bg-white border border-[#E2E8F0] rounded-lg shadow-ambient p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+                className="bg-surface border border-outline-variant rounded-lg shadow-ambient p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
               >
                 <div className="min-w-0">
                   <h4 className="text-label-md font-bold text-on-surface leading-tight truncate">{exam.title}</h4>
-                  <p className="text-[11px] text-[#737686] mt-0.5">
+                  <p className="text-[11px] text-on-surface-variant mt-0.5">
                     {t('academic:subjectDetail.date')} {exam.date} • {t('academic:subjectDetail.type')} {t(`dashboard:timetable.eventTypes.${exam.type}`, exam.type)}
                   </p>
                 </div>
                 
                 <div className="flex items-center gap-3 shrink-0 self-end sm:self-auto">
-                  <span className="text-[11px] font-bold text-slate-500 uppercase">{t('academic:subjectDetail.status')}</span>
+                  <span className="text-[11px] font-bold text-on-surface-variant uppercase">{t('academic:subjectDetail.status')}</span>
                   <select 
                     value={exam.status || 'Not Started'} 
                     onChange={(e) => onUpdateStatus(exam.id, e.target.value)}
-                    className="px-2.5 py-1 bg-surface border border-[#E2E8F0] rounded-md text-label-md font-semibold text-on-surface focus:outline-none focus:border-primary cursor-pointer transition-colors"
+                    className="px-2.5 py-1 bg-surface border border-outline-variant rounded-md text-label-md font-semibold text-on-surface focus:outline-none focus:border-primary cursor-pointer transition-colors"
                   >
                     <option value="Not Started">{t('academic:subjectDetail.statusOptions.upcoming')}</option>
                     <option value="Completed">{t('academic:subjectDetail.statusOptions.completed')}</option>
@@ -293,7 +293,7 @@ const TestsExamsTab = ({ subject, events, onUpdateStatus }) => {
                   {isCompleted ? (
                     <CheckCheck className="w-5 h-5 text-emerald-600" />
                   ) : (
-                    <Circle className="w-5 h-5 text-slate-300" />
+                    <Circle className="w-5 h-5 text-on-surface-variant" />
                   )}
                 </div>
               </div>
@@ -329,7 +329,7 @@ const SubjectDetailView = ({ subject, events, resources, onBack, onUpdateEventSt
       {onBack && (
         <button
           onClick={onBack}
-          className="flex items-center gap-1.5 text-label-md font-semibold text-[#737686] hover:text-on-surface transition-colors cursor-pointer mb-4 w-fit bg-transparent border-0"
+          className="flex items-center gap-1.5 text-label-md font-semibold text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer mb-4 w-fit bg-transparent border-0"
         >
           <ArrowLeft className="w-4 h-4" />
           {t('academic:subjectDetail.backToSubjects')}
@@ -341,10 +341,10 @@ const SubjectDetailView = ({ subject, events, resources, onBack, onUpdateEventSt
         <div className="flex flex-col gap-2">
           {/* Code badge + semester */}
           <div className="flex items-center gap-3">
-            <span className="text-label-sm font-extrabold uppercase px-2.5 py-1 rounded-sm bg-[#eeefff] text-primary">
+            <span className="text-label-sm font-extrabold uppercase px-2.5 py-1 rounded-sm bg-primary-container text-primary">
               {subject.code}
             </span>
-            <span className="text-body-md text-[#737686] font-medium">
+            <span className="text-body-md text-on-surface-variant font-medium">
               {subject.semester === 'Winter'
                 ? t('dashboard:subjectCard.semester.winter')
                 : t('dashboard:subjectCard.semester.summer')}
@@ -353,7 +353,7 @@ const SubjectDetailView = ({ subject, events, resources, onBack, onUpdateEventSt
           {/* Title */}
           <h1 className="text-display text-on-surface">{subject.name}</h1>
           {/* Meta row */}
-          <div className="flex flex-wrap items-center gap-4 text-body-md text-[#737686]">
+          <div className="flex flex-wrap items-center gap-4 text-body-md text-on-surface-variant">
             <span className="flex items-center gap-1.5">
               <User className="w-3.5 h-3.5 shrink-0" /> {t('academic:subjectDetail.lecturerLabel')} {subject.lecturer}
             </span>
@@ -368,7 +368,7 @@ const SubjectDetailView = ({ subject, events, resources, onBack, onUpdateEventSt
       </div>
 
       {/* Tab Navigation */}
-      <div className="border-b border-[#E2E8F0] mb-6 overflow-x-auto no-scrollbar">
+      <div className="border-b border-outline-variant mb-6 overflow-x-auto no-scrollbar">
         <div className="flex gap-0 min-w-max">
           {TAB_KEYS.map(tab => (
             <button
@@ -377,7 +377,7 @@ const SubjectDetailView = ({ subject, events, resources, onBack, onUpdateEventSt
               className={`px-4 py-3 text-label-md font-semibold border-b-2 transition-colors cursor-pointer whitespace-nowrap bg-transparent border-0 ${
                 activeTab === tab
                   ? 'border-primary text-primary'
-                  : 'border-transparent text-[#737686] hover:text-on-surface hover:border-[#c3c6d7]'
+                  : 'border-transparent text-on-surface-variant hover:text-on-surface hover:border-surface-container'
               }`}
             >
               {t(`academic:subjectDetail.tabs.${tab}`)}

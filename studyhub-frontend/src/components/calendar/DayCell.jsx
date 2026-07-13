@@ -11,11 +11,11 @@ const DayCell = ({
   return (
     <div
       onClick={() => setSelectedDate(day.date)}
-      className={`cursor-pointer flex flex-col justify-between items-center sm:items-stretch transition-all group relative rounded-lg sm:rounded-none aspect-square sm:aspect-auto min-h-0 sm:min-h-[110px] p-1 sm:p-2 border-1 sm:border-r sm:border-b border-[#E2E8F0] ${
-        day.isCurrentMonth ? 'bg-white' : 'bg-[#f7f9fb]'
+      className={`cursor-pointer flex flex-col justify-between items-center sm:items-stretch transition-all group relative rounded-lg sm:rounded-none aspect-square sm:aspect-auto min-h-0 sm:min-h-[110px] p-1 sm:p-2 border-1 sm:border-r sm:border-b border-outline-variant ${
+        day.isCurrentMonth ? 'bg-surface-container' : 'bg-surface'
       } ${
         isSelected 
-          ? 'bg-[#eeefff]! border-blue-800' 
+          ? 'bg-primary/10 border-primary text-primary' 
           : 'hover:bg-surface-container-low'
       }`}
     >
@@ -28,7 +28,7 @@ const DayCell = ({
           <span className={`text-label-md font-semibold ${
             day.isCurrentMonth 
               ? isToday ? 'text-primary font-bold' : 'text-on-surface'
-              : 'text-[#c3c6d7]'
+              : 'text-on-surface-variant'
           }`}>
             {day.dayNum}
           </span>
@@ -47,7 +47,7 @@ const DayCell = ({
                 handleEventSelect(event);
               }}
               title={`${event.code}: ${event.title} (${event.time})`}
-              className={`text-[10px] font-bold px-1.5 py-0.5 rounded-sm truncate border ${styleObj.bg} ${styleObj.text} border-black/5 hover:brightness-95 transition-all cursor-pointer`}
+              className={`text-[10px] font-bold px-1.5 py-0.5 rounded-sm truncate border ${styleObj.bg} ${styleObj.text} border-outline-variant/30 hover:brightness-95 transition-all cursor-pointer`}
             >
               {event.code}: {event.title}
             </div>

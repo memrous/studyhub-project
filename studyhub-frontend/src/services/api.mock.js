@@ -26,7 +26,7 @@ const MOCK_USER_DB = [
     stag_password: null,
     role: 'student',
     avatarUrl:
-      'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80',
+      'src/assets/icons/user.png',
   },
 ]
 const mockRegisteredUsers = [...MOCK_USER_DB]
@@ -137,7 +137,7 @@ export const register = async (...args) => {
     stag_password: payload.stag_password ?? null,
     role: 'student',
     avatarUrl:
-      'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80',
+      'src/assets/icons/user.png',
   }
 
   mockRegisteredUsers.push(newUser)

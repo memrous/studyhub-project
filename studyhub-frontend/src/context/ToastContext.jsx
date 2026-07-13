@@ -12,21 +12,32 @@ const AUTO_DISMISS_MS = 4000
 
 const VARIANT_STYLES = {
   success: {
-    container: 'bg-emerald-50 border-emerald-200 text-emerald-900',
-    icon: 'text-emerald-500',
-    bar: 'bg-emerald-400',
+    container:
+      'bg-emerald-50 border-emerald-200 text-emerald-900 dark:bg-emerald-950/40 dark:border-emerald-800 dark:text-emerald-100',
+    icon:
+      'text-emerald-500 dark:text-emerald-400',
+    bar:
+      'bg-emerald-400 dark:bg-emerald-500',
     Icon: CheckCircle,
   },
+
   error: {
-    container: 'bg-red-50 border-red-200 text-red-900',
-    icon: 'text-red-500',
-    bar: 'bg-red-400',
+    container:
+      'bg-red-50 border-red-200 text-red-900 dark:bg-red-950/40 dark:border-red-800 dark:text-red-100',
+    icon:
+      'text-red-500 dark:text-red-400',
+    bar:
+      'bg-red-400 dark:bg-red-500',
     Icon: XCircle,
   },
+
   info: {
-    container: 'bg-blue-50 border-blue-200 text-blue-900',
-    icon: 'text-blue-500',
-    bar: 'bg-blue-400',
+    container:
+      'bg-blue-50 border-blue-200 text-blue-900 dark:bg-blue-950/40 dark:border-blue-800 dark:text-blue-100',
+    icon:
+      'text-blue-500 dark:text-blue-400',
+    bar:
+      'bg-blue-400 dark:bg-blue-500',
     Icon: Info,
   },
 }

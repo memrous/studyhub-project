@@ -5,18 +5,18 @@ import { getLocaleFromLanguage } from '../utils/locale'
 
 const getTypeStyles = (type) => {
   switch (type) {
-    case 'Assignment': return { dot: 'bg-[#bc4800]', badgeBg: 'bg-[#ffede6]', badgeText: 'text-[#bc4800]' };
-    case 'Test': return { dot: 'bg-[#ba1a1a]', badgeBg: 'bg-[#ffdad6]', badgeText: 'text-[#ba1a1a]' };
-    case 'Exam': return { dot: 'bg-purple-700', badgeBg: 'bg-purple-100', badgeText: 'text-purple-700' };
-    default: return { dot: 'bg-slate-400', badgeBg: 'bg-slate-100', badgeText: 'text-slate-700' };
+    case 'Assignment': return { dot: 'bg-warning', badgeBg: 'bg-warning-container', badgeText: 'text-warning' };
+    case 'Test': return { dot: 'bg-error', badgeBg: 'bg-error-container', badgeText: 'text-error' };
+    case 'Exam': return { dot: 'bg-error', badgeBg: 'bg-error-container', badgeText: 'text-error' };
+    default: return { dot: 'bg-surface-container-highest', badgeBg: 'bg-surface-container-low', badgeText: 'text-on-surface-variant' };
   }
 };
 
 const getMobileUrgencyStyles = (type) => {
   switch (type) {
-    case 'Exam': return 'bg-purple-100 text-purple-700 border-purple-200';
-    case 'Test': return 'bg-[#ffdad6] text-[#ba1a1a] border-[#ffdad6]';
-    default: return 'bg-[#ffede6] text-[#bc4800] border-[#ffede6]'; // Assignment
+    case 'Exam': return 'bg-error-container text-error border-error/20';
+    case 'Test': return 'bg-error-container text-error border-error/20';
+    default: return 'bg-warning-container text-warning border-warning/20';
   }
 };
 
@@ -80,7 +80,7 @@ const Deadlines = ({ events, subjects, onDeadlineClick }) => {
         
         <div className="flex flex-col gap-3">
           {urgentList.length === 0 ? (
-              <div className="bg-white border border-[#E2E8F0] p-4 rounded-lg text-center text-body-md text-[#737686] italic">
+              <div className="bg-surface border border-outline-variant p-4 rounded-lg text-center text-body-md text-on-surface-variant italic">
               {t('deadlines.noUrgent')}
             </div>
           ) : (
@@ -94,11 +94,11 @@ const Deadlines = ({ events, subjects, onDeadlineClick }) => {
                 <div 
                   key={dl.id} 
                   onClick={() => onDeadlineClick?.(dl.id)}
-                  className="bg-white border border-[#E2E8F0] p-4 rounded-lg shadow-ambient flex items-center justify-between cursor-pointer hover:bg-slate-50 transition-colors"
+                  className="bg-surface border border-outline-variant p-4 rounded-lg shadow-ambient flex items-center justify-between cursor-pointer hover:bg-surface-container transition-colors"
                 >
                   <div className="flex items-center gap-3">
                     <div className={`w-8 h-8 rounded-sm shrink-0 flex items-center justify-center ${
-                      isCritical ? 'bg-[#ffdad6] text-[#ba1a1a]' : 'bg-[#eeefff] text-[#004ac6]'
+                      isCritical ? 'bg-error-container text-error' : 'bg-primary-container text-primary'
                     }`}>
                       {isCritical ? <AlertCircle className="w-5 h-5" /> : <Clock className="w-5 h-5" />}
                     </div>
@@ -106,7 +106,7 @@ const Deadlines = ({ events, subjects, onDeadlineClick }) => {
                       <h4 className="text-label-md font-semibold leading-snug">
                         {dl.title} {subCode && `(${subCode})`}
                       </h4>
-                      <span className="text-label-sm text-[#737686] block mt-0.5">
+                      <span className="text-label-sm text-on-surface-variant block mt-0.5">
                         {getRelativeDaysLabel(dl.date)}
                       </span>
                     </div>
@@ -122,7 +122,7 @@ const Deadlines = ({ events, subjects, onDeadlineClick }) => {
       </section>
 
       {/* DESKTOP LAYOUT: Upcoming Deadlines */}
-      <div className="hidden lg:flex bg-white border border-[#E2E8F0] p-5 rounded-lg shadow-ambient flex-col gap-4 font-inter text-on-surface">
+      <div className="hidden lg:flex bg-surface border border-outline-variant p-5 rounded-lg shadow-ambient flex-col gap-4 font-inter text-on-surface">
         <div className="flex items-center gap-2">
           <CustomIcon name="bell" className="w-5 h-5" />
           <h2 className="text-headline-md font-semibold">{t('deadlines.upcoming')}</h2>
@@ -130,7 +130,7 @@ const Deadlines = ({ events, subjects, onDeadlineClick }) => {
 
         <div className="flex flex-col gap-4">
           {upcomingDeadlines.length === 0 ? (
-            <p className="text-body-md text-[#737686] italic text-center py-2">{t('deadlines.noUpcoming')}</p>
+            <p className="text-body-md text-on-surface-variant italic text-center py-2">{t('deadlines.noUpcoming')}</p>
           ) : (
             upcomingDeadlines.map((dl, idx) => {
               const subject = (subjects || []).find(s => s.id === dl.subjectId);
@@ -142,18 +142,18 @@ const Deadlines = ({ events, subjects, onDeadlineClick }) => {
                 <div
                   key={dl.id}
                   onClick={() => onDeadlineClick?.(dl.id)}
-                  className="flex gap-3 items-start relative pl-4 cursor-pointer hover:bg-slate-50 transition-colors"
+                  className="flex gap-3 items-start relative pl-4 cursor-pointer hover:bg-surface-container transition-colors"
                 >
                   <div className={`absolute left-[4px] top-[7px] w-2 h-2 rounded-full ${styles.dot}`}></div>
                   {!isLast && (
-                    <div className="absolute left-[7px] top-[15px] bottom-[-20px] w-[1px] bg-slate-200"></div>
+                    <div className="absolute left-[7px] top-[15px] bottom-[-20px] w-[1px] bg-outline-variant/40"></div>
                   )}
                   
                   <div className="flex-1 flex flex-col gap-1">
                     <h4 className="text-label-md font-semibold leading-tight">
                       {dl.title} {subCode && `(${subCode})`}
                     </h4>
-                    <span className="text-label-sm text-[#737686]">
+                    <span className="text-label-sm text-on-surface-variant">
                       {getDeadlineLabel(dl.date)}
                     </span>
                     <span className={`text-[10px] font-bold tracking-wider ${styles.badgeBg} ${styles.badgeText} px-2 py-0.5 rounded-sm w-fit mt-1 uppercase`}>

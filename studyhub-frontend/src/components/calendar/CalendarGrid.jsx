@@ -24,15 +24,15 @@ const CalendarGrid = ({
       {/* MĚSÍČNÍ POHLED */}
       {activeView === 'month' && (
         <div className="flex flex-col w-full">
-          <div className="grid grid-cols-7 border-b border-[#E2E8F0] bg-[#F2F4F6] rounded-t-md text-center py-2">
+          <div className="grid grid-cols-7 border-b border-outline-variant bg-surface-container-low rounded-t-md text-center py-2">
             {['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'].map(dayName => (
-              <span key={dayName} className="text-label-sm text-[#737686] font-bold">
+              <span key={dayName} className="text-label-sm text-on-surface-variant font-bold">
                 {t(`academic:calendarGrid.days.${dayName}`)}
               </span>
             ))}
           </div>
 
-          <div className="grid grid-cols-7 border-l border-t border-[#E2E8F0] rounded-b-md bg-[#F2F4F6]">
+          <div className="grid grid-cols-7 border-l border-t border-outline-variant rounded-b-md bg-surface-container-low">
             {gridDays.map((day, idx) => {
               const dayEvents = filteredEvents.filter(e => e.date === day.dateKey)
               const isSelected = formatDateKey(selectedDate) === day.dateKey
@@ -53,12 +53,12 @@ const CalendarGrid = ({
           </div>
           
           {/* Mobilní Agenda pod kalendářem */}
-          <div className="sm:hidden mt-6 bg-[#F2F4F6] border border-[#E2E8F0] p-4 rounded-lg flex flex-col gap-3">
+          <div className="sm:hidden mt-6 bg-surface-container-low border border-outline-variant p-4 rounded-lg flex flex-col gap-3">
             <h3 className="text-label-md font-bold text-on-surface">
               {t('academic:calendarGrid.agenda')} {selectedDate.toLocaleDateString(locale, { day: 'numeric', month: 'short', year: 'numeric' })}
             </h3>
             {selectedDayEvents.length === 0 ? (
-              <p className="text-body-md text-[#737686] italic">{t('academic:calendarGrid.noEventsToday')}</p>
+              <p className="text-body-md text-on-surface-variant italic">{t('academic:calendarGrid.noEventsToday')}</p>
             ) : (
               <div className="flex flex-col gap-2.5">
                 {selectedDayEvents.map(event => {
@@ -67,7 +67,7 @@ const CalendarGrid = ({
                     <div 
                       key={event.id} 
                       onClick={() => handleEventSelect(event)}
-                      className="bg-white border border-[#E2E8F0] p-3 rounded-md flex items-center justify-between shadow-ambient cursor-pointer hover:bg-slate-50"
+                      className="bg-surface-container border border-outline-variant p-3 rounded-md flex items-center justify-between shadow-ambient cursor-pointer hover:bg-surface-container-low"
                     >
                       <div className="flex items-center gap-3">
                         <div className={`w-8 h-8 ${styleObj.bg} ${styleObj.text} flex items-center justify-center rounded-sm shrink-0 font-bold text-[10px]`}>
@@ -75,7 +75,7 @@ const CalendarGrid = ({
                         </div>
                         <div>
                           <h4 className="text-label-md font-bold text-on-surface leading-tight">{event.title}</h4>
-                          <span className="text-[10px] text-[#737686] flex items-center gap-1 mt-0.5">
+                          <span className="text-[10px] text-on-surface-variant flex items-center gap-1 mt-0.5">
                             <CustomIcon name="clock" className="w-3 h-3" /> {event.startTime} {event.endTime && `– ${event.endTime}`}
                           </span>
                         </div>
@@ -94,8 +94,8 @@ const CalendarGrid = ({
 
       {/* TÝDENNÍ POHLED */}
       {activeView === 'week' && (
-        <div className="w-full flex flex-col border border-[#E2E8F0] rounded-md overflow-x-auto">
-          <div className="grid grid-cols-7 min-w-[700px] border-b border-[#E2E8F0] bg-[#F2F4F6] py-3 text-center font-semibold">
+        <div className="w-full flex flex-col border border-outline-variant rounded-md overflow-x-auto">
+          <div className="grid grid-cols-7 min-w-[700px] border-b border-outline-variant bg-surface-container-low py-3 text-center font-semibold">
             {currentWeekDays.map(day => {
               const isSelected = formatDateKey(selectedDate) === day.dateKey
               return (
@@ -106,7 +106,7 @@ const CalendarGrid = ({
                       isSelected ? 'text-primary' : 'text-on-surface'
                     }`}
                   >
-                  <span className="text-label-sm text-[#737686] font-bold uppercase">{t(`academic:calendarGrid.days.${day.dayName}`)}</span>
+                  <span className="text-label-sm text-on-surface-variant font-bold uppercase">{t(`academic:calendarGrid.days.${day.dayName}`)}</span>
                   <span className={`w-8 h-8 rounded-full flex items-center justify-center text-label-md font-bold transition-all ${
                     isSelected 
                       ? 'bg-primary text-white shadow-sm' 
@@ -119,13 +119,13 @@ const CalendarGrid = ({
             })}
           </div>
 
-          <div className="grid grid-cols-7 min-w-[700px] bg-white divide-x divide-[#E2E8F0] h-[480px] overflow-y-auto">
+          <div className="grid grid-cols-7 min-w-[700px] bg-surface divide-x divide-outline-variant h-[480px] overflow-y-auto">
             {currentWeekDays.map(day => {
               const dayEvents = filteredEvents.filter(e => e.date === day.dateKey)
               return (
-                <div key={day.dateKey} className="p-3 flex flex-col gap-3 min-h-full bg-white hover:bg-slate-50/50 transition-colors">
+                <div key={day.dateKey} className="p-3 flex flex-col gap-3 min-h-full bg-surface hover:bg-surface-container-low/60 transition-colors">
                   {dayEvents.length === 0 ? (
-                    <div className="flex-1 flex items-center justify-center text-[11px] text-[#c3c6d7] italic border-2 border-dashed border-[#eceef0] rounded-lg p-2 text-center select-none">
+                    <div className="flex-1 flex items-center justify-center text-[11px] text-on-surface-variant italic border-2 border-dashed border-surface-container rounded-lg p-2 text-center select-none">
                       {t('academic:calendarGrid.noEvents')}
                     </div>
                   ) : (
@@ -137,7 +137,7 @@ const CalendarGrid = ({
                           <div 
                             key={event.id}
                             onClick={() => handleEventSelect(event)}
-                            className={`p-3 rounded-lg border flex flex-col gap-1.5 shadow-sm hover:shadow transition-shadow cursor-pointer ${styleObj.bg} ${styleObj.text} border-black/5`}
+                            className={`p-3 rounded-lg border flex flex-col gap-1.5 shadow-sm hover:shadow transition-shadow cursor-pointer ${styleObj.bg} ${styleObj.text} border-outline-variant/30`}
                           >
                             <div className="flex justify-between items-start gap-1">
                               <span className="text-[10px] font-extrabold uppercase tracking-wider">{event.code}</span>
@@ -160,17 +160,17 @@ const CalendarGrid = ({
 
       {/* DENNÍ POHLED */}
       {activeView === 'day' && (
-        <div className="w-full flex flex-col border border-[#E2E8F0] rounded-md bg-white p-4">
-          <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:gap-0 justify-between border-b border-[#E2E8F0] pb-4 mb-4">
+        <div className="w-full flex flex-col border border-outline-variant rounded-md bg-surface p-4">
+          <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:gap-0 justify-between border-b border-outline-variant pb-4 mb-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-[#eeefff] text-primary flex items-center justify-center rounded-md">
+              <div className="w-10 h-10 bg-on-primary-container text-primary flex items-center justify-center rounded-md">
                 <CustomIcon name="calendar" className="w-5 h-5" />
               </div>
               <div>
                 <h3 className=" text-headline-md font-bold text-on-surface capitalize">
                   {selectedDate.toLocaleDateString(locale, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
                 </h3>
-                <p className="text-body-md text-[#737686] mt-0.5">{t('academic:calendarGrid.yourSchedule')}</p>
+                <p className="text-body-md text-on-surface-variant mt-0.5">{t('academic:calendarGrid.yourSchedule')}</p>
               </div>
             </div>
             
@@ -191,12 +191,12 @@ const CalendarGrid = ({
               })
 
               return (
-                    <div key={hour} className="flex flex-col sm:flex-row gap-4 border-b border-[#eceef0] py-4 items-start ">
-                      <span className="w-12 text-label-sm font-bold text-[#737686] text-right pt-0.5">{hour}</span>
+                    <div key={hour} className="flex flex-col sm:flex-row gap-4 border-b border-surface-container py-4 items-start ">
+                      <span className="w-12 text-label-sm font-bold text-on-surface-variant text-right pt-0.5">{hour}</span>
                       
                       <div className="flex-1 flex flex-col gap-2">
                     {slotEvents.length === 0 ? (
-                      <div className="text-[11px] text-[#c3c6d7] italic pt-1">{t('academic:calendarGrid.freeSlot')}</div>
+                      <div className="text-[11px] text-on-surface-variant italic pt-1">{t('academic:calendarGrid.freeSlot')}</div>
                     ) : (
                       slotEvents.map(event => {
                         const styleObj = getEventStyle(event.type)
@@ -204,10 +204,10 @@ const CalendarGrid = ({
                           <div 
                             key={event.id}
                             onClick={() => handleEventSelect(event)}
-                            className={`p-3 rounded-lg border flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-ambient hover:shadow-sm transition-all cursor-pointer ${styleObj.bg} ${styleObj.text} border-black/5`}
+                            className={`p-3 rounded-lg border flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-ambient hover:shadow-sm transition-all cursor-pointer ${styleObj.bg} ${styleObj.text} border-outline-variant/30`}
                           >
                             <div className="flex items-start gap-3">
-                              <div className="hidden md:block bg-white/80 px-2 py-1 rounded-sm text-[10px] font-extrabold uppercase shrink-0">
+                              <div className="hidden md:block bg-surface-container-highest/80 px-2 py-1 rounded-sm text-[10px] font-extrabold uppercase shrink-0 text-on-surface">
                                 {event.code}
                               </div>
                               <div>
@@ -217,7 +217,7 @@ const CalendarGrid = ({
                                 </span>
                               </div>
                             </div>
-                            <span className={`text-[10px] font-bold px-2 py-1 rounded-sm bg-white/70 w-fit self-end md:self-auto`}>
+                            <span className={`text-[10px] font-bold px-2 py-1 rounded-sm bg-surface-container-highest/70 w-fit self-end md:self-auto text-on-surface`}>
                               {event.subject}
                             </span>
                           </div>

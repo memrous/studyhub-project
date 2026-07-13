@@ -1,4 +1,23 @@
 services:
+    laravel.queue:
+        build:
+            context: './vendor/laravel/sail/runtimes/8.5'
+            dockerfile: Dockerfile
+            args:
+                WWWGROUP: '${WWWGROUP}'
+        image: 'sail-8.5/app'
+        environment:
+            WWWUSER: '${WWWUSER}'
+            LARAVEL_SAIL: 1
+        volumes:
+            - '.:/var/www/html'
+            - '../stag_mock_import:/var/www/stag_mock_import'
+        networks:
+            - sail
+        depends_on:
+            - pgsql
+            - redis
+        entrypoint: ['php', 'artisan', 'queue:work', '--tries=1']
     laravel.test:
         build:
             context: './vendor/laravel/sail/runtimes/8.5'

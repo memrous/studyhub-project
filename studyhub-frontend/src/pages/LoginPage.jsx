@@ -72,7 +72,7 @@ const LoginPage = () => {
   }
 
   const inputBase =
-    'w-full pl-10 pr-4 py-2.5 bg-[#F8F9FB] rounded-lg border text-body-md text-on-surface focus:outline-none focus:bg-white transition-colors'
+    'w-full pl-10 pr-4 py-2.5 bg-[#F8F9FB] rounded-lg border text-body-md text-gray-900 focus:outline-none focus:bg-white transition-colors'
   const inputOk  = `${inputBase} border-[#E2E8F0] focus:border-[#004ac6]`
   const inputErr = `${inputBase} border-red-400 focus:border-red-500 bg-red-50`
 
@@ -143,13 +143,13 @@ const LoginPage = () => {
             <div className="w-9 h-9 bg-[#004ac6] rounded-xl flex items-center justify-center">
               <GraduationCap className="w-5 h-5 text-white" />
             </div>
-            <span className="font-geist font-bold text-xl text-on-surface tracking-tight">StudyHub</span>
+            <span className="font-geist font-bold text-xl text-gray-900 tracking-tight">StudyHub</span>
           </div>
 
           {/* Heading */}
           <div className="flex flex-col gap-1.5">
-            <h2 className="text-2xl font-bold text-on-surface tracking-tight">{t('login.welcomeBack')}</h2>
-            <p className="text-body-md text-on-surface-variant">{t('login.welcomeSubtitle')}</p>
+            <h2 className="text-2xl font-bold text-gray-900 tracking-tight">{t('login.welcomeBack')}</h2>
+            <p className="text-body-md text-gray-500">{t('login.welcomeSubtitle')}</p>
           </div>
 
           {/* Mock credentials hint */}
@@ -174,11 +174,11 @@ const LoginPage = () => {
 
             {/* Email */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-label-md font-semibold text-on-surface" htmlFor="login-email">
+              <label className="text-label-md font-semibold text-gray-900" htmlFor="login-email">
                 {t('login.fields.email.label')}
               </label>
               <div className="relative">
-                <Mail className="w-4 h-4 text-outline absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <Mail className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                 <input
                   id="login-email"
                   type="email"
@@ -199,12 +199,12 @@ const LoginPage = () => {
             {/* Password */}
             <div className="flex flex-col gap-1.5">
               <div className="flex items-center justify-between">
-                <label className="text-label-md font-semibold text-on-surface" htmlFor="login-password">
+                <label className="text-label-md font-semibold text-gray-900" htmlFor="login-password">
                   {t('login.fields.password.label')}
                 </label>
               </div>
               <div className="relative">
-                <Lock className="w-4 h-4 text-outline absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <Lock className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                 <input
                   id="login-password"
                   type={showPass ? 'text' : 'password'}
@@ -217,7 +217,7 @@ const LoginPage = () => {
                 <button
                   type="button"
                   onClick={() => setShowPass((v) => !v)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-outline hover:text-on-surface transition-colors"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-900 transition-colors"
                   aria-label={showPass ? t('login.aria.hidePassword') : t('login.aria.showPassword')}
                 >
                   {showPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -245,7 +245,7 @@ const LoginPage = () => {
           </form>
 
           {/* Register link */}
-          <p className="text-body-md text-on-surface-variant text-center">
+          <p className="text-body-md text-gray-500 text-center">
             {t('login.links.noAccount')}{' '}
             <Link to="/register" className="text-[#004ac6] font-semibold hover:underline">
               {t('login.links.createOne')}

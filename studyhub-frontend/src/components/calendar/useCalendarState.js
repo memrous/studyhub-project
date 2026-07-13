@@ -6,14 +6,14 @@ import { useEventForm } from './useEventForm'
 export { formatDateKey } from './useCalendarGrid'
 
 export const TYPE_COLOR_MAP = {
-  'Lecture': { color: 'blue', dot: '#004ac6', bg: 'bg-[#eeefff]', text: 'text-[#004ac6]' },
-  'Lab': { color: 'blue', dot: '#004ac6', bg: 'bg-[#eeefff]', text: 'text-[#004ac6]' },
-  'Assignment': { color: 'green', dot: '#117a3a', bg: 'bg-[#e6f4ea]', text: 'text-[#117a3a]' },
-  'Test': { color: 'orange', dot: '#bc4800', bg: 'bg-[#ffede6]', text: 'text-[#bc4800]' },
-  'Quiz': { color: 'orange', dot: '#bc4800', bg: 'bg-[#ffede6]', text: 'text-[#bc4800]' },
-  'Exam': { color: 'red', dot: '#ba1a1a', bg: 'bg-[#ffdad6]', text: 'text-[#ba1a1a]' },
-  'Deadline': { color: 'red', dot: '#ba1a1a', bg: 'bg-[#ffdad6]', text: 'text-[#ba1a1a]' },
-  'default': { color: 'grey', dot: '#737686', bg: 'bg-[#eceef0]', text: 'text-[#737686]' }
+  'Lecture': { color: 'blue', dot: 'var(--color-primary)', bg: 'bg-on-primary-container', text: 'text-primary' },
+  'Lab': { color: 'blue', dot: 'var(--color-primary)', bg: 'bg-on-primary-container', text: 'text-primary' },
+  'Assignment': { color: 'green', dot: 'var(--color-secondary)', bg: 'bg-secondary-container', text: 'text-on-secondary-container' },
+  'Test': { color: 'orange', dot: 'var(--color-tertiary)', bg: 'bg-tertiary-container', text: 'text-on-tertiary-container' },
+  'Quiz': { color: 'orange', dot: 'var(--color-tertiary)', bg: 'bg-tertiary-container', text: 'text-on-tertiary-container' },
+  'Exam': { color: 'red', dot: 'var(--color-error)', bg: 'bg-error-container', text: 'text-on-error-container' },
+  'Deadline': { color: 'red', dot: 'var(--color-error)', bg: 'bg-error-container', text: 'text-on-error-container' },
+  'default': { color: 'grey', dot: 'var(--color-outline-variant)', bg: 'bg-surface-container', text: 'text-on-surface-variant' }
 }
 
 export const getEventStyle = (type) => {

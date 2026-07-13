@@ -5,14 +5,14 @@ import CustomIcon from './CustomIcon';
 import { getLocaleFromLanguage } from '../utils/locale'
 
 const TYPE_COLOR_MAP = {
-  'Lecture': { border: 'border-[#004ac6]', bg: 'bg-[#eeefff]', text: 'text-[#004ac6]' },
-  'Lab': { border: 'border-[#004ac6]', bg: 'bg-[#eeefff]', text: 'text-[#004ac6]' },
-  'Assignment': { border: 'border-[#117a3a]', bg: 'bg-[#e6f4ea]', text: 'text-[#117a3a]' },
-  'Test': { border: 'border-[#bc4800]', bg: 'bg-[#ffede6]', text: 'text-[#bc4800]' },
-  'Quiz': { border: 'border-[#bc4800]', bg: 'bg-[#ffede6]', text: 'text-[#bc4800]' },
-  'Exam': { border: 'border-[#ba1a1a]', bg: 'bg-[#ffdad6]', text: 'text-[#ba1a1a]' },
-  'Deadline': { border: 'border-[#ba1a1a]', bg: 'bg-[#ffdad6]', text: 'text-[#ba1a1a]' },
-  'default': { border: 'border-[#737686]', bg: 'bg-[#eceef0]', text: 'text-[#737686]' }
+  'Lecture': { border: 'border-primary', bg: 'bg-primary-container', text: 'text-primary' },
+  'Lab': { border: 'border-primary', bg: 'bg-primary-container', text: 'text-primary' },
+  'Assignment': { border: 'border-success', bg: 'bg-success-container', text: 'text-success' },
+  'Test': { border: 'border-warning', bg: 'bg-warning-container', text: 'text-warning' },
+  'Quiz': { border: 'border-warning', bg: 'bg-warning-container', text: 'text-warning' },
+  'Exam': { border: 'border-error', bg: 'bg-error-container', text: 'text-error' },
+  'Deadline': { border: 'border-error', bg: 'bg-error-container', text: 'text-error' },
+  'default': { border: 'border-outline-variant', bg: 'bg-surface-container-low', text: 'text-on-surface-variant' }
 };
 
 const Timetable = ({ events, subjects, onOpenSubject }) => {
@@ -109,12 +109,12 @@ const Timetable = ({ events, subjects, onOpenSubject }) => {
       <section className="flex lg:hidden flex-col gap-3 font-inter">
         <div className="flex justify-between items-center">
           <h3 className="text-headline-md text-on-surface font-semibold">{t('timetable.titleMobile')}</h3>
-          <span className="text-label-md text-[#004ac6] font-bold">{formattedToday}</span>
+          <span className="text-label-md text-primary font-bold">{formattedToday}</span>
         </div>
 
-        <div className="bg-white border border-[#E2E8F0] p-4 rounded-lg shadow-ambient flex flex-col gap-4">
+        <div className="bg-surface border border-outline-variant p-4 rounded-lg shadow-ambient flex flex-col gap-4">
           {todayLectures.length === 0 ? (
-            <p className="text-body-md text-[#737686] italic text-center py-2">
+            <p className="text-body-md text-on-surface-variant italic text-center py-2">
               {t('timetable.noClassesToday')}
             </p>
           ) : (
@@ -129,17 +129,17 @@ const Timetable = ({ events, subjects, onOpenSubject }) => {
                 <div 
                   key={lec.id} 
                   onClick={() => setSelectedDetailEvent({ ...lec, subject: subName, code: subCode })}
-                  className="flex items-center gap-4 relative pl-4 cursor-pointer hover:bg-slate-50/80 p-1.5 -mx-1.5 rounded-md transition-colors group"
+                  className="flex items-center gap-4 relative pl-4 cursor-pointer hover:bg-surface-container-low/80 p-1.5 -mx-1.5 rounded-md transition-colors group"
                 >
-                  <div className="absolute left-0 w-1 h-8 bg-[#2563eb] rounded-full group-hover:scale-y-105 transition-transform"></div>
+                  <div className="absolute left-0 w-1 h-8 bg-primary rounded-full group-hover:scale-y-105 transition-transform"></div>
                   <span className="text-label-sm font-semibold text-on-surface shrink-0 pt-0.5 ml-0.5">
                     {lec.startTime}
                   </span>
                   <div className="flex-1 min-w-0">
-                    <h4 className="text-label-md text-on-surface font-bold leading-tight truncate group-hover:text-[#004ac6] transition-colors">
+                    <h4 className="text-label-md text-on-surface font-bold leading-tight truncate group-hover:text-primary transition-colors">
                       {subName}
                     </h4>
-                    <span className="text-label-sm text-[#737686] mt-0.5 block truncate">
+                    <span className="text-label-sm text-on-surface-variant mt-0.5 block truncate">
                       {roomInfo} • {subLecturer}
                     </span>
                   </div>
@@ -155,24 +155,24 @@ const Timetable = ({ events, subjects, onOpenSubject }) => {
         <div className="flex justify-between items-center">
           <div className="flex flex-col">
             <h2 className="text-headline-md text-on-surface font-semibold">{t('timetable.titleDesktop')}</h2>
-            <span className="text-sm text-slate-500 capitalize">{formattedDateRange}</span>
+            <span className="text-sm text-on-surface-variant capitalize">{formattedDateRange}</span>
           </div>
           
-          <div className="flex items-center gap-2 bg-[#F2F4F6] p-1 rounded-lg border border-[#E2E8F0]">
+          <div className="flex items-center gap-2 bg-surface-container-low p-1 rounded-lg border border-outline-variant">
             <button 
               onClick={handlePrevWeek}
               disabled={isPrevDisabled}
               className={`px-2 py-1 text-xs font-semibold rounded-md transition-all shadow-sm ${
                 isPrevDisabled 
-                  ? 'opacity-40 text-slate-400 bg-transparent' 
-                  : 'hover:bg-white text-slate-600 hover:text-slate-900 cursor-pointer'
+                  ? 'opacity-40 text-on-surface-variant bg-transparent' 
+                  : 'hover:bg-surface-container-low text-on-surface hover:text-on-surface cursor-pointer'
               }`}
             >
               {t('timetable.prev')}
             </button>
             <button 
               onClick={handleToday}
-              className="px-2 py-1 text-xs font-bold rounded-md bg-white text-[#004ac6] border border-[#E2E8F0] shadow-sm cursor-pointer"
+              className="px-2 py-1 text-xs font-bold rounded-md bg-primary text-on-primary border border-outline-variant shadow-sm cursor-pointer"
             >
               {t('timetable.current')}
             </button>
@@ -181,8 +181,8 @@ const Timetable = ({ events, subjects, onOpenSubject }) => {
               disabled={isNextDisabled}
               className={`px-2 py-1 text-xs font-semibold rounded-md transition-all shadow-sm ${
                 isNextDisabled 
-                  ? 'opacity-40 text-slate-400 bg-transparent' 
-                  : 'hover:bg-white text-slate-600 hover:text-slate-900 cursor-pointer'
+                  ? 'opacity-40 text-on-surface-variant bg-transparent' 
+                  : 'hover:bg-surface-container-low text-on-surface hover:text-on-surface cursor-pointer'
               }`}
             >
               {t('timetable.next')}
@@ -190,16 +190,16 @@ const Timetable = ({ events, subjects, onOpenSubject }) => {
           </div>
         </div>
 
-        <div className="bg-white border border-[#E2E8F0] rounded-lg p-5 shadow-ambient grid grid-cols-5 gap-4">
+        <div className="bg-surface border border-outline-variant rounded-lg p-5 shadow-ambient grid grid-cols-5 gap-4">
           {days.map((day) => (
             <div key={day.name} className="flex flex-col gap-3">
               <div className="flex justify-center">
                 {day.isToday ? (
-                  <span className="text-label-sm bg-[#004ac6] text-white px-2.5 py-0.5 rounded-full uppercase tracking-wider font-semibold text-center">
+                  <span className="text-label-sm bg-primary text-on-primary px-2.5 py-0.5 rounded-full uppercase tracking-wider font-semibold text-center">
                     {day.name}
                   </span>
                 ) : (
-                  <span className="text-label-sm text-[#737686] uppercase tracking-wider text-center block font-semibold">
+                  <span className="text-label-sm text-on-surface-variant uppercase tracking-wider text-center block font-semibold">
                     {day.name}
                   </span>
                 )}
@@ -207,7 +207,7 @@ const Timetable = ({ events, subjects, onOpenSubject }) => {
 
               <div className="flex flex-col gap-2 min-h-[110px]">
                 {day.lectures.length === 0 ? (
-                  <div className="bg-slate-50 border border-dashed border-slate-100 rounded-md flex-1 min-h-[96px] flex items-center justify-center text-[10px] text-slate-400 italic text-center p-1 select-none">
+                  <div className="bg-surface-container-low border border-dashed border-surface-container rounded-md flex-1 min-h-[96px] flex items-center justify-center text-[10px] text-on-surface-variant italic text-center p-1 select-none">
                     {t('timetable.noClasses')}
                   </div>
                 ) : (
@@ -228,7 +228,7 @@ const Timetable = ({ events, subjects, onOpenSubject }) => {
                         <span className={`text-[11px] font-bold ${colorConfig.text}`}>
                           {subCode.split('/')[1] || subCode}
                         </span>
-                        <span className="text-[10px] text-slate-500 font-semibold mt-0.5">
+                        <span className="text-[10px] text-on-surface-variant font-semibold mt-0.5">
                           {lec.startTime}
                         </span>
                       </div>
@@ -248,14 +248,14 @@ const Timetable = ({ events, subjects, onOpenSubject }) => {
         
         return (
           <div className="fixed inset-0 bg-black/40 backdrop-blur-xs flex items-center justify-center z-50 p-4 transition-opacity">
-            <div className="bg-white rounded-lg shadow-2xl border border-[#E2E8F0] w-full max-w-md overflow-hidden relative font-inter text-left animate-in fade-in zoom-in-95 duration-150">
+            <div className="bg-surface-container rounded-lg shadow-2xl border border-outline-variant w-full max-w-md overflow-hidden relative font-inter text-left animate-in fade-in zoom-in-95 duration-150">
               
-              <div className={`px-6 py-4 border-b border-[#E2E8F0] ${styleObj.bg} flex items-center justify-between`}>
+              <div className={`px-6 py-4 border-b border-outline-variant ${styleObj.bg} flex items-center justify-between`}>
                 <div className="flex items-center gap-2">
-                  <span className={`text-xs font-extrabold uppercase px-2 py-0.5 rounded-sm bg-white border border-black/5 ${styleObj.text}`}>
+                  <span className={`text-xs font-extrabold uppercase px-2 py-0.5 rounded-sm bg-surface-container-highest border border-outline-variant/30 ${styleObj.text}`}>
                     {selectedDetailEvent.code}
                   </span>
-                  <span className={`text-xs font-bold px-2 py-0.5 rounded-sm bg-white/60 ${styleObj.text}`}>
+                  <span className={`text-xs font-bold px-2 py-0.5 rounded-sm bg-surface-container-low/60 ${styleObj.text}`}>
                     {renderEventType(selectedDetailEvent.type)}
                   </span>
                 </div>
@@ -277,7 +277,7 @@ const Timetable = ({ events, subjects, onOpenSubject }) => {
                   </p>
                 </div>
 
-              <div className="grid grid-cols-2 gap-3 bg-[#F2F4F6] p-3 rounded-lg border border-[#E2E8F0]">
+              <div className="grid grid-cols-2 gap-3 bg-surface-container-low p-3 rounded-lg border border-outline-variant">
                 <div className="flex items-center gap-2 text-on-surface-variant">
                   <CustomIcon name="calendar" className="w-4 h-4 shrink-0" />
                   <span className="text-label-md font-medium text-on-surface">
@@ -293,20 +293,20 @@ const Timetable = ({ events, subjects, onOpenSubject }) => {
                 </div>
 
                 {targetSubject && (
-                  <div className="flex flex-col gap-2.5 border-t border-[#E2E8F0] pt-4">
+                  <div className="flex flex-col gap-2.5 border-t border-outline-variant pt-4">
                     <div className="flex justify-between items-center text-body-md">
-                      <span className="text-[#737686] font-medium">{t('timetable.lecturer')}</span>
+                      <span className="text-on-surface-variant font-medium">{t('timetable.lecturer')}</span>
                       <span className="font-bold text-on-surface">{targetSubject.lecturer || t('timetable.fallbacks.notSpecified')}</span>
                     </div>
                     <div className="flex justify-between items-center text-body-md">
-                      <span className="text-[#737686] font-medium">{t('timetable.creditsCompletion')}</span>
+                      <span className="text-on-surface-variant font-medium">{t('timetable.creditsCompletion')}</span>
                       <span className="font-semibold text-on-surface">
                         {targetSubject.credits} STAG Credits ({targetSubject.completionType})
                       </span>
                     </div>
                     {targetSubject.description && (
-                      <div className="flex flex-col gap-1 mt-1 bg-slate-50 p-2.5 rounded border border-slate-100">
-                        <span className="text-[11px] text-[#737686] font-bold uppercase tracking-wider">{t('timetable.subjectDescription')}</span>
+                      <div className="flex flex-col gap-1 mt-1 bg-surface-container-low p-2.5 rounded border border-surface-container">
+                        <span className="text-[11px] text-on-surface-variant font-bold uppercase tracking-wider">{t('timetable.subjectDescription')}</span>
                         <p className="text-label-sm text-on-surface-variant leading-relaxed line-clamp-3">
                           {targetSubject.description}
                         </p>
@@ -315,7 +315,7 @@ const Timetable = ({ events, subjects, onOpenSubject }) => {
                   </div>
                 )}
 
-                <div className="flex flex-col gap-2 mt-4 pt-4 border-t border-[#E2E8F0]">
+                <div className="flex flex-col gap-2 mt-4 pt-4 border-t border-outline-variant">
                   <button
                     type="button"
                     onClick={() => {
@@ -324,7 +324,7 @@ const Timetable = ({ events, subjects, onOpenSubject }) => {
                       }
                       setSelectedDetailEvent(null);
                     }}
-                    className="w-full bg-[#004ac6] hover:bg-[#003ea8] text-white py-2 rounded-md font-semibold text-label-md transition-colors shadow-sm cursor-pointer text-center"
+                    className="w-full bg-primary hover:bg-primary/90 text-on-primary py-2 rounded-md font-semibold text-label-md transition-colors shadow-sm cursor-pointer text-center"
                   >
                     {t('timetable.openSubjectHub')}
                   </button>

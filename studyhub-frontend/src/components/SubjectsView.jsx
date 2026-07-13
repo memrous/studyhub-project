@@ -44,16 +44,16 @@ const CreateSubjectModal = ({ onClose, onSave }) => {
     onClose()
   }
 
-  const inputCls = 'w-full px-3 py-2 bg-surface rounded-md border border-[#E2E8F0] text-body-md text-on-surface focus:outline-none focus:border-primary focus:bg-white transition-colors'
+  const inputCls = 'w-full px-3 py-2 bg-surface rounded-md border border-outline-variant text-body-md text-on-surface focus:outline-none focus:border-primary focus:bg-surface-container transition-colors'
   const labelCls = 'text-label-md font-bold text-on-surface-variant'
 
   return (
     <div className="fixed inset-0 bg-black/40 backdrop-blur-xs flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg shadow-2xl border border-[#E2E8F0] w-full max-w-lg overflow-hidden font-inter">
+      <div className="bg-surface rounded-lg shadow-2xl border border-outline-variant w-full max-w-lg overflow-hidden font-inter">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-[#E2E8F0] bg-surface">
           <h2 className="text-headline-md font-bold text-on-surface">{t('academic:subjectsView.modalTitle')}</h2>
-          <button onClick={onClose} className="p-1 rounded-full hover:bg-[#E2E8F0] text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer">
+          <button onClick={onClose} className="p-1 rounded-full hover:bg-surface-container transition-colors text-on-surface-variant hover:text-on-surface cursor-pointer">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -125,8 +125,8 @@ const CreateSubjectModal = ({ onClose, onSave }) => {
 
           {/* Actions */}
           <div className="flex flex-col sm:flex-row gap-3 justify-end pt-4 border-t border-[#E2E8F0] mt-2">
-            <button type="button" onClick={onClose} className="w-full sm:w-auto px-4 py-2 border border-[#E2E8F0] rounded-md text-label-md font-semibold text-on-surface-variant hover:bg-slate-50 transition-colors cursor-pointer">{t('academic:subjectsView.actions.cancel')}</button>
-            <button type="submit" className="w-full sm:w-auto px-4 py-2 bg-[#004ac6] hover:bg-[#003ea8] text-white rounded-md text-label-md font-semibold shadow-sm transition-colors cursor-pointer">{t('academic:subjectsView.actions.saveSubject')}</button>
+            <button type="button" onClick={onClose} className="w-full sm:w-auto px-4 py-2 border border-outline-variant rounded-md text-label-md font-semibold text-on-surface-variant hover:bg-surface-container-low transition-colors cursor-pointer">{t('academic:subjectsView.actions.cancel')}</button>
+            <button type="submit" className="w-full sm:w-auto px-4 py-2 bg-primary hover:bg-primary-container text-on-primary rounded-md text-label-md font-semibold shadow-sm transition-colors cursor-pointer">{t('academic:subjectsView.actions.saveSubject')}</button>
           </div>
         </form>
       </div>
@@ -149,20 +149,20 @@ const Dropdown = ({ label, icon: Icon, options, value, onChange }) => {
     <div className="relative w-full sm:w-auto" ref={ref}>
       <button
         onClick={() => setOpen(o => !o)}
-        className="flex w-full sm:w-auto items-center gap-2 px-3 py-2 bg-white border border-[#E2E8F0] rounded-md text-label-md font-semibold text-on-surface hover:bg-surface-container transition-colors cursor-pointer shadow-ambient"
+        className="flex w-full sm:w-auto items-center gap-2 px-3 py-2 bg-surface border border-outline-variant rounded-md text-label-md font-semibold text-on-surface hover:bg-surface-container transition-colors cursor-pointer shadow-ambient"
       >
-        <Icon className="w-3.5 h-3.5 text-[#737686]" />
+        <Icon className="w-3.5 h-3.5 text-on-surface-variant" />
         {label}
-        <ChevronDown className={`w-3 h-3 text-[#737686] transition-transform ${open ? 'rotate-180' : ''}`} />
+        <ChevronDown className={`w-3 h-3 text-on-surface-variant transition-transform ${open ? 'rotate-180' : ''}`} />
       </button>
       {open && (
-        <div className="absolute right-0 top-[calc(100%+6px)] z-30 bg-white border border-[#E2E8F0] rounded-lg shadow-lg min-w-[160px] py-1 overflow-hidden">
+        <div className="absolute right-0 top-[calc(100%+6px)] z-30 bg-surface border border-outline-variant rounded-lg shadow-lg min-w-[160px] py-1 overflow-hidden">
           {options.map(opt => (
             <button
               key={opt.value}
               onClick={() => { onChange(opt.value); setOpen(false) }}
               className={`w-full text-left px-4 py-2.5 text-label-md font-medium transition-colors cursor-pointer flex items-center justify-between gap-2 ${
-                value === opt.value ? 'text-primary bg-[#eeefff]' : 'text-on-surface hover:bg-surface-container-low'
+                value === opt.value ? 'text-primary bg-primary-container' : 'text-on-surface hover:bg-surface-container-low'
               }`}
             >
               {opt.label}

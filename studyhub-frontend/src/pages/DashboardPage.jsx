@@ -46,7 +46,7 @@ const DashboardPage = () => {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setStagSyncStatus(user.stag_sync_status)
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.stag_sync_status])
 
   // Poll stag_sync_status while it is 'pending', then invalidate React Query cache
@@ -231,7 +231,7 @@ const DashboardPage = () => {
             </p>
           </div>
           <img
-            src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80"
+            src="src/assets/icons/user.png"
             alt={user.name}
             className="w-12 h-12 rounded-full object-cover shrink-0 border border-[#E2E8F0]"
           />

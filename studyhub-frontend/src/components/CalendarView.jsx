@@ -84,35 +84,35 @@ const CalendarView = ({
     <div className="w-full flex flex-col xl:flex-row gap-8 font-inter text-on-surface">
       
       {/* LEVÝ SLOUPEC: Mřížka kalendáře */}
-      <div className="flex-1 min-w-0 bg-white border border-[#E2E8F0] p-6 rounded-lg shadow-ambient">
+      <div className="flex-1 min-w-0 bg-surface border border-outline-variant p-6 rounded-lg shadow-ambient">
         
         {/* Hlavička kalendáře */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-[#E2E8F0] pb-6 mb-6">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-outline-variant pb-6 mb-6">
           <div className="flex flex-col gap-1.5">
             <h1 className="text-headline-lg font-bold text-on-surface">{t('academic:calendarView.title')}</h1>
             <div className="flex items-center gap-4">
               <span className="text-headline-md text-on-surface font-semibold capitalize">
                 {activeView === 'month' ? getMonthName(currentMonth) : getMonthName(selectedDate)}
               </span>
-              <div className="flex items-center bg-[#F2F4F6] rounded-md border border-[#E2E8F0]">
+              <div className="flex items-center bg-surface-container-low rounded-md border border-outline-variant">
                 <button 
                   onClick={handlePrev}
-                  className="p-1.5 hover:bg-surface-container transition-colors rounded-l-md cursor-pointer border-r border-[#E2E8F0]"
+                  className="p-1.5 hover:bg-surface-container transition-colors rounded-l-md cursor-pointer border-r border-outline-variant"
                 >
-                  <ChevronLeft className="w-4 h-4 text-[#737686]" />
+                  <ChevronLeft className="w-4 h-4 text-on-surface-variant" />
                 </button>
                 <button 
                   onClick={handleNext}
                   className="p-1.5 hover:bg-surface-container transition-colors rounded-r-md cursor-pointer"
                 >
-                  <ChevronRight className="w-4 h-4 text-[#737686]" />
+                  <ChevronRight className="w-4 h-4 text-on-surface-variant" />
                 </button>
               </div>
             </div>
           </div>
 
           {/* Přepínání pohledů */}
-          <div className="flex p-0.5 bg-[#F2F4F6] border border-[#E2E8F0] rounded-md shrink-0 self-stretch sm:self-auto justify-between sm:justify-start">
+          <div className="flex p-0.5 bg-surface-container-low border border-outline-variant rounded-md shrink-0 self-stretch sm:self-auto justify-between sm:justify-start">
             {['month', 'week', 'day'].map((view) => (
               <button
                 key={view}
@@ -124,7 +124,7 @@ const CalendarView = ({
                 }}
                 className={`px-4 py-1.5 rounded-sm text-label-md font-semibold transition-all cursor-pointer flex-1 sm:flex-none text-center ${
                   activeView === view
-                    ? 'bg-white text-on-surface shadow-sm'
+                    ? 'bg-surface text-on-surface shadow-sm'
                     : 'text-on-surface-variant hover:text-on-surface'
                 }`}
               >
@@ -153,19 +153,19 @@ const CalendarView = ({
         
         <button 
           onClick={openCreateModal}
-          className="w-full bg-[#004ac6] hover:bg-[#003ea8] active:scale-[0.98] text-white flex items-center justify-center gap-2 py-3 rounded-lg font-semibold shadow-md transition-all text-body-lg cursor-pointer"
+          className="w-full bg-primary hover:bg-primary-container active:scale-[0.98] text-on-primary flex items-center justify-center gap-2 py-3 rounded-lg font-semibold shadow-md transition-all text-body-lg cursor-pointer"
         >
           <Plus className="w-5 h-5" />
           {t('academic:calendarView.createNewEvent')}
         </button>
 
         {/* Přehled blížících se akcí */}
-        <div className="bg-white border border-[#E2E8F0] p-5 rounded-lg shadow-ambient">
+        <div className="bg-surface border border-outline-variant p-5 rounded-lg shadow-ambient">
           <h2 className="text-headline-md font-bold text-on-surface mb-4">{t('academic:calendarView.upcomingEvents')}</h2>
           
           <div className="flex flex-col gap-3">
             {upcomingEventsList.length === 0 ? (
-              <p className="text-body-md text-[#737686] italic text-center py-4">{t('academic:calendarView.noUpcomingEvents')}</p>
+              <p className="text-body-md text-on-surface-variant italic text-center py-4">{t('academic:calendarView.noUpcomingEvents')}</p>
             ) : (
               upcomingEventsList.map(event => {
                 const styleObj = getEventStyle(event.type)
@@ -178,7 +178,7 @@ const CalendarView = ({
                   <div 
                     key={event.id}
                     onClick={() => handleEventSelect(event)}
-                    className="bg-white border border-[#E2E8F0] p-4 rounded-lg flex flex-col gap-2 hover:shadow-md transition-shadow cursor-pointer relative overflow-hidden group"
+                    className="bg-surface border border-outline-variant p-4 rounded-lg flex flex-col gap-2 hover:shadow-md transition-shadow cursor-pointer relative overflow-hidden group"
                   >
                     <div 
                       className="absolute left-0 top-0 bottom-0 w-1" 
@@ -189,7 +189,7 @@ const CalendarView = ({
                       <span className={`text-[10px] font-extrabold uppercase px-1.5 py-0.5 rounded-sm ${styleObj.bg} ${styleObj.text}`}>
                         {event.code}
                       </span>
-                      <span className="text-[10px] text-[#737686] font-semibold">
+                      <span className="text-[10px] text-on-surface-variant font-semibold">
                         {dateText}, {event.time}
                       </span>
                     </div>
@@ -204,7 +204,7 @@ const CalendarView = ({
         </div>
 
         {/* Dynamické Checkboxy pro filtry */}
-        <div className="bg-white border border-[#E2E8F0] p-5 rounded-lg shadow-ambient">
+        <div className="bg-surface border border-outline-variant p-5 rounded-lg shadow-ambient">
           <h2 className="text-headline-md font-bold text-on-surface mb-4">{t('academic:calendarView.filterBySubject')}</h2>
           
           <div className="flex flex-col gap-3">
@@ -213,18 +213,18 @@ const CalendarView = ({
               return (
                 <label 
                   key={subj.id}
-                  className="flex items-center justify-between p-2 rounded-md hover:bg-[#F2F4F6] transition-colors cursor-pointer select-none"
+                  className="flex items-center justify-between p-2 rounded-md hover:bg-surface-container transition-colors cursor-pointer select-none"
                 >
                   <div className="flex items-center gap-3">
                     <input 
                       type="checkbox"
                       checked={isChecked}
                       onChange={() => handleSubjectToggle(subj.name)}
-                      className="w-4.5 h-4.5 rounded border-[#E2E8F0] text-primary focus:ring-primary accent-primary shrink-0 cursor-pointer"
+                      className="w-4.5 h-4.5 rounded border-outline-variant text-primary focus:ring-primary accent-primary shrink-0 cursor-pointer"
                     />
                     <span className="text-body-md font-semibold text-on-surface">{subj.name}</span>
                   </div>
-                  <span className="w-2.5 h-2.5 rounded-full shrink-0 bg-slate-400" />
+                  <span className="w-2.5 h-2.5 rounded-full shrink-0 bg-surface-container-low" />
                 </label>
               )
             })}
@@ -232,47 +232,47 @@ const CalendarView = ({
         </div>
 
         {/* Legend / Vysvětlivky barev */}
-        <div className="bg-white border border-[#E2E8F0] p-5 rounded-lg shadow-ambient">
+        <div className="bg-surface border border-outline-variant p-5 rounded-lg shadow-ambient">
           <h2 className="text-headline-md font-bold text-on-surface mb-4">{t('academic:calendarView.eventTypesTitle')}</h2>
 
           <div className="flex flex-col gap-3.5">
             <div className="flex items-center gap-3">
-              <span className="w-3.5 h-3.5 rounded-sm shrink-0 bg-[#eeefff] border border-[#004ac6]/20 flex items-center justify-center">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#004ac6]" />
+              <span className="w-3.5 h-3.5 rounded-sm shrink-0 bg-primary-container border border-primary/20 flex items-center justify-center">
+                <span className="w-1.5 h-1.5 rounded-full bg-primary" />
               </span>
               <div className="flex flex-col">
                 <span className="text-body-md font-bold text-on-surface leading-none">{t('academic:calendarView.eventTypeDescriptions.lectureLab.title')}</span>
-                <span className="text-[11px] text-[#737686] mt-0.5">{t('academic:calendarView.eventTypeDescriptions.lectureLab.description')}</span>
+                <span className="text-[11px] text-on-surface-variant mt-0.5">{t('academic:calendarView.eventTypeDescriptions.lectureLab.description')}</span>
               </div>
             </div>
 
             <div className="flex items-center gap-3">
-              <span className="w-3.5 h-3.5 rounded-sm shrink-0 bg-[#e6f4ea] border border-[#117a3a]/20 flex items-center justify-center">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#117a3a]" />
+              <span className="w-3.5 h-3.5 rounded-sm shrink-0 bg-secondary-container border border-secondary/20 flex items-center justify-center">
+                <span className="w-1.5 h-1.5 rounded-full bg-secondary" />
               </span>
               <div className="flex flex-col">
                 <span className="text-body-md font-bold text-on-surface leading-none">{t('academic:calendarView.eventTypeDescriptions.assignments.title')}</span>
-                <span className="text-[11px] text-[#737686] mt-0.5">{t('academic:calendarView.eventTypeDescriptions.assignments.description')}</span>
+                <span className="text-[11px] text-on-surface-variant mt-0.5">{t('academic:calendarView.eventTypeDescriptions.assignments.description')}</span>
               </div>
             </div>
 
             <div className="flex items-center gap-3">
-              <span className="w-3.5 h-3.5 rounded-sm shrink-0 bg-[#ffede6] border border-[#bc4800]/20 flex items-center justify-center">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#bc4800]" />
+              <span className="w-3.5 h-3.5 rounded-sm shrink-0 bg-error-container border border-error/20 flex items-center justify-center">
+                <span className="w-1.5 h-1.5 rounded-full bg-error" />
               </span>
               <div className="flex flex-col">
                 <span className="text-body-md font-bold text-on-surface leading-none">{t('academic:calendarView.eventTypeDescriptions.testsQuizzes.title')}</span>
-                <span className="text-[11px] text-[#737686] mt-0.5">{t('academic:calendarView.eventTypeDescriptions.testsQuizzes.description')}</span>
+                <span className="text-[11px] text-on-surface-variant mt-0.5">{t('academic:calendarView.eventTypeDescriptions.testsQuizzes.description')}</span>
               </div>
             </div>
 
             <div className="flex items-center gap-3">
-              <span className="w-3.5 h-3.5 rounded-sm shrink-0 bg-[#ffdad6] border border-[#ba1a1a]/20 flex items-center justify-center">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#ba1a1a]" />
+              <span className="w-3.5 h-3.5 rounded-sm shrink-0 bg-error-container border border-error/20 flex items-center justify-center">
+                <span className="w-1.5 h-1.5 rounded-full bg-error" />
               </span>
               <div className="flex flex-col">
                 <span className="text-body-md font-bold text-on-surface leading-none">{t('academic:calendarView.eventTypeDescriptions.examsDeadlines.title')}</span>
-                <span className="text-[11px] text-[#ba1a1a] font-semibold mt-0.5">{t('academic:calendarView.eventTypeDescriptions.examsDeadlines.description')}</span>
+                <span className="text-[11px] text-error font-semibold mt-0.5">{t('academic:calendarView.eventTypeDescriptions.examsDeadlines.description')}</span>
               </div>
             </div>
           </div>

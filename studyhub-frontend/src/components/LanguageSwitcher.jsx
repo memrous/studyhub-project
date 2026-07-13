@@ -12,7 +12,7 @@ const LanguageSwitcher = () => {
     const isActive = activeLanguage === languageCode
 
     return [
-      'inline-flex items-center justify-center overflow-hidden transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-[#004ac6] focus-visible:ring-offset-2 focus-visible:ring-offset-white cursor-pointer',
+      'inline-flex items-center justify-center overflow-hidden transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface cursor-pointer',
       isActive ? 'opacity-100' : 'opacity-50 hover:opacity-100',
     ].join(' ')
   }
