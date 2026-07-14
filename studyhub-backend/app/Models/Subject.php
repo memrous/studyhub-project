@@ -19,6 +19,8 @@ class Subject extends Model
         'is_mandatory',
         'semester',
         'description',
+        'guarantor',
+        'pass_threshold',
     ];
 
     protected $casts = [
@@ -29,6 +31,8 @@ class Subject extends Model
     protected $appends = [
         'completionType',
         'isMandatory',
+        'guarantor',
+        'passThreshold',
     ];
 
     public function user()
@@ -46,6 +50,16 @@ class Subject extends Model
         return $this->hasMany(Material::class, 'subject_id');
     }
 
+    public function requirements()
+    {
+        return $this->hasMany(Requirement::class);
+    }
+
+    public function note()
+    {
+        return $this->hasOne(Note::class);
+    }
+
     public function getCompletionTypeAttribute()
     {
         return $this->attributes['completion_type'] ?? null;
@@ -54,5 +68,15 @@ class Subject extends Model
     public function getIsMandatoryAttribute()
     {
         return $this->attributes['is_mandatory'] ?? null;
+    }
+
+    public function getGuarantorAttribute()
+    {
+        return $this->attributes['guarantor'] ?? null;
+    }
+
+    public function getPassThresholdAttribute()
+    {
+        return $this->attributes['pass_threshold'] ?? null;
     }
 }

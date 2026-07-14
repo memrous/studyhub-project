@@ -38,6 +38,10 @@ class EventController extends Controller
             'endTime' => 'nullable|string',
             'type' => 'required|string|max:255',
             'status' => 'nullable|string|max:255',
+            'room' => 'nullable|string|max:255',
+            'teacherName' => 'nullable|string|max:255',
+            'teacherEmail' => 'nullable|string|email|max:255',
+            'requirementId' => 'nullable|integer',
         ]);
 
         $event = new Event();
@@ -48,6 +52,10 @@ class EventController extends Controller
         $event->end_time = $validated['endTime'] ?? null;
         $event->type = $validated['type'];
         $event->status = $validated['status'] ?? 'Not Started';
+        $event->room = $validated['room'] ?? null;
+        $event->teacher_name = $validated['teacherName'] ?? null;
+        $event->teacher_email = $validated['teacherEmail'] ?? null;
+        $event->requirement_id = $validated['requirementId'] ?? null;
         $event->save();
 
         return response()->json($event, 201);
@@ -78,6 +86,10 @@ class EventController extends Controller
             'endTime' => 'nullable|string',
             'type' => 'required|string|max:255',
             'status' => 'nullable|string|max:255',
+            'room' => 'nullable|string|max:255',
+            'teacherName' => 'nullable|string|max:255',
+            'teacherEmail' => 'nullable|string|email|max:255',
+            'requirementId' => 'nullable|integer',
         ]);
 
         $event->subject_id = $validated['subjectId'];
@@ -89,6 +101,10 @@ class EventController extends Controller
         if (isset($validated['status'])) {
             $event->status = $validated['status'];
         }
+        $event->room = $validated['room'] ?? null;
+        $event->teacher_name = $validated['teacherName'] ?? null;
+        $event->teacher_email = $validated['teacherEmail'] ?? null;
+        $event->requirement_id = $validated['requirementId'] ?? null;
         $event->save();
 
         return response()->json($event);

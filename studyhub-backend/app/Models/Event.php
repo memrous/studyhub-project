@@ -17,6 +17,10 @@ class Event extends Model
         'end_time',
         'type',
         'status',
+        'room',
+        'teacher_name',
+        'teacher_email',
+        'requirement_id',
     ];
 
     protected $casts = [
@@ -27,6 +31,10 @@ class Event extends Model
         'subjectId',
         'startTime',
         'endTime',
+        'room',
+        'teacherName',
+        'teacherEmail',
+        'requirementId',
     ];
 
     public function subject()
@@ -47,6 +55,26 @@ class Event extends Model
     public function getEndTimeAttribute()
     {
         return $this->attributes['end_time'] ?? null;
+    }
+
+    public function getRoomAttribute()
+    {
+        return $this->attributes['room'] ?? null;
+    }
+
+    public function getTeacherNameAttribute()
+    {
+        return $this->attributes['teacher_name'] ?? null;
+    }
+
+    public function getTeacherEmailAttribute()
+    {
+        return $this->attributes['teacher_email'] ?? null;
+    }
+
+    public function getRequirementIdAttribute()
+    {
+        return $this->attributes['requirement_id'] ?? null;
     }
 }
   

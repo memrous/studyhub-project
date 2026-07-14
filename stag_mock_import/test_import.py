@@ -26,6 +26,7 @@ def transformuj_data_pro_laravel(surova_data):
         katedra = akce.get("katedra", "???")
         kod_predmetu = akce.get("predmet", "???")
         plny_kod = f"{katedra}/{kod_predmetu}"
+        mistnost = akce.get("mistnost", None)
         
         ucitel_obj = akce.get("ucitel", {})
         jmeno_vyucujiciho = f"{ucitel_obj.get('jmeno', '')} {ucitel_obj.get('prijmeni', '')}".strip() or "Neznámý"
@@ -49,7 +50,9 @@ def transformuj_data_pro_laravel(surova_data):
                 "startTime": akce.get("casOd", "00:00"),
                 "endTime": akce.get("casDo", "00:00"),
                 "type": full_typ,
-                "status": "Not Started"
+                "status": "Not Started",
+                "room": mistnost,
+                "teacherName": jmeno_vyucujiciho if jmeno_vyucujiciho != "Neznámý" else None
             }
         }
         vysledek.append(laravel_payload)

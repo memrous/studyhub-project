@@ -26,6 +26,9 @@ class SubjectController extends Controller
             'is_mandatory' => 'nullable|boolean',
             'semester' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'guarantor' => 'nullable|string|max:255',
+            'passThreshold' => 'nullable|integer',
+            'pass_threshold' => 'nullable|integer',
         ]);
 
         $subject = new Subject();
@@ -38,9 +41,20 @@ class SubjectController extends Controller
         $subject->is_mandatory = $validated['isMandatory'] ?? $validated['is_mandatory'] ?? true;
         $subject->semester = $validated['semester'];
         $subject->description = $validated['description'] ?? null;
+        $subject->guarantor = $validated['guarantor'] ?? null;
+        $subject->pass_threshold = $validated['passThreshold'] ?? $validated['pass_threshold'] ?? null;
         $subject->save();
 
         return response()->json($subject, 201);
+    }
+
+    public function show(Request $request, $id)
+    {
+        $subject = Subject::where('user_id', $request->user()->id)
+            ->with(['requirements', 'materials', 'note', 'events'])
+            ->findOrFail($id);
+
+        return response()->json($subject);
     }
 
     public function destroy(Request $request, $id)

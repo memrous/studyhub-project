@@ -11,8 +11,10 @@ class MaterialController extends Controller
 {
     public function index(Request $request)
     {
-        $materials = Material::whereHas('subject', function ($query) use ($request) {
-            $query->where('user_id', $request->user()->id);
+        $materials = Material::where(function ($query) use ($request) {
+            $query->whereHas('subject', function ($q) use ($request) {
+                $q->where('user_id', $request->user()->id);
+            })->orWhere('resources.user_id', $request->user()->id);
         })->get();
 
         return response()->json($materials);
@@ -24,7 +26,7 @@ class MaterialController extends Controller
 
         $validated = $request->validate([
             'subjectId' => [
-                'required',
+                'nullable',
                 'integer',
                 function ($attribute, $value, $fail) use ($userId) {
                     $exists = Subject::where('id', $value)->where('user_id', $userId)->exists();
@@ -39,13 +41,23 @@ class MaterialController extends Controller
             'url' => 'nullable|string|max:255',
             'file' => 'nullable|file|max:51200',
             'size' => 'nullable|string|max:255',
+            'eventId' => 'nullable|integer',
+            'requirementId' => 'nullable|integer',
+            'category' => 'nullable|string|in:file,platform',
         ]);
 
         $material = new Material();
-        $material->subject_id = $validated['subjectId'];
+        $material->subject_id = $validated['subjectId'] ?? null;
         $material->title = $validated['title'];
         $material->type = $validated['type'];
         $material->description = $validated['description'] ?? null;
+        $material->event_id = $validated['eventId'] ?? null;
+        $material->requirement_id = $validated['requirementId'] ?? null;
+        $material->category = $validated['category'] ?? 'file';
+
+        if (empty($validated['subjectId'])) {
+            $material->user_id = $userId;
+        }
 
         if ($request->hasFile('file')) {
             $file = $request->file('file');
@@ -54,7 +66,7 @@ class MaterialController extends Controller
             $material->size = $this->formatBytes($file->getSize());
             $material->file_name = $file->getClientOriginalName();
         } else {
-            $material->url = $validated['url'];
+            $material->url = $validated['url'] ?? null;
             $material->size = $validated['size'] ?? 'External Link';
             $material->file_name = null;
         }
@@ -83,8 +95,10 @@ class MaterialController extends Controller
     {
         $userId = $request->user()->id;
 
-        $material = Material::whereHas('subject', function ($query) use ($userId) {
-            $query->where('user_id', $userId);
+        $material = Material::where(function ($query) use ($userId) {
+            $query->whereHas('subject', function ($q) use ($userId) {
+                $q->where('user_id', $userId);
+            })->orWhere('resources.user_id', $userId);
         })->findOrFail($id);
 
         $material->delete();

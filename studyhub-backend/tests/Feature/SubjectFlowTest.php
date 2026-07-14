@@ -94,4 +94,82 @@ class SubjectFlowTest extends TestCase
         $response->assertStatus(404);
         $this->assertDatabaseHas('subjects', ['id' => $subject->id]);
     }
+
+    public function test_user_can_create_subject_with_guarantor_and_pass_threshold(): void
+    {
+        $user = User::factory()->create();
+        Sanctum::actingAs($user);
+
+        $payload = [
+            'code' => 'KMI/ALGO2',
+            'name' => 'Algorithms 2',
+            'credits' => 6,
+            'lecturer' => 'Prof. Brown',
+            'semester' => 'Summer',
+            'guarantor' => 'Alice Green',
+            'passThreshold' => 50,
+        ];
+
+        $response = $this->postJson('/api/subjects', $payload);
+
+        $response->assertStatus(201)
+            ->assertJsonFragment([
+                'code' => 'KMI/ALGO2',
+                'name' => 'Algorithms 2',
+                'guarantor' => 'Alice Green',
+                'passThreshold' => 50,
+            ]);
+
+        $this->assertDatabaseHas('subjects', [
+            'user_id' => $user->id,
+            'code' => 'KMI/ALGO2',
+            'guarantor' => 'Alice Green',
+            'pass_threshold' => 50,
+        ]);
+    }
+
+    public function test_user_can_manage_global_materials(): void
+    {
+        $user = User::factory()->create();
+        Sanctum::actingAs($user);
+
+        // Store global material (subjectId is null)
+        $payload = [
+            'subjectId' => null,
+            'title' => 'Global Guide',
+            'type' => 'pdf',
+            'url' => 'https://example.com/guide.pdf',
+            'category' => 'file',
+        ];
+
+        $responseStore = $this->postJson('/api/materials', $payload);
+        $responseStore->assertStatus(201)
+            ->assertJsonFragment([
+                'title' => 'Global Guide',
+                'category' => 'file',
+                'subjectId' => null,
+            ]);
+
+        $materialId = $responseStore->json('id');
+
+        $this->assertDatabaseHas('resources', [
+            'id' => $materialId,
+            'user_id' => $user->id,
+            'subject_id' => null,
+            'category' => 'file',
+        ]);
+
+        // Get materials list (should contain our global material)
+        $responseIndex = $this->getJson('/api/materials');
+        $responseIndex->assertStatus(200)
+            ->assertJsonFragment(['title' => 'Global Guide']);
+
+        // Delete the global material
+        $responseDelete = $this->deleteJson("/api/materials/{$materialId}");
+        $responseDelete->assertStatus(200);
+
+        $this->assertDatabaseMissing('resources', [
+            'id' => $materialId,
+        ]);
+    }
 }

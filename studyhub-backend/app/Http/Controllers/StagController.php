@@ -30,6 +30,8 @@ class StagController extends Controller
             '*.event.endTime' => 'nullable|string',
             '*.event.type' => 'required|string|max:255',
             '*.event.status' => 'nullable|string|max:255',
+            '*.event.room' => 'nullable|string|max:255',
+            '*.event.teacherName' => 'nullable|string|max:255',
         ]);
 
         $user = $request->user();
@@ -75,6 +77,8 @@ class StagController extends Controller
                     $event->end_time = $eventData['endTime'] ?? null;
                     $event->type = $eventData['type'];
                     $event->status = $eventData['status'] ?? 'Not Started';
+                    $event->room = $eventData['room'] ?? null;
+                    $event->teacher_name = $eventData['teacherName'] ?? null;
                     $event->save();
 
                     $importedCount++;

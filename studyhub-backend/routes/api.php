@@ -7,6 +7,9 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\StagController;
 use App\Http\Controllers\StagConnectController;
+use App\Http\Controllers\RequirementController;
+use App\Http\Controllers\NoteController;
+use App\Http\Controllers\DashboardController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -28,7 +31,10 @@ Route::middleware('auth:sanctum')->group(function () {
     // Subjects
     Route::get('/subjects', [SubjectController::class, 'index']);
     Route::post('/subjects', [SubjectController::class, 'store']);
+    Route::get('/subjects/{subject}', [SubjectController::class, 'show']);
     Route::delete('/subjects/{subject}', [SubjectController::class, 'destroy']);
+    Route::get('/subjects/{subjectId}/note', [NoteController::class, 'show']);
+    Route::put('/subjects/{subjectId}/note', [NoteController::class, 'update']);
 
     // Events
     Route::get('/events', [EventController::class, 'index']);
@@ -37,10 +43,19 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::patch('/events/{event}/status', [EventController::class, 'updateStatus']);
     Route::delete('/events/{event}', [EventController::class, 'destroy']);
 
+    // Requirements
+    Route::get('/requirements', [RequirementController::class, 'index']);
+    Route::post('/requirements', [RequirementController::class, 'store']);
+    Route::put('/requirements/{requirement}', [RequirementController::class, 'update']);
+    Route::delete('/requirements/{requirement}', [RequirementController::class, 'destroy']);
+
     // Materials (Resources)
     Route::get('/materials', [MaterialController::class, 'index']);
     Route::post('/materials', [MaterialController::class, 'store']);
     Route::delete('/materials/{material}', [MaterialController::class, 'destroy']);
+
+    // Dashboard
+    Route::get('/dashboard/summary', [DashboardController::class, 'summary']);
 
     // STAG Synchronizace
     Route::post('/stag/sync-schedule', [StagController::class, 'syncSchedule']);
