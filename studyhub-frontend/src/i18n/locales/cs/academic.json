@@ -1,200 +1,259 @@
 {
   "subjectsView": {
-    "modalTitle": "Přidat zapsaný předmět",
+    "modalTitle": "Add Enrolled Subject",
+    "addManually": "Add Subject Manually",
     "fields": {
-      "subjectName": "Název předmětu",
-      "courseCode": "Kód předmětu (STAG)",
-      "credits": "Kredity",
-      "lecturer": "Vyučující / profesor",
-      "enrollmentBadge": "Typ zápisu",
-      "semester": "Semestr",
-      "completionType": "Typ ukončení",
-      "subjectDescription": "Popis předmětu"
+      "subjectName": "Subject Name",
+      "courseCode": "Course Code (STAG)",
+      "credits": "Credits",
+      "lecturer": "Lecturer / Professor",
+      "enrollmentBadge": "Enrollment Badge",
+      "semester": "Semester",
+      "completionType": "Completion Type",
+      "subjectDescription": "Subject Description"
     },
     "placeholders": {
-      "subjectName": "např. Databázové systémy",
-      "courseCode": "např. KMI/DBS",
-      "lecturer": "např. Jan Novák",
-      "description": "Popište osnovu předmětu..."
+      "subjectName": "e.g. Database Systems",
+      "courseCode": "e.g. KMI/DBS",
+      "lecturer": "e.g. John Smith",
+      "description": "Describe the course curriculum..."
     },
     "defaults": {
-      "tba": "Bude doplněno",
-      "noDescriptionProvided": "Popis nebyl zadán."
+      "tba": "TBA",
+      "noDescriptionProvided": "No description provided."
     },
     "options": {
-      "mandatory": "Povinný",
-      "elective": "Volitelný",
-      "exam": "Zkouška",
-      "credit": "Kredit",
-      "creditPlusExam": "Kredit + zkouška"
+      "mandatory": "Mandatory",
+      "elective": "Elective",
+      "exam": "Exam",
+      "credit": "Credit",
+      "creditPlusExam": "Credit + Exam"
     },
-    "creditUnit_one": "kredit",
-    "creditUnit_few": "kredity",
-    "creditUnit_other": "kreditů",
+    "creditUnit_one": "Credit",
+    "creditUnit_other": "Credits",
     "semesterOptions": {
-      "winter": "Zimní semestr",
-      "summer": "Letní semestr"
+      "winter": "Winter Semester",
+      "summer": "Summer Semester"
     },
     "filters": {
-      "allSubjects": "Všechny předměty",
-      "mandatoryOnly": "Pouze povinné",
-      "electiveOnly": "Pouze volitelné"
+      "allSubjects": "All Subjects",
+      "mandatoryOnly": "Mandatory Only",
+      "electiveOnly": "Elective Only"
     },
     "sorts": {
-      "defaultOrder": "Výchozí řazení",
-      "nameAZ": "Název (A–Z)",
-      "courseCode": "Kód předmětu",
-      "creditsHighLow": "Kredity (sestupně)"
+      "defaultOrder": "Default Order",
+      "nameAZ": "Name (A–Z)",
+      "courseCode": "Course Code",
+      "creditsHighLow": "Credits (High–Low)"
     },
     "fallbacks": {
-      "filter": "Filtr",
-      "sort": "Řazení"
+      "filter": "Filter",
+      "sort": "Sort"
     },
     "emptyState": {
-      "noDataTitle": "Žádná data",
-      "noDataDescription": "Zatím nemáte žádné zapsané předměty.",
-      "noMatchingTitle": "Žádné odpovídající předměty",
-      "noMatchingDescription": "Zkuste upravit filtr nebo přidat nový předmět."
+      "noDataTitle": "No data",
+      "noDataDescription": "You do not have any enrolled subjects yet.",
+      "noMatchingTitle": "No matching subjects",
+      "noMatchingDescription": "Try changing the filter or add a new subject."
     },
     "page": {
-      "title": "Moje zapsané předměty",
-      "subtitle": "Spravujte studijní plán, kredity a typy ukončení propojené se STAGem.",
-      "footer": "© 2026 Palacký University Olomouc Academic Systems. Napojení na STAG je aktivní."
+      "title": "My Enrolled Subjects",
+      "subtitle": "Manage your academic curriculum, credits, and completion types connected with STAG.",
+      "footer": "© 2026 Palacký University Olomouc Academic Systems. STAG Integration Connected."
     },
     "actions": {
-      "cancel": "Zrušit",
-      "saveSubject": "Uložit předmět"
+      "cancel": "Cancel",
+      "saveSubject": "Save Subject"
     }
   },
   "subjectDetail": {
-    "tabs": {
-      "overview": "Přehled",
-      "materials": "Materiály",
-      "assignments": "Zadání",
-      "testsExams": "Testy a zkoušky"
-    },
-    "backToSubjects": "Zpět na předměty",
-    "noSubjectSelected": "Není vybraný žádný předmět. Klikněte zpět a vyberte předmět.",
-    "goBack": "Vrátit se",
-    "semesterLabel": "{{semester}} semestr",
-    "creditsLabel": "Kredity",
-    "lecturerLabel": "Vyučující:",
-    "courseDescription": "Popis předmětu",
-    "completionCriteria": "Podmínky ukončení",
-    "lecturerInCharge": "Garant předmětu",
-    "subjectDeadlines": "Termíny předmětu",
-    "noUpcomingDeadlines": "Žádné nadcházející termíny.",
-    "materialsUploaded": "Pro tento předmět jsou nahrány {{count}} materiály",
-    "noMaterials": "Pro tento předmět zatím nejsou k dispozici žádné materiály.",
-    "attachment": "Příloha",
-    "uploaded": "Nahráno:",
-    "preview": "Náhled",
-    "download": "Stáhnout",
-    "assignmentsTracked": "Sledováno {{count}} zadání",
-    "noAssignments": "Pro tento předmět nejsou uvedena žádná zadání.",
-    "deadline": "Termín:",
-    "status": "Stav:",
+    "showInfo": "Show subject description",
+    "backToSubjects": "Back to Subjects",
+    "noSubjectSelected": "No subject selected. Click back to select a subject.",
+    "goBack": "Go back",
+    "semesterLabel": "{{semester}} Semester",
+    "creditsLabel": "Credits",
+    "creditsEcts": "{{count}} ECTS",
+    "lecturerLabel": "Lecturer:",
+    "guarantorLabel": "Guarantor",
+    "typeLabel": "Type",
+    "completionLabel": "Completion",
+    "courseDescription": "Course Description",
+    "completionCriteria": "Completion Criteria",
+    "lecturerInCharge": "Lecturer In Charge",
+    "subjectDeadlines": "Subject Deadlines",
+    "noUpcomingDeadlines": "No upcoming deadlines.",
+    "materialsUploaded": "{{count}} materials uploaded for this subject",
+    "noMaterials": "No materials available for this subject yet.",
+    "attachment": "Attachment",
+    "uploaded": "Uploaded:",
+    "preview": "Preview",
+    "download": "Download",
+    "assignmentsTracked": "{{count}} assignments tracked",
+    "noAssignments": "No assignments listed for this subject.",
+    "deadline": "Deadline:",
+    "status": "Status:",
     "statusOptions": {
-      "notStarted": "Nezahájeno",
-      "inProgress": "Probíhá",
-      "submitted": "Odevzdáno",
-      "completed": "Dokončeno",
-      "upcoming": "Nadcházející"
+      "notStarted": "Not Started",
+      "inProgress": "In Progress",
+      "submitted": "Submitted",
+      "completed": "Completed",
+      "upcoming": "Upcoming"
     },
-    "testsExamsTracked": "Uvedeno {{count}} testů a zkoušek",
-    "noTestsExams": "Nebyly naplánovány žádné testy ani zkoušky.",
-    "date": "Datum:",
-    "type": "Typ:",
-    "dueToday": "Termín dnes",
-    "dueTomorrow": "Termín zítra",
-    "dueOnDate": "Termín {{date}}",
-    "dueInDays": "Termín za {{count}} dní",
-    "overdueByDays": "Po termínu o {{count}} dní"
+    "testsExamsTracked": "{{count}} tests and exams listed",
+    "noTestsExams": "No tests or exams scheduled.",
+    "date": "Date:",
+    "type": "Type:",
+    "dueToday": "Due Today",
+    "dueTomorrow": "Due Tomorrow",
+    "dueOnDate": "Due {{date}}",
+    "dueInDays": "In {{count}} days",
+    "dueInDays_one": "In 1 day",
+    "dueInDays_other": "In {{count}} days",
+    "overdueByDays": "Overdue by {{count}} days",
+    "tabs": {
+      "overview": "Overview",
+      "materials": "Materials & Links",
+      "assignments": "Assignments",
+      "testsExams": "Tests & Exams",
+      "requirements": "Requirements",
+      "notes": "My Notes"
+    },
+    "requirements": {
+      "noRequirements": "No requirements yet.",
+      "types": {
+        "homework": "Homework",
+        "test": "Test",
+        "exam": "Exam",
+        "project": "Project",
+        "milestone": "Milestone",
+        "Assignment": "Homework",
+        "Test": "Test",
+        "Exam": "Exam",
+        "Project": "Project",
+        "Milestone": "Milestone"
+      },
+      "weight": "Weight {{weight}}%",
+      "statusCompleted": "Submitted",
+      "statusDueSoon": "In {{count}} days",
+      "statusDueSoon_one": "In 1 day",
+      "statusDueSoon_other": "In {{count}} days",
+      "statusDueToday": "Today",
+      "noPts": "–"
+    },
+    "progress": {
+      "title": "Progress Assessment",
+      "minimum": "Minimum to pass",
+      "minimumMet": "Minimum requirement met",
+      "missingToMinimum": "Missing to minimum: {{diff}} PTS",
+      "pts": "PTS"
+    },
+    "infoDialog": {
+      "title": "Subject description",
+      "close": "Close",
+      "importedFromStag": "Imported from IS/STAG · Lecturer: {{teacher}}"
+    },
+    "notes": {
+      "placeholder": "Start writing notes for this subject...",
+      "save": "Save Notes",
+      "saved": "Saved",
+      "lastSaved": "Last saved: {{time}}"
+    }
   },
   "calendarView": {
-    "title": "Kalendář",
+    "today": "Dnes",
+    "previous": "Předchozí",
+    "next": "Následující",
+    "viewLabel": "Zobrazení",
+    "filterLabel": "Filtr:",
+    "hidePanel": "Skrýt panel",
+    "showPanel": "Zobrazit panel",
+    "title": "Calendar",
     "views": {
-      "month": "Měsíc",
-      "week": "Týden",
-      "day": "Den"
+      "month": "Month",
+      "week": "Week",
+      "agenda": "Agenda"
     },
-    "upcomingEvents": "Nadcházející události",
-    "noUpcomingEvents": "Nenalezeny žádné nadcházející události odpovídající filtru.",
-    "filterBySubject": "Filtrovat podle předmětu",
-    "eventTypesTitle": "Typy událostí",
-    "createNewEvent": "Vytvořit událost",
+    "upcomingEvents": "Upcoming Events",
+    "noUpcomingEvents": "No upcoming events filter matches.",
+    "filterBySubject": "Filter by Subject",
+    "eventTypesTitle": "Event Types",
+    "createNewEvent": "Add Reminder",
+    "quickOverview": {
+      "tipText": "Click on any class to view materials, lecturer and quick actions."
+    },
     "eventTypeDescriptions": {
       "lectureLab": {
-        "title": "Přednášky a cvičení",
-        "description": "Běžná výuka a semináře"
+        "title": "Lectures & Labs",
+        "description": "Regular classes and seminars"
       },
       "assignments": {
-        "title": "Zadání",
-        "description": "Domácí úkoly a milníky projektu"
+        "title": "Assignments",
+        "description": "Homework and project milestones"
       },
       "testsQuizzes": {
-        "title": "Testy a kvízy",
-        "description": "Průběžné testy, malé testy a kvízy"
+        "title": "Tests & Quizzes",
+        "description": "Midterms, small tests and quizzes"
       },
       "examsDeadlines": {
-        "title": "Zkoušky a termíny",
-        "description": "Závěrečné zkoušky a pevné termíny"
+        "title": "Exams & Deadlines",
+        "description": "Final exams and strict deadlines"
       }
     }
   },
   "calendarGrid": {
     "days": {
-      "mon": "Po",
-      "tue": "Út",
-      "wed": "St",
-      "thu": "Čt",
-      "fri": "Pá",
-      "sat": "So",
-      "sun": "Ne"
+      "mon": "Mon",
+      "tue": "Tue",
+      "wed": "Wed",
+      "thu": "Thu",
+      "fri": "Fri",
+      "sat": "Sat",
+      "sun": "Sun"
     },
-    "agenda": "Program:",
-    "noEventsToday": "Na tento den nejsou naplánované žádné události.",
-    "noEvents": "Žádné události",
-    "yourSchedule": "Váš rozvrh a termíny na dnešek",
-    "addEvent": "Přidat událost",
-    "freeSlot": "Volný časový blok"
+    "agenda": "Agenda:",
+    "noEventsToday": "No events scheduled for this day.",
+    "noEvents": "No events",
+    "yourSchedule": "Your schedule and deadlines for today",
+    "addEvent": "Add Event",
+    "freeSlot": "Free schedule slot"
   },
   "eventModal": {
-    "createTitle": "Vytvořit událost",
-    "editTitle": "Upravit událost",
+    "createTitle": "Create New Event",
+    "editTitle": "Edit Event",
     "fields": {
-      "eventTitle": "Název události",
-      "type": "Typ",
-      "subject": "Předmět",
-      "date": "Datum",
-      "startTime": "Čas začátku",
-      "duration": "Doba trvání (minuty)"
+      "eventTitle": "Event Title",
+      "type": "Type",
+      "subject": "Subject",
+      "date": "Date",
+      "startTime": "Start Time",
+      "duration": "Duration (Minutes)"
     },
     "placeholders": {
-      "eventTitle": "např. Praktický test z databází"
+      "eventTitle": "e.g. Database Systems Practical Test"
     },
     "durationOptions": {
-      "30": "30 minut",
-      "60": "1 hodina",
-      "90": "1,5 hodiny",
-      "120": "2 hodiny",
-      "180": "3 hodiny",
-      "0": "Termín (celý den)"
+      "30": "30 minutes",
+      "60": "1 hour",
+      "90": "1.5 hours",
+      "120": "2 hours",
+      "180": "3 hours",
+      "0": "Deadline (All Day)"
     },
     "actions": {
-      "cancel": "Zrušit",
-      "save": "Uložit událost"
+      "cancel": "Cancel",
+      "save": "Save Event"
     }
   },
   "eventDetail": {
-    "unknownSubject": "Neznámý předmět",
-    "lecturer": "Vyučující:",
-    "notSpecified": "Neuvedeno",
-    "subjectDescription": "Popis předmětu:",
-    "creditsCompletion": "Kredity / ukončení:",
-    "openSubjectHub": "Otevřít předmět",
-    "editEvent": "Upravit událost",
-    "deleteEvent": "Smazat událost",
-    "areYouSure": "Jste si jistí?"
+    "unknownSubject": "Unknown Subject",
+    "lecturer": "Lecturer:",
+    "notSpecified": "Not specified",
+    "subjectDescription": "Subject Description:",
+    "creditsCompletion": "Credits / Completion:",
+    "openSubjectHub": "Open Subject Hub",
+    "editEvent": "Edit Event",
+    "deleteEvent": "Delete Event",
+    "areYouSure": "Are you sure?"
   }
 }

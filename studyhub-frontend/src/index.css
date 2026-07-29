@@ -21,7 +21,7 @@
   --color-outline: #737686;
   --color-outline-variant: #c3c6d7;
   --color-surface-tint: #0053db;
-  --color-primary: #004ac6;
+  --color-primary: #1e64ef;
   --color-on-primary: #ffffff;
   --color-primary-container: #2563eb;
   --color-on-primary-container: #eeefff;
@@ -50,7 +50,7 @@
   --color-on-error: #ffffff;
   --color-error-container: #ffdad6;
   --color-on-error-container: #93000a;
-  --color-success: #059669;
+  --color-success: #35c26d;
   --color-on-success: #ffffff;
   --color-success-container: #ecfdf5;
   --color-on-success-container: #065f46;
@@ -70,6 +70,12 @@
   --radius-full: 9999px;
   
   --shadow-ambient: 0 1px 3px 0 rgba(0, 0, 0, 0.02), 0 1px 2px -1px rgba(0, 0, 0, 0.03);
+
+  --color-foreground: #191c1e;
+  --color-primary-foreground: #ffffff;
+
+  --color-midnight: #1d293d;
+  --color-midnight-foreground: #f1f5f9;
 }
 
 .dark {
@@ -90,7 +96,7 @@
   --color-outline: #8d97a5;
   --color-outline-variant: #37424f;
   --color-surface-tint: #7ea7ff;
-  --color-primary: #7ea7ff;
+  --color-primary: #1e64ef;
   --color-on-primary: #07111f;
   --color-primary-container: #163b8b;
   --color-on-primary-container: #dce6ff;
@@ -127,6 +133,12 @@
   --color-on-warning: #07111f;
   --color-warning-container: #78350f;
   --color-on-warning-container: #fff6e0;
+  --color-midnight: #0b1220;
+  --color-midnight-foreground: #f1f5f9;
+  --color-foreground: #edf1f4;
+  --color-primary-foreground: #07111f;
+  --color-midnight: #141c2c;
+  --color-midnight-foreground: #f1f5f9;
 }
 
 /* Custom design system typography classes */

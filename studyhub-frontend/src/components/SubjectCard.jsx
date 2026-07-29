@@ -12,21 +12,38 @@ const SubjectCard = ({ subject, onSelect, onDelete }) => {
     if (semester === 'Summer') return t('subjectCard.semester.summer')
     return semester
   }
+
+  const getScoreColorClass = (score) => {
+    if (score >= 70) return 'bg-success-container text-success'
+    if (score >= 40) return 'bg-warning-container text-warning'
+    return 'bg-error-container text-error'
+  }
+
+  const gained = subject.gainedPoints !== undefined ? subject.gainedPoints : subject.gained_points
+  const max = subject.maxPoints !== undefined ? subject.maxPoints : subject.max_points
+  const hasPoints = (gained !== undefined && gained !== null) && (max !== undefined && max !== null)
   
   return (
     <div className="bg-surface-container border border-outline-variant rounded-lg shadow-ambient hover:shadow-md transition-shadow flex flex-col p-5 gap-4 font-inter">
-      {/* Header: Icon + Mandatory/Elective Badge */}
+      {/* Header: Icon + Mandatory/Elective Badge + Score */}
       <div className="flex items-start justify-between">
         <div className="w-10 h-10 bg-surface-container-highest text-primary flex items-center justify-center rounded-md shrink-0">
           <SubjectIcon code={subject.code} />
         </div>
-        <span className={`text-label-sm font-bold px-2.5 py-0.5 rounded-sm ${
-          subject.isMandatory 
-            ? 'bg-surface-container-highest text-primary' 
-            : 'bg-surface-container-low text-emerald-700'
-        }`}>
-          {subject.isMandatory ? t('subjectCard.mandatory') : t('subjectCard.elective')}
-        </span>
+        <div className="flex items-center gap-2">
+          {subject.score !== undefined && subject.score !== null && (
+            <span className={`text-label-sm font-bold px-2 py-0.5 rounded-sm ${getScoreColorClass(subject.score)}`}>
+              {subject.score}%
+            </span>
+          )}
+          <span className={`text-label-sm font-bold px-2.5 py-0.5 rounded-sm ${
+            subject.isMandatory 
+              ? 'bg-surface-container-highest text-primary' 
+              : 'bg-surface-container-low text-emerald-700'
+          }`}>
+            {subject.isMandatory ? t('subjectCard.mandatory') : t('subjectCard.elective')}
+          </span>
+        </div>
       </div>
 
       {/* Meta Row: Code + Credits */}
@@ -45,6 +62,11 @@ const SubjectCard = ({ subject, onSelect, onDelete }) => {
         <h3 className="text-headline-md font-bold text-on-surface leading-snug">
           {subject.name}
         </h3>
+        {hasPoints && (
+          <div className="text-body-md text-on-surface-variant font-medium">
+            {gained} / {max} {t('subjectCard.points', 'bodů')}
+          </div>
+        )}
         <p className="text-body-md text-on-surface-variant line-clamp-2 leading-relaxed">
           {subject.description}
         </p>

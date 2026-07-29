@@ -84,5 +84,19 @@
   "emptyState": {
     "title": "No resources match your search criteria",
     "description": "Try adjusting filters or upload a new resource."
+  },
+  "library": {
+    "title": "Materials Library",
+    "subtitle": "A chronological overview of materials and links from all your subjects.",
+    "uploadButton": "Upload Material / Link",
+    "thisWeek": "This Week",
+    "weekLabel": "Week {{n}}",
+    "otherMaterials": "Other Materials",
+    "addCustom": "Add custom note / file",
+    "semesterMaterials": "Semester Materials",
+    "semesterMaterialsSubtitle": "Permanent links for the whole semester that you need daily.",
+    "allSubjects": "All Subjects",
+    "allTypes": "All Types",
+    "externalLink": "External Link"
   }
 }

@@ -1,6 +1,7 @@
 {
   "subjectsView": {
     "modalTitle": "Add Enrolled Subject",
+    "addManually": "Add Subject Manually",
     "fields": {
       "subjectName": "Subject Name",
       "courseCode": "Course Code (STAG)",
@@ -66,18 +67,16 @@
     }
   },
   "subjectDetail": {
-    "tabs": {
-      "overview": "Overview",
-      "materials": "Materials",
-      "assignments": "Assignments",
-      "testsExams": "Tests & Exams"
-    },
     "backToSubjects": "Back to Subjects",
     "noSubjectSelected": "No subject selected. Click back to select a subject.",
     "goBack": "Go back",
     "semesterLabel": "{{semester}} Semester",
     "creditsLabel": "Credits",
+    "creditsEcts": "{{count}} ECTS",
     "lecturerLabel": "Lecturer:",
+    "guarantorLabel": "Guarantor",
+    "typeLabel": "Type",
+    "completionLabel": "Completion",
     "courseDescription": "Course Description",
     "completionCriteria": "Completion Criteria",
     "lecturerInCharge": "Lecturer In Charge",
@@ -98,7 +97,16 @@
       "inProgress": "In Progress",
       "submitted": "Submitted",
       "completed": "Completed",
-      "upcoming": "Upcoming"
+      "upcoming": "Upcoming",
+      "showInfo": "Show subject description",
+      "progress": {
+      "minimumMet": "Minimum requirement met"
+    },
+    "infoDialog": {
+      "title": "Subject description",
+      "close": "Close",
+      "importedFromStag": "Imported from IS/STAG · Lecturer: {{teacher}}"
+    }
     },
     "testsExamsTracked": "{{count}} tests and exams listed",
     "noTestsExams": "No tests or exams scheduled.",
@@ -107,21 +115,65 @@
     "dueToday": "Due Today",
     "dueTomorrow": "Due Tomorrow",
     "dueOnDate": "Due {{date}}",
-    "dueInDays": "Due in {{count}} days",
-    "overdueByDays": "Overdue by {{count}} days"
+    "dueInDays": "In {{count}} days",
+    "dueInDays_one": "In 1 day",
+    "dueInDays_other": "In {{count}} days",
+    "overdueByDays": "Overdue by {{count}} days",
+    "tabs": {
+      "requirements": "Requirements",
+      "materials": "Materials & Links",
+      "notes": "My Notes"
+    },
+    "requirements": {
+      "noRequirements": "No requirements yet.",
+      "types": {
+        "homework": "Homework",
+        "test": "Test",
+        "exam": "Exam",
+        "project": "Project",
+        "milestone": "Milestone",
+        "Assignment": "Homework",
+        "Test": "Test",
+        "Exam": "Exam",
+        "Project": "Project",
+        "Milestone": "Milestone"
+      },
+      "weight": "Weight {{weight}}%",
+      "statusCompleted": "Submitted",
+      "statusDueSoon": "In {{count}} days",
+      "statusDueSoon_one": "In 1 day",
+      "statusDueSoon_other": "In {{count}} days",
+      "statusDueToday": "Today",
+      "noPts": "–"
+    },
+    "progress": {
+      "title": "Progress Assessment",
+      "minimum": "Minimum to pass",
+      "missingToMinimum": "Missing to minimum: {{diff}} PTS",
+      "pts": "PTS"
+    },
+    "notes": {
+      "placeholder": "Start writing notes for this subject...",
+      "save": "Save Notes",
+      "saved": "Saved",
+      "lastSaved": "Last saved: {{time}}"
+    }
   },
   "calendarView": {
     "title": "Calendar",
     "views": {
       "month": "Month",
       "week": "Week",
-      "day": "Day"
+      "agenda": "Agenda"
     },
     "upcomingEvents": "Upcoming Events",
     "noUpcomingEvents": "No upcoming events filter matches.",
     "filterBySubject": "Filter by Subject",
     "eventTypesTitle": "Event Types",
-    "createNewEvent": "Create New Event",
+    "createNewEvent": "Add Reminder",
+    "quickOverview": {
+      "tipText": "Click on any class to view materials, lecturer and quick actions."
+    },
     "eventTypeDescriptions": {
       "lectureLab": {
         "title": "Lectures & Labs",

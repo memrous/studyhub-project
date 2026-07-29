@@ -32,6 +32,7 @@
     "current": "Current",
     "next": "Next →",
     "openSubjectHub": "Open Subject Hub",
+    "room": "Room {{room}}",
     "fallbacks": {
       "subjectCode": "GEN 101",
       "room201": "Room 201",
@@ -94,9 +95,53 @@
     "deleteSubject": "Delete Subject",
     "deleteConfirm": "Are you sure you want to delete the subject \"{{name}}\"?",
     "openSubject": "Open Subject",
+    "points": "points",
     "semester": {
       "winter": "Winter Semester",
       "summer": "Summer Semester"
     }
+  },
+  "needsAttention": {
+    "title": "Needs Attention",
+    "deadlineMessage": "Submission deadline in {{count}} days — missing uploaded file.",
+    "deadlineMessage_one": "Submission deadline in {{count}} day — missing uploaded file.",
+    "deadlineMessage_other": "Submission deadline in {{count}} days — missing uploaded file.",
+    "lowScoreMessage": "Success rate {{score}} % — below threshold for credit.",
+    "uploadSolution": "Upload solution",
+    "viewDetail": "View detail",
+    "noAlerts": "Everything is fine, nothing requires attention.",
+    "allDone": "All done!"
+  },
+  "nextUp": {
+    "title": "Next Up",
+    "startsIn": "Starts in {{minutes}} minutes",
+    "startsIn_one": "Starts in {{minutes}} minute",
+    "startsIn_other": "Starts in {{minutes}} minutes",
+    "openMaterials": "Open materials",
+    "addToCalendar": "Add to calendar",
+    "noUpcoming": "No more classes today."
+  },
+  "todaySchedule": {
+    "title": "Today's Schedule",
+    "freeTime": "Free time — {{duration}}",
+    "noClassesTitle": "No classes today!",
+    "noClassesSubtitle": "Time to rest, or catch up on projects. Enjoy it!. 🎉"
+  },
+  "quickProgress": {
+    "title": "Quick Progress",
+    "creditsThisSemester": "Semester Credits",
+    "averageScore": "Average Score",
+    "completedSubjects": "Completed Subjects"
+  },
+  "subjectMiniCard": {
+    "points": "{{gained}} / {{max}} points"
+  },
+  "subjectOverviewCard": {
+    "gainedPoints": "Gained points",
+    "urgentTasks": "{{count}} urgent tasks",
+    "urgentTasks_one": "1 urgent task",
+    "urgentTasks_other": "{{count}} urgent tasks",
+    "allDone": "Vše splněno",
+    "open": "Open"
   }
 }

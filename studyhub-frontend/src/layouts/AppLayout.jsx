@@ -52,19 +52,19 @@ const AppLayout = () => {
       {/* ========================================== */}
       {/* DESKTOP LAYOUT                            */}
       {/* ========================================== */}
-      <div className="hidden lg:flex min-h-screen">
-        <Sidebar />
-
-        <div className="flex-1 flex flex-col min-w-0">
-          <Header />
-
-          <main className="flex-1 overflow-y-auto bg-surface p-8">
-            <div className="max-w-[1600px] w-full mx-auto flex flex-col gap-6">
-              <Outlet />
-            </div>
-          </main>
+      <div className="hidden lg:flex h-screen">
+          <Sidebar />
+          
+          <div className="flex-1 flex flex-col min-w-0 h-screen">
+            <Header />
+          
+            <main className="flex-1 overflow-y-auto bg-surface p-8">
+              <div className="max-w-[1600px] w-full mx-auto flex flex-col gap-6">
+                <Outlet />
+              </div>
+            </main>
+          </div>
         </div>
-      </div>
 
       {/* ========================================== */}
       {/* MOBILE LAYOUT                             */}

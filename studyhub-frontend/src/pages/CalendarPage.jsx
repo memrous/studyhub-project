@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSubjects } from '../hooks/useSubjects'
 import { useEvents } from '../hooks/useEvents'
+import { useRequirements } from '../hooks/useRequirements'
 import CalendarView from '../components/CalendarView'
 import PageState from '../components/PageState'
 
@@ -25,14 +26,21 @@ const CalendarPage = () => {
     editEvent: handleEditEvent,
     deleteEvent: handleDeleteEvent,
   } = useEvents()
+  const {
+    data: requirements,
+    isLoading: requirementsLoading,
+    error: requirementsError,
+    refetch: refetchRequirements
+  } = useRequirements()
 
   const currentSubjects = subjects ?? []
   const currentEvents = events ?? []
-  const isLoading = subjectsLoading || eventsLoading
-  const error = subjectsError || eventsError
+  const isLoading = subjectsLoading || eventsLoading || requirementsLoading
+  const error = subjectsError || eventsError || requirementsError
   const reloadData = () => {
     refetchSubjects()
     refetchEvents()
+    refetchRequirements()
   }
 
   // Clear the router state so a refresh doesn't re-open the event
@@ -72,6 +80,7 @@ const CalendarPage = () => {
     <CalendarView
       events={currentEvents}
       subjects={currentSubjects}
+      requirements={requirements}
       onCreateEvent={handleCreateEvent}
       onEditEvent={handleEditEvent}
       onDeleteEvent={handleDeleteEvent}

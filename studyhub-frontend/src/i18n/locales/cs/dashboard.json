@@ -32,6 +32,7 @@
     "current": "Aktuální",
     "next": "Další →",
     "openSubjectHub": "Otevřít předmět",
+    "room": "Učebna {{room}}",
     "fallbacks": {
       "subjectCode": "GEN 101",
       "room201": "Místnost 201",
@@ -95,9 +96,56 @@
     "deleteSubject": "Smazat předmět",
     "deleteConfirm": "Opravdu chcete smazat předmět „{{name}}“?",
     "openSubject": "Otevřít předmět",
+    "points": "bodů",
     "semester": {
       "winter": "Zimní semestr",
       "summer": "Letní semestr"
     }
+  },
+  "needsAttention": {
+    "title": "Vyžaduje pozornost",
+    "deadlineMessage": "Termín odevzdání za {{count}} dny — chybí nahraný soubor.",
+    "deadlineMessage_one": "Termín odevzdání za {{count}} den — chybí nahraný soubor.",
+    "deadlineMessage_few": "Termín odevzdání za {{count}} dny — chybí nahraný soubor.",
+    "deadlineMessage_other": "Termín odevzdání za {{count}} dní — chybí nahraný soubor.",
+    "lowScoreMessage": "Úspěšnost {{score}} % — pod hranicí pro udělení zápočtu.",
+    "uploadSolution": "Nahrát řešení",
+    "viewDetail": "Zobrazit detail",
+    "noAlerts": "Vše je v pořádku, nic nevyžaduje pozornost.",
+    "allDone": "Vše hotovo!"
+},
+  "nextUp": {
+    "title": "Právě přichází",
+    "startsIn": "Začíná za {{minutes}} minut",
+    "startsIn_one": "Začíná za {{minutes}} minutu",
+    "startsIn_few": "Začíná za {{minutes}} minuty",
+    "startsIn_other": "Začíná za {{minutes}} minut",
+    "openMaterials": "Otevřít materiály k přednášce",
+    "addToCalendar": "Přidat do kalendáře",
+    "noUpcoming": "Žádná další výuka dnes."
+  },
+  "todaySchedule": {
+    "title": "Dnešní rozvrh",
+    "freeTime": "Volno — {{duration}}",
+    "noClassesTitle": "Dnes žádná výuka!",
+    "noClassesSubtitle": "Čas na odpočinek, nebo doháníš projekty. Užij si to! 🎉"
+  },
+  "quickProgress": {
+    "title": "Rychlý přehled",
+    "creditsThisSemester": "Kredity za semestr",
+    "averageScore": "Studijní průměr",
+    "completedSubjects": "Splněné předměty"
+  },
+  "subjectMiniCard": {
+    "points": "{{gained}} / {{max}} bodů"
+  },
+  "subjectOverviewCard": {
+    "gainedPoints": "Získané body",
+    "urgentTasks": "{{count}} urgentní úkoly",
+    "urgentTasks_one": "1 urgentní úkol",
+    "urgentTasks_few": "{{count}} urgentní úkoly",
+    "urgentTasks_other": "{{count}} urgentních úkolů",
+    "allDone": "Vše splněno",
+    "open": "Otevřít"
   }
 }

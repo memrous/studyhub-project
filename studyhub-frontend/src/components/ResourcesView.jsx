@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useState, useMemo, useRef, useEffect } from 'react'
 import { renderAsync } from 'docx-preview'
 import { useTranslation } from 'react-i18next'
@@ -5,13 +6,16 @@ import {
   Download,
   ExternalLink,
   Eye,
-  ArrowUpDown,
   ChevronDown,
   Search,
   Plus,
   X,
   Check,
-  History,
+  Pin,
+  Users,
+  GraduationCap,
+  CalendarDays,
+  File,
 } from "lucide-react"
 import pdfIcon from '../assets/icons/pdf.png'
 import bookIcon from '../assets/icons/book.png'
@@ -19,6 +23,7 @@ import imageIcon from '../assets/icons/image.png'
 import fileIcon from '../assets/icons/file.png'
 import folderIcon from '../assets/icons/folder.png'
 import CustomIcon from './CustomIcon'
+import { getSubjectColor } from '../utils/subjectColors'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:80/api"
 
@@ -58,15 +63,14 @@ const resolveResourceUrl = (url) => {
   return url
 }
 
-
-// ─── Type Config ─────────────────────────────────────────────
+// ─── Type Config (colored icon tints, one per material type) ─
 const TYPE_CONFIG = {
-  PDF:       { Icon: (props) => <MaterialTypeIcon type="PDF" {...props} />, iconBg: 'bg-surface-container-low', iconColor: 'text-primary', badgeBg: 'bg-surface-container-low', badgeText: 'text-primary' },
-  NOTES:     { Icon: (props) => <MaterialTypeIcon type="NOTES" {...props} />, iconBg: 'bg-surface-container-low', iconColor: 'text-primary', badgeBg: 'bg-surface-container-low', badgeText: 'text-primary' },
-  SLIDES:    { Icon: (props) => <MaterialTypeIcon type="SLIDES" {...props} />, iconBg: 'bg-surface-container-low', iconColor: 'text-primary', badgeBg: 'bg-surface-container-low', badgeText: 'text-primary' },
-  RECORDING: { Icon: (props) => <MaterialTypeIcon type="RECORDING" {...props} />, iconBg: 'bg-surface-container-low', iconColor: 'text-success', badgeBg: 'bg-surface-container-low', badgeText: 'text-success' },
-  LINK:      { Icon: (props) => <MaterialTypeIcon type="LINK" {...props} />, iconBg: 'bg-surface-container-low', iconColor: 'text-success', badgeBg: 'bg-surface-container-low', badgeText: 'text-success' },
-  DOC:       { Icon: (props) => <MaterialTypeIcon type="DOC" {...props} />,  iconBg: 'bg-surface-container-low', iconColor: 'text-primary', badgeBg: 'bg-surface-container-low', badgeText: 'text-primary' },
+  PDF:       { Icon: (props) => <MaterialTypeIcon type="PDF" {...props} />,       iconBg: 'bg-red-500/10',     iconColor: 'text-red-500',     badgeBg: 'bg-surface-container-low', badgeText: 'text-on-surface-variant' },
+  NOTES:     { Icon: (props) => <MaterialTypeIcon type="NOTES" {...props} />,     iconBg: 'bg-amber-500/10',   iconColor: 'text-amber-500',   badgeBg: 'bg-surface-container-low', badgeText: 'text-on-surface-variant' },
+  SLIDES:    { Icon: (props) => <MaterialTypeIcon type="SLIDES" {...props} />,    iconBg: 'bg-indigo-500/10',  iconColor: 'text-indigo-500',  badgeBg: 'bg-surface-container-low', badgeText: 'text-on-surface-variant' },
+  RECORDING: { Icon: (props) => <MaterialTypeIcon type="RECORDING" {...props} />, iconBg: 'bg-emerald-500/10', iconColor: 'text-emerald-500', badgeBg: 'bg-surface-container-low', badgeText: 'text-on-surface-variant' },
+  LINK:      { Icon: (props) => <MaterialTypeIcon type="LINK" {...props} />,      iconBg: 'bg-sky-500/10',     iconColor: 'text-sky-500',     badgeBg: 'bg-surface-container-low', badgeText: 'text-on-surface-variant' },
+  DOC:       { Icon: (props) => <MaterialTypeIcon type="DOC" {...props} />,       iconBg: 'bg-blue-500/10',    iconColor: 'text-blue-500',    badgeBg: 'bg-surface-container-low', badgeText: 'text-on-surface-variant' },
 }
 
 const getTypeConfig = (type) => TYPE_CONFIG[type] ?? TYPE_CONFIG['DOC']
@@ -92,18 +96,15 @@ const getPreviewInfo = (resource) => {
   if (ext === 'pdf') return { canPreview: true, type: 'pdf' }
   if (['txt','md'].includes(ext)) return { canPreview: true, type: 'text' }
   if (['mp4','webm','mov'].includes(ext)) return { canPreview: true, type: 'video' }
-  // .docx hosted locally: render with docx-preview
   if (ext === 'docx') return { canPreview: true, type: 'office-docx' }
-  // Remote Office files (publicly accessible): use Office Live viewer
   if (['doc','ppt','pptx'].includes(ext) && isRemote && !isStorageUrl) return { canPreview: true, type: 'office-remote' }
   if (['docx','ppt','pptx'].includes(ext) && isRemote && !isStorageUrl) return { canPreview: true, type: 'office-remote' }
-  // Local .doc / .ppt / .pptx: no browser renderer available
   if (['doc','ppt','pptx'].includes(ext)) return { canPreview: true, type: 'office-local' }
   return { canPreview: false, type: 'unsupported' }
 }
 
 const TagChip = ({ label }) => (
-  <span className="text-[9px] font-extrabold tracking-widest uppercase px-1.5 py-0.5 rounded-sm bg-surface-container-low text-on-surface-variant border border-outline-variant">
+  <span className="inline-flex items-center gap-1.5 rounded-full bg-surface-container-low px-2.5 py-1 text-[11px] font-semibold text-on-surface-variant">
     {label}
   </span>
 )
@@ -113,25 +114,53 @@ const RecentCard = ({ resource, subjectName, t }) => {
   const cfg = getTypeConfig(resource.type)
   const { Icon } = cfg
   return (
-    <div className="bg-surface border border-outline-variant rounded-lg shadow-ambient hover:shadow-md transition-shadow p-4 flex flex-col gap-3 flex-1 min-w-[220px] max-w-sm">
+    <div className="rounded-2xl border border-outline-variant bg-surface p-4 flex flex-col gap-3 flex-1 min-w-[220px] max-w-sm transition-colors hover:border-outline-variant/80">
       <div className="flex items-start justify-between">
-        <div className={`w-9 h-9 ${cfg.iconBg} ${cfg.iconColor} flex items-center justify-center rounded-md shrink-0`}>
+        <span className={`flex size-9 shrink-0 items-center justify-center rounded-lg ${cfg.iconBg} ${cfg.iconColor}`}>
           <Icon className="w-4.5 h-4.5" />
-        </div>
-        <span className={`text-label-sm font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-sm ${cfg.badgeBg} ${cfg.badgeText}`}>
+        </span>
+        <span className={`text-[11px] font-semibold px-2.5 py-1 rounded-full ${cfg.badgeBg} ${cfg.badgeText}`}>
           {t(`resources:typeShort.${resource.type}`, resource.type)}
         </span>
       </div>
       <div>
-        <p className="text-label-md font-bold text-on-surface leading-snug truncate">{resource.title}</p>
-        <p className="text-[11px] text-on-surface-variant mt-0.5 truncate">{subjectName}</p>
+        <p className="text-sm font-medium text-on-surface leading-snug truncate">{resource.title}</p>
+        <p className="text-[11px] text-on-surface-variant/70 mt-0.5 truncate">{subjectName}</p>
       </div>
-      <p className="text-[11px] text-on-surface-variant mt-auto font-medium">{resource.size || t('resources:defaults.attachment')} • {resource.uploadDate}</p>
+      <p className="text-[11px] text-on-surface-variant/70 mt-auto font-medium">{resource.size || t('resources:defaults.attachment')} • {resource.uploadDate}</p>
     </div>
   )
 }
 
-// ─── Full Resource Card ───────────────────────────────────────
+// ─── Resource Row (used inside session/event cards) ───────────
+const ResourceRow = ({ resource, onOpen }) => {
+  const cfg = getTypeConfig(resource.type)
+  const isLink = resource.type === 'LINK'
+
+  return (
+    <div
+      onClick={onOpen}
+      className="group flex items-center gap-3 rounded-xl border border-transparent px-3 py-2.5 transition-colors hover:border-outline-variant hover:bg-surface-container-low/50 cursor-pointer"
+    >
+      <span className={`flex size-9 shrink-0 items-center justify-center rounded-lg ${cfg.iconBg} ${cfg.iconColor}`}>
+        <MaterialTypeIcon type={resource.type} />
+      </span>
+
+      <div className="min-w-0 flex-1">
+        <p className="truncate text-sm font-medium text-on-surface">{resource.title}</p>
+        <p className="text-[11px] text-on-surface-variant/70">
+          {isLink ? 'Externí odkaz' : resource.size || 'Soubor'}
+        </p>
+      </div>
+
+      <span className="flex size-8 shrink-0 items-center justify-center rounded-lg text-on-surface-variant opacity-100 transition-all hover:bg-primary/15 hover:text-primary md:opacity-0 md:group-hover:opacity-100">
+        {isLink ? <ExternalLink className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+      </span>
+    </div>
+  )
+}
+
+// ─── Full Resource Card (grid, "Other materials" section) ────
 const ResourceCard = ({ resource, subjectName, onPreview, t }) => {
   const cfg = getTypeConfig(resource.type)
   const { Icon } = cfg
@@ -150,46 +179,46 @@ const ResourceCard = ({ resource, subjectName, onPreview, t }) => {
   const displayDate = resource.uploadDate || (resource.uploadedAt ? resource.uploadedAt.split('T')[0] : '')
 
   return (
-    <div className="bg-surface border border-outline-variant rounded-lg shadow-ambient hover:shadow-md transition-shadow p-4 flex flex-col gap-3 font-inter">
+    <div className="rounded-2xl border border-outline-variant bg-surface transition-colors hover:border-outline-variant/70 font-inter">
       {/* Header */}
-      <div className="flex items-start justify-between gap-2">
-        <div className={`w-9 h-9 ${cfg.iconBg} ${cfg.iconColor} flex items-center justify-center rounded-md shrink-0`}>
+      <div className="flex items-start justify-between gap-2 p-4 pb-3">
+        <span className={`flex size-9 shrink-0 items-center justify-center rounded-lg ${cfg.iconBg} ${cfg.iconColor}`}>
           <Icon className="w-4.5 h-4.5" />
-        </div>
-        <div className="flex flex-wrap gap-1 justify-end">
+        </span>
+        <div className="flex flex-wrap gap-1.5 justify-end">
           <TagChip label={t(`resources:typeShort.${resource.type}`, resource.type)} />
           {subCode(subjectName) && <TagChip label={subCode(subjectName)} />}
         </div>
       </div>
 
       {/* Title + description */}
-      <div className="flex flex-col gap-1">
-        <h4 className="text-label-md font-bold text-on-surface leading-snug line-clamp-2">{resource.title}</h4>
-        <p className="text-[12px] text-on-surface-variant leading-relaxed line-clamp-3">{resource.description}</p>
+      <div className="flex flex-col gap-1 px-4">
+        <h4 className="text-sm font-semibold text-on-surface leading-snug line-clamp-2">{resource.title}</h4>
+        <p className="text-[12px] text-on-surface-variant/80 leading-relaxed line-clamp-3">{resource.description}</p>
       </div>
 
       {/* Footer: meta + actions */}
-      <div className="flex items-center justify-between mt-auto pt-2 border-t border-surface-container">
-        <span className="text-[11px] text-on-surface-variant font-medium truncate pr-2">{resource.size || t('resources:defaults.attachment')} • {displayDate}</span>
-        <div className="flex items-center gap-3 shrink-0">
+      <div className="flex items-center justify-between mt-3 px-4 py-3 border-t border-outline-variant/60">
+        <span className="text-[11px] text-on-surface-variant/70 font-medium truncate pr-2">{resource.size || t('resources:defaults.attachment')} • {displayDate}</span>
+        <div className="flex items-center gap-1 shrink-0">
           {!isLink && (
             <a
               href={url}
               download
               target="_blank"
               rel="noreferrer"
-              className="flex items-center gap-1 text-label-sm font-bold text-primary hover:text-primary/90 transition-colors cursor-pointer"
+              className="flex size-8 items-center justify-center rounded-lg text-on-surface-variant transition-colors hover:bg-primary/15 hover:text-primary"
+              title={t('resources:actions.download')}
             >
               <Download className="w-3.5 h-3.5" />
-              <span>{t('resources:actions.download')}</span>
             </a>
           )}
           <button
             onClick={handleOpen}
-            className="flex items-center gap-1 text-label-sm font-bold text-primary hover:text-primary/90 transition-colors cursor-pointer bg-transparent border-0"
+            className="flex size-8 items-center justify-center rounded-lg text-on-surface-variant transition-colors hover:bg-primary/15 hover:text-primary cursor-pointer bg-transparent border-0"
+            title={t('resources:actions.open')}
           >
             {isLink || !previewInfo.canPreview ? <ExternalLink className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
-            <span>{t('resources:actions.open')}</span>
           </button>
         </div>
       </div>
@@ -208,11 +237,11 @@ const subCode = (subjName) => {
 };
 
 // ─── Upload Modal ────────────────────────────────────────────
-const UploadModal = ({ onClose, onSave, subjects }) => {
+const UploadModal = ({ onClose, onSave, subjects, presetEventId, presetSubjectId }) => {
   const { t } = useTranslation('resources')
   const [form, setForm] = useState({
     title: '',
-    subjectId: subjects[0]?.id || '',
+    subjectId: presetSubjectId ? String(presetSubjectId) : (subjects[0]?.id || ''),
     type: 'PDF',
     description: ''
   })
@@ -221,9 +250,9 @@ const UploadModal = ({ onClose, onSave, subjects }) => {
   const [remoteUrl, setRemoteUrl] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState(null)
-  
+
   const set = k => e => setForm(f => ({ ...f, [k]: e.target.value }))
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.subjectId) return;
@@ -235,6 +264,9 @@ const UploadModal = ({ onClose, onSave, subjects }) => {
       title,
       type: sourceType === 'local' ? getTypeFromFileName(file.name) : form.type,
       description: form.description || (sourceType === 'local' ? t('resources:defaults.localDescription') : t('resources:defaults.urlDescription')),
+    }
+    if (presetEventId) {
+      payload.eventId = Number(presetEventId);
     }
 
     if (sourceType === 'local') {
@@ -258,22 +290,22 @@ const UploadModal = ({ onClose, onSave, subjects }) => {
     }
   }
 
-  const inputCls = 'w-full px-3 py-2 bg-surface rounded-md border border-outline-variant text-body-md text-on-surface focus:outline-none focus:border-primary focus:bg-surface-container transition-colors disabled:opacity-60'
-  const labelCls = 'text-label-md font-bold text-on-surface-variant'
+  const inputCls = 'w-full px-3.5 py-2.5 bg-surface rounded-xl border border-outline-variant text-sm text-on-surface placeholder:text-on-surface-variant/70 focus:outline-none focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-colors disabled:opacity-60'
+  const labelCls = 'text-xs font-semibold text-on-surface-variant'
 
   return (
     <div className="fixed inset-0 bg-black/40 backdrop-blur-xs flex items-center justify-center z-50 p-4">
-      <div className="bg-surface rounded-lg shadow-2xl border border-outline-variant w-full max-w-md overflow-hidden font-inter">
+      <div className="bg-surface rounded-2xl shadow-2xl border border-outline-variant w-full max-w-md overflow-hidden font-inter">
         <div className="flex items-center justify-between px-6 py-4 border-b border-outline-variant bg-surface">
-          <h2 className="text-headline-md font-bold text-on-surface">{t('resources:modal.title')}</h2>
+          <h2 className="text-lg font-semibold text-on-surface">{t('resources:modal.title')}</h2>
           <button onClick={onClose} disabled={isSubmitting} className="p-1 rounded-full hover:bg-surface-container transition-colors text-on-surface-variant hover:text-on-surface cursor-pointer bg-transparent border-0 disabled:opacity-50">
             <X className="w-5 h-5" />
           </button>
         </div>
-        
+
         <form onSubmit={handleSubmit} className="p-6 flex flex-col gap-4">
           {submitError && (
-            <div className="p-3 bg-red-50 border border-red-200 rounded-md text-sm text-red-600">
+            <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-xl text-sm text-red-500">
               {submitError}
             </div>
           )}
@@ -313,7 +345,7 @@ const UploadModal = ({ onClose, onSave, subjects }) => {
                   type="button"
                   disabled={isSubmitting}
                   onClick={() => setSourceType('local')}
-                  className={`px-3 py-2 rounded-md border transition-colors ${sourceType === 'local' ? 'border-primary bg-primary-container text-primary' : 'border-outline-variant bg-surface text-on-surface'} disabled:opacity-50`}
+                  className={`px-3 py-2 rounded-xl border transition-colors text-sm font-medium ${sourceType === 'local' ? 'border-primary/50 bg-primary/10 text-primary' : 'border-outline-variant bg-surface text-on-surface'} disabled:opacity-50`}
                 >
                   {t('resources:modal.sourceButtons.local')}
                 </button>
@@ -321,7 +353,7 @@ const UploadModal = ({ onClose, onSave, subjects }) => {
                   type="button"
                   disabled={isSubmitting}
                   onClick={() => setSourceType('url')}
-                  className={`px-3 py-2 rounded-md border transition-colors ${sourceType === 'url' ? 'border-primary bg-primary-container text-primary' : 'border-outline-variant bg-surface text-on-surface'} disabled:opacity-50`}
+                  className={`px-3 py-2 rounded-xl border transition-colors text-sm font-medium ${sourceType === 'url' ? 'border-primary/50 bg-primary/10 text-primary' : 'border-outline-variant bg-surface text-on-surface'} disabled:opacity-50`}
                 >
                   {t('resources:modal.sourceButtons.url')}
                 </button>
@@ -354,12 +386,12 @@ const UploadModal = ({ onClose, onSave, subjects }) => {
             </div>
           )}
 
-          <div className="flex gap-3 justify-end pt-2 border-t border-surface-container mt-1">
-            <button type="button" onClick={onClose} disabled={isSubmitting} className="px-4 py-2 border border-outline-variant rounded-md text-label-md font-semibold text-on-surface-variant hover:bg-surface-container transition-colors cursor-pointer bg-transparent disabled:opacity-50">{t('resources:modal.actions.cancel')}</button>
+          <div className="flex gap-3 justify-end pt-2 border-t border-outline-variant/60 mt-1">
+            <button type="button" onClick={onClose} disabled={isSubmitting} className="px-4 py-2 border border-outline-variant rounded-xl text-sm font-semibold text-on-surface-variant hover:bg-surface-container transition-colors cursor-pointer bg-transparent disabled:opacity-50">{t('resources:modal.actions.cancel')}</button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="px-4 py-2 bg-primary hover:bg-primary/90 text-on-primary rounded-md text-label-md font-semibold shadow-sm transition-colors cursor-pointer flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-4 py-2 bg-primary hover:bg-primary/90 text-on-primary rounded-xl text-sm font-semibold shadow-sm transition-colors cursor-pointer flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSubmitting ? (
                 <>
@@ -380,7 +412,7 @@ const UploadModal = ({ onClose, onSave, subjects }) => {
   )
 }
 
-// ─── Dropdown helper ─────────────────────────────────────────
+// ─── Preview Modal ────────────────────────────────────────────
 const ResourcePreviewModal = ({ resource, onClose }) => {
   const { t } = useTranslation('resources')
   const [textContent, setTextContent] = useState('')
@@ -420,8 +452,6 @@ const ResourcePreviewModal = ({ resource, onClose }) => {
     }
   }, [previewInfo.type, url])
 
-  // Callback ref: fires as soon as the container div is mounted (avoids the
-  // null-ref problem that happens when the div is conditionally rendered).
   const docxCallbackRef = (container) => {
     if (!container || previewInfo.type !== 'office-docx' || !url) return
     if (renderedDocxUrlRef.current === url) return
@@ -458,12 +488,12 @@ const ResourcePreviewModal = ({ resource, onClose }) => {
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center z-50 p-4">
-      <div className="bg-surface rounded-xl shadow-2xl border border-outline-variant w-full max-w-5xl h-[90vh] flex flex-col overflow-hidden font-inter">
+      <div className="bg-surface rounded-2xl shadow-2xl border border-outline-variant w-full max-w-5xl h-[90vh] flex flex-col overflow-hidden font-inter">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-outline-variant bg-surface shrink-0">
           <div className="flex items-center gap-3 min-w-0">
-            <h2 className="text-headline-md font-bold text-on-surface truncate">{resource.title}</h2>
-            <span className="text-[10px] font-extrabold tracking-widest uppercase px-2 py-0.5 rounded-sm bg-surface-container-low text-on-surface-variant border border-outline-variant">
+            <h2 className="text-lg font-semibold text-on-surface truncate">{resource.title}</h2>
+            <span className="inline-flex items-center rounded-full bg-surface-container-low px-2.5 py-1 text-[10px] font-semibold text-on-surface-variant">
               {resource.type}
             </span>
           </div>
@@ -473,7 +503,7 @@ const ResourcePreviewModal = ({ resource, onClose }) => {
               download
               target="_blank"
               rel="noreferrer"
-              className="flex items-center gap-1.5 px-3 py-1.5 border border-outline-variant hover:bg-surface-container rounded-md text-label-sm font-semibold text-on-surface transition-colors"
+              className="flex items-center gap-1.5 px-3 py-1.5 border border-outline-variant hover:bg-surface-container rounded-xl text-sm font-semibold text-on-surface transition-colors"
             >
               <Download className="w-3.5 h-3.5" />
               <span>{t('resources:actions.download')}</span>
@@ -490,15 +520,15 @@ const ResourcePreviewModal = ({ resource, onClose }) => {
         {/* Content Area */}
         <div className="flex-1 bg-surface-container-low overflow-hidden p-6 flex flex-col">
           <div className="mb-4 shrink-0">
-            <p className="text-label-md font-semibold text-on-surface">{resource.title}</p>
+            <p className="text-sm font-semibold text-on-surface">{resource.title}</p>
             <p className="text-sm text-on-surface-variant">{resource.description}</p>
           </div>
 
-          <div className="flex-1 bg-surface rounded-xl overflow-hidden border border-outline-variant flex items-center justify-center relative">
+          <div className="flex-1 bg-surface rounded-2xl overflow-hidden border border-outline-variant flex items-center justify-center relative">
             {previewInfo.type === 'image' && (
               <img src={url} alt={resource.title} className="w-full h-full object-contain" />
             )}
-            
+
             {previewInfo.type === 'pdf' && (
               <iframe src={url} title={resource.title} className="w-full h-full border-0" />
             )}
@@ -544,10 +574,10 @@ const ResourcePreviewModal = ({ resource, onClose }) => {
                 )}
                 {docxError && (
                   <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-8">
-                    <File className="w-12 h-12 text-error-container text-error mb-3" />
-                    <p className="text-body-md text-error font-semibold mb-1">{t('resources:preview.failedRenderDocument')}</p>
+                    <File className="w-12 h-12 text-red-500 mb-3" />
+                    <p className="text-sm text-red-500 font-semibold mb-1">{t('resources:preview.failedRenderDocument')}</p>
                     <p className="text-sm text-on-surface-variant mb-4">{docxError}</p>
-                    <a href={url} download className="px-4 py-2 bg-primary hover:bg-primary/90 text-on-primary rounded-md text-label-md font-semibold transition-colors flex items-center gap-2 shadow-sm">
+                    <a href={url} download className="px-4 py-2 bg-primary hover:bg-primary/90 text-on-primary rounded-xl text-sm font-semibold transition-colors flex items-center gap-2 shadow-sm">
                       <Download className="w-4 h-4" />
                       <span>{t('resources:actions.downloadFile')}</span>
                     </a>
@@ -563,12 +593,12 @@ const ResourcePreviewModal = ({ resource, onClose }) => {
             {previewInfo.type === 'office-local' && (
               <div className="flex flex-col items-center justify-center text-center p-8">
                 <File className="w-16 h-16 text-on-surface-variant mb-4" />
-                <p className="text-body-md text-on-surface font-semibold mb-2">{t('resources:preview.directPreviewLocalOffice')}</p>
+                <p className="text-sm text-on-surface font-semibold mb-2">{t('resources:preview.directPreviewLocalOffice')}</p>
                 <p className="text-sm text-on-surface-variant mb-4">{t('resources:preview.pleaseDownload')}</p>
                 <a
                   href={url}
                   download
-                  className="px-4 py-2 bg-primary hover:bg-primary/90 text-on-primary rounded-md text-label-md font-semibold transition-colors flex items-center gap-2 shadow-sm"
+                  className="px-4 py-2 bg-primary hover:bg-primary/90 text-on-primary rounded-xl text-sm font-semibold transition-colors flex items-center gap-2 shadow-sm"
                 >
                   <Download className="w-4 h-4" />
                   <span>{t('resources:actions.downloadFile')}</span>
@@ -579,12 +609,12 @@ const ResourcePreviewModal = ({ resource, onClose }) => {
             {previewInfo.type === 'unsupported' && (
               <div className="flex flex-col items-center justify-center text-center p-8">
                 <File className="w-16 h-16 text-on-surface-variant mb-4" />
-                <p className="text-body-md text-on-surface mb-4">{t('resources:preview.noPreview')}</p>
+                <p className="text-sm text-on-surface mb-4">{t('resources:preview.noPreview')}</p>
                 <a
                   href={url}
                   target="_blank"
                   rel="noreferrer"
-                  className="px-4 py-2 bg-primary hover:bg-primary/90 text-on-primary rounded-md text-label-md font-semibold transition-colors shadow-sm"
+                  className="px-4 py-2 bg-primary hover:bg-primary/90 text-on-primary rounded-xl text-sm font-semibold transition-colors shadow-sm"
                 >
                   {t('resources:openInNewTab')}
                 </a>
@@ -610,20 +640,20 @@ const Dropdown = ({ label, icon: Icon, options, value, onChange }) => {
     <div className="relative" ref={ref}>
       <button
         onClick={() => setOpen(o => !o)}
-        className="flex items-center gap-1.5 px-3 py-1.5 bg-surface border border-outline-variant rounded-md text-label-md font-semibold text-on-surface hover:bg-surface-container transition-colors cursor-pointer shadow-ambient"
+        className="flex items-center gap-1.5 px-3.5 py-2 bg-surface border border-outline-variant rounded-xl text-sm font-medium text-on-surface hover:border-primary/40 transition-colors cursor-pointer"
       >
         {Icon && <Icon className="w-3.5 h-3.5 text-on-surface-variant" />}
         {label}
-        <ChevronDown className={`w-3 h-3 text-on-surface-variant transition-transform ${open ? 'rotate-180' : ''}`} />
+        <ChevronDown className={`w-3.5 h-3.5 text-on-surface-variant transition-transform ${open ? 'rotate-180' : ''}`} />
       </button>
       {open && (
-        <div className="absolute right-0 top-[calc(100%+6px)] z-30 bg-surface border border-outline-variant rounded-lg shadow-lg min-w-[160px] py-1 overflow-hidden">
+        <div className="absolute right-0 top-[calc(100%+6px)] z-30 bg-surface border border-outline-variant rounded-xl shadow-lg min-w-[160px] py-1 overflow-hidden">
           {options.map(opt => (
             <button
               key={opt.value}
               onClick={() => { onChange(opt.value); setOpen(false) }}
-              className={`w-full text-left px-4 py-2.5 text-label-md font-medium transition-colors cursor-pointer flex items-center justify-between gap-2 ${
-                value === opt.value ? 'text-primary bg-primary-container' : 'text-on-surface hover:bg-surface-container-low'
+              className={`w-full text-left px-4 py-2.5 text-sm font-medium transition-colors cursor-pointer flex items-center justify-between gap-2 ${
+                value === opt.value ? 'text-primary bg-primary/10' : 'text-on-surface hover:bg-surface-container-low'
               }`}
             >
               {opt.label}
@@ -637,14 +667,16 @@ const Dropdown = ({ label, icon: Icon, options, value, onChange }) => {
 }
 
 // ─── Main ResourcesView Component ────────────────────────────
-const ResourcesView = ({ resources, subjects, onUploadResource }) => {
-  const { t } = useTranslation('resources')
-  const [searchQuery, setSearchQuery]   = useState('')
+const ResourcesView = ({ resources, subjects, events, onUploadResource }) => {
+  const { t } = useTranslation(['resources', 'dashboard'])
+  const [searchQuery, setSearchQuery] = useState('')
   const [subjectFilter, setSubjectFilter] = useState('all')
-  const [typeFilter, setTypeFilter]     = useState('all')
-  const [sortKey, setSortKey]           = useState('recent')
-  const [isModalOpen, setIsModalOpen]   = useState(false)
+  const [typeFilter, setTypeFilter] = useState('all')
+  const [isModalOpen, setIsModalOpen] = useState(false)
   const [previewResource, setPreviewResource] = useState(null)
+
+  const [presetEventId, setPresetEventId] = useState(null)
+  const [presetSubjectId, setPresetSubjectId] = useState(null)
 
   const SUBJECT_OPTIONS = useMemo(() => [
     { value: 'all', label: t('resources:filters.allSubjects') },
@@ -660,15 +692,24 @@ const ResourcesView = ({ resources, subjects, onUploadResource }) => {
     { value: 'LINK',      label: t('resources:typeLabels.LINK') },
     { value: 'DOC',       label: t('resources:typeLabels.DOC') },
   ]
-  
-  const SORT_OPTIONS = [
-    { value: 'recent', label: t('resources:sorts.recent') },
-    { value: 'name',   label: t('resources:sorts.name') },
-    { value: 'type',   label: t('resources:sorts.type') },
-  ]
 
-  const filtered = useMemo(() => {
-    let list = [...resources]
+  const getWeekAndYear = (dateStr) => {
+    if (!dateStr) return { week: 0, year: 0 }
+    const d = new Date(dateStr)
+    const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()))
+    const dayNum = date.getUTCDay() || 7
+    date.setUTCDate(date.getUTCDate() + 4 - dayNum)
+    const yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1))
+    const week = Math.ceil((((date - yearStart) / 86400000) + 1) / 7)
+    return { week, year: date.getUTCFullYear() }
+  }
+
+  const currentWeekAndYear = useMemo(() => {
+    return getWeekAndYear(new Date().toISOString().split('T')[0])
+  }, [])
+
+  const filteredResources = useMemo(() => {
+    let list = [...(resources || [])]
     if (subjectFilter !== 'all') {
       list = list.filter(r => String(r.subjectId) === subjectFilter)
     }
@@ -678,149 +719,338 @@ const ResourcesView = ({ resources, subjects, onUploadResource }) => {
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase()
       list = list.filter(r =>
-        r.title.toLowerCase().includes(q) ||
-        r.description.toLowerCase().includes(q)
+        (r.title || '').toLowerCase().includes(q) ||
+        (r.description || '').toLowerCase().includes(q)
       )
     }
-    if (sortKey === 'name') list.sort((a, b) => (a.title ?? '').localeCompare(b.title ?? ''))
-    if (sortKey === 'type') list.sort((a, b) => (a.type ?? '').localeCompare(b.type ?? ''))
-    if (sortKey === 'recent') list.sort((a, b) => (b.uploadedAt ?? '').localeCompare(a.uploadedAt ?? ''))
     return list
-  }, [resources, subjectFilter, typeFilter, searchQuery, sortKey])
+  }, [resources, subjectFilter, typeFilter, searchQuery])
 
-  // Get recent 3 resources for horizontal layout
-  const recentResources = useMemo(() => {
-  return [...resources]
-    .sort((a, b) => (b.uploadedAt ?? '').localeCompare(a.uploadedAt ?? ''))
-    .slice(0, 3)
-}, [resources])
+  const eventResources = useMemo(() => {
+    return filteredResources.filter(r => r.eventId || r.event_id)
+  }, [filteredResources])
 
-  // Group filtered resources by subject
-  const grouped = useMemo(() => {
+  const eventSessions = useMemo(() => {
+    const map = new Map()
+    eventResources.forEach((res) => {
+      const eId = res.eventId || res.event_id
+      if (!eId) return
+      if (!map.has(eId)) {
+        const ev = (events || []).find((e) => e.id === eId || e.id === Number(eId))
+        if (ev) {
+          const sub = subjects.find((s) => s.id === ev.subjectId)
+          const { week, year } = getWeekAndYear(ev.date)
+          map.set(eId, {
+            event: ev,
+            subject: sub,
+            resources: [],
+            week,
+            year,
+            date: ev.date || '',
+          })
+        }
+      }
+      if (map.has(eId)) {
+        map.get(eId).resources.push(res)
+      }
+    })
+    return Array.from(map.values()).sort((a, b) => b.date.localeCompare(a.date))
+  }, [eventResources, events, subjects])
+
+  const weeklyGroups = useMemo(() => {
+    const groupsMap = new Map()
+    eventSessions.forEach((session) => {
+      const key = `${session.year}-W${session.week}`
+      if (!groupsMap.has(key)) {
+        groupsMap.set(key, {
+          week: session.week,
+          year: session.year,
+          sessions: [],
+        })
+      }
+      groupsMap.get(key).sessions.push(session)
+    })
+    return Array.from(groupsMap.values()).sort((a, b) => {
+      if (b.year !== a.year) return b.year - a.year
+      return b.week - a.week
+    })
+  }, [eventSessions])
+
+  const generalGrouped = useMemo(() => {
+    const generalResources = filteredResources.filter(r => !r.eventId && !r.event_id && r.category !== 'platform')
     return subjects
       .map(subject => ({
         subject,
-        items: filtered.filter(r => r.subjectId === subject.id),
+        items: generalResources.filter(r => r.subjectId === subject.id),
       }))
       .filter(g => g.items.length > 0)
-  }, [filtered, subjects])
+  }, [filteredResources, subjects])
 
-  const isFiltering = subjectFilter !== 'all' || typeFilter !== 'all' || searchQuery.trim()
+  const platformResources = useMemo(() => {
+    return (resources || []).filter(r => r.category === 'platform')
+  }, [resources])
+
+  const formatEventDate = (dateStr) => {
+    if (!dateStr) return ''
+    const date = new Date(dateStr)
+    return date.toLocaleDateString('cs-CZ', {
+      weekday: 'short',
+      day: 'numeric',
+      month: 'numeric',
+      year: 'numeric'
+    })
+  }
+
   const subjectLabel = SUBJECT_OPTIONS.find(o => o.value === subjectFilter)?.label ?? t('resources:filters.subjectFallback')
   const typeLabel    = TYPE_OPTIONS.find(o => o.value === typeFilter)?.label ?? t('resources:filters.typeFallback')
-  const sortLabel    = SORT_OPTIONS.find(o => o.value === sortKey)?.label ?? t('resources:sorts.recent')
 
   return (
     <>
       <div className="w-full flex flex-col gap-8 font-inter pb-16">
-
         {/* Page Header */}
-        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 flex-wrap">
-          <div className="flex flex-col gap-1">
-            <h1 className="text-display text-on-surface">{t('resources:page.title')}</h1>
-            <p className="text-body-md text-on-surface-variant">{t('resources:page.subtitle')}</p>
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div className="min-w-0">
+            <h1 className="text-3xl font-bold tracking-tight text-on-surface">{t('resources:library.title')}</h1>
+            <p className="mt-1.5 text-sm text-on-surface-variant">{t('resources:library.subtitle')}</p>
           </div>
 
-          {/* Controls row */}
-          <div className="flex flex-wrap items-center gap-2 self-end sm:self-auto">
-            {/* Search */}
-            <div className="relative">
-              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-on-surface-variant" />
-              <input
-                type="text"
-                placeholder={t('resources:searchPlaceholder')}
-                value={searchQuery}
-                onChange={e => setSearchQuery(e.target.value)}
-                className="pl-8 pr-3 py-1.5 bg-surface border border-outline-variant rounded-md text-body-md text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:border-primary focus:bg-surface-container transition-colors w-44 shadow-ambient"
-              />
-            </div>
-            <Dropdown label={subjectLabel} icon={null} options={SUBJECT_OPTIONS} value={subjectFilter} onChange={setSubjectFilter} />
-            <Dropdown label={typeLabel}    icon={null} options={TYPE_OPTIONS}    value={typeFilter}    onChange={setTypeFilter} />
-            <Dropdown label={sortLabel}    icon={ArrowUpDown} options={SORT_OPTIONS}   value={sortKey}       onChange={setSortKey} />
-          </div>
+          <button
+            onClick={() => {
+              setPresetEventId(null)
+              setPresetSubjectId(null)
+              setIsModalOpen(true)
+            }}
+            className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-on-primary shadow-sm transition-colors hover:bg-primary/90 cursor-pointer"
+          >
+            <Plus className="size-4" />
+            <span>{t('resources:library.uploadButton')}</span>
+          </button>
         </div>
 
-        {/* Recent Resources (hidden when searching/filtering) */}
-        {!isFiltering && (
-          <section className="flex flex-col gap-4">
-            <div className="flex items-center gap-2">
-              <History className="w-4 h-4 text-on-surface-variant" />
-              <h2 className="text-headline-md font-bold text-on-surface">{t('resources:recentTitle')}</h2>
-            </div>
-            <div className="flex flex-wrap gap-4">
-              {recentResources.map(r => {
-                const subObj = subjects.find(s => s.id === r.subjectId);
-                return (
-                  <RecentCard 
-                    key={r.id} 
-                    resource={r} 
-                    subjectName={subObj ? subObj.name : t('resources:subjectFallback')} 
-                    t={t}
-                  />
-                );
-              })}
-            </div>
-          </section>
-        )}
-
-        {/* Subject Folders */}
-        {grouped.length === 0 ? (
-          <div className="bg-surface border border-outline-variant rounded-lg p-16 text-center flex flex-col items-center gap-3 shadow-ambient">
-            <div className="w-12 h-12 bg-surface-container-low text-primary rounded-full flex items-center justify-center">
-              <CustomIcon name="book" className="w-6 h-6" />
-            </div>
-            <p className="text-headline-md font-semibold text-on-surface">{t('resources:emptyState.title')}</p>
-            <p className="text-body-md text-on-surface-variant">{t('resources:emptyState.description')}</p>
+        {/* Filters Row */}
+        <div className="flex flex-col gap-3 rounded-2xl border border-outline-variant bg-surface p-3 sm:flex-row sm:items-center">
+          <div className="relative flex-1">
+            <Search className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-on-surface-variant" />
+            <input
+              type="text"
+              placeholder="Hledat v materiálech..."
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              className="w-full rounded-xl border border-outline-variant bg-surface-container-low py-2.5 pl-10 pr-4 text-sm text-on-surface placeholder:text-on-surface-variant/70 outline-none transition-colors focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
+            />
           </div>
-        ) : (
-          <section className="flex flex-col gap-10">
-            {!isFiltering && (
-              <h2 className="text-headline-md font-bold text-on-surface -mb-6">{t('resources:librariesTitle')}</h2>
-            )}
+          <Dropdown label={subjectLabel} icon={null} options={SUBJECT_OPTIONS} value={subjectFilter} onChange={setSubjectFilter} />
+          <Dropdown label={typeLabel}    icon={null} options={TYPE_OPTIONS}    value={typeFilter}    onChange={setTypeFilter} />
+        </div>
 
-            {grouped.map(({ subject, items }) => (
-              <div key={subject.id} className="flex flex-col gap-4">
-                {/* Section header */}
-                <div className="flex items-center justify-between border-b border-outline-variant pb-2">
-                  <h3 className="text-body-lg font-bold text-on-surface flex items-center gap-2">
-                    <CustomIcon name="folder" className="w-4 h-4" />
-                    {subject.name} <span className="text-label-sm text-on-surface-variant font-medium">({subject.code})</span>
-                  </h3>
+        {/* Two Columns Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+          {/* LEFT COLUMN: Timeline & Other Materials */}
+          <div className="lg:col-span-2 flex flex-col gap-10">
+            {weeklyGroups.length === 0 && generalGrouped.length === 0 ? (
+              <div className="rounded-2xl border border-dashed border-outline-variant bg-surface/50 p-16 text-center flex flex-col items-center gap-3">
+                <div className="w-12 h-12 bg-surface-container-low text-primary rounded-full flex items-center justify-center">
+                  <CustomIcon name="book" className="w-6 h-6" />
                 </div>
-
-                {/* Resource cards grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-                  {items.map(r => (
-                    <ResourceCard 
-                    key={r.id} 
-                    resource={r} 
-                    subjectName={subject.name}
-                    t={t}
-                    onPreview={(res) => setPreviewResource(res)}
-                  />
-                ))}
-                </div>
+                <p className="text-lg font-semibold text-on-surface">{t('resources:emptyState.title')}</p>
+                <p className="text-sm text-on-surface-variant">{t('resources:emptyState.description')}</p>
               </div>
-            ))}
-          </section>
-        )}
-      </div>
+            ) : (
+              <>
+                {/* Timeline */}
+                {weeklyGroups.map((group) => {
+                  const isCurrent = group.week === currentWeekAndYear.week && group.year === currentWeekAndYear.year
+                  return (
+                    <section key={`${group.year}-W${group.week}`}>
+                      {/* Week Heading */}
+                      <div className="mb-4 flex items-center gap-3">
+                        <h2 className="text-lg font-semibold text-on-surface">
+                          {isCurrent ? t('resources:library.thisWeek') : t('resources:library.weekLabel', { n: group.week })}
+                        </h2>
+                        <span className="rounded-full bg-surface-container-high px-2.5 py-0.5 text-xs font-medium text-on-surface-variant">
+                          {t('resources:library.weekLabel', { n: group.week })}
+                        </span>
+                        <span className="h-px flex-1 bg-outline-variant" />
+                      </div>
 
-      {/* Floating Action Button */}
-      <button
-        onClick={() => setIsModalOpen(true)}
-        title={t('resources:modal.title')}
-        className="fixed lg:bottom-8 bottom-20 right-8 w-14 h-14 bg-primary hover:bg-primary/90 active:scale-95 text-on-primary rounded-full shadow-xl flex items-center justify-center transition-all z-30 cursor-pointer"
-      >
-        <Plus className="w-6 h-6" />
-      </button>
+                      {/* Sessions within this week */}
+                      <div className="relative flex flex-col gap-5 pl-6">
+                        <span
+                          aria-hidden="true"
+                          className="absolute left-[7px] top-2 bottom-2 w-px bg-gradient-to-b from-outline-variant via-outline-variant to-transparent"
+                        />
+                        {group.sessions.map((session) => {
+                          const color = getSubjectColor(session.subject)
+                          const isLecture = session.event.type === 'Lecture'
+                          const TypeIcon = isLecture ? GraduationCap : Users
+                          const eventTypeLabel = isLecture
+                            ? t('dashboard:timetable.eventTypes.Lecture')
+                            : t('dashboard:timetable.eventTypes.Lab')
+
+                          return (
+                            <div key={session.event.id} className="relative">
+                              <span
+                                aria-hidden="true"
+                                className="absolute -left-[22px] top-6 size-3.5 rounded-full border-2 border-surface bg-primary ring-4 ring-primary/15"
+                              />
+
+                              {/* Card */}
+                              <article className="rounded-2xl border border-outline-variant bg-surface transition-colors hover:border-outline-variant/70">
+                                {/* Header */}
+                                <header className="flex flex-col gap-2.5 border-b border-outline-variant/60 p-5">
+                                  <div className="flex flex-wrap items-center gap-2">
+                                    <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold ${color.bg} ${color.text}`}>
+                                      <span className="font-mono">{session.subject?.code}</span>
+                                      <span className="hidden font-normal opacity-80 sm:inline">{session.subject?.name}</span>
+                                    </span>
+                                    <span className="inline-flex items-center gap-1.5 rounded-full bg-surface-container-low px-2.5 py-1 text-xs font-medium text-on-surface-variant">
+                                      <TypeIcon className="size-3.5" />
+                                      {eventTypeLabel}
+                                    </span>
+                                  </div>
+
+                                  <div className="flex flex-wrap items-center justify-between gap-2">
+                                    <h3 className="text-base font-semibold text-on-surface">
+                                      {session.event.title}
+                                    </h3>
+                                    <p className="flex items-center gap-1.5 text-xs text-on-surface-variant">
+                                      <CalendarDays className="size-3.5" />
+                                      {formatEventDate(session.event.date)}
+                                    </p>
+                                  </div>
+                                </header>
+
+                                {/* Materials list */}
+                                <div className="flex flex-col gap-0.5 p-3">
+                                  {session.resources.map((res) => {
+                                    const isLink = res.type === 'LINK'
+                                    const handleOpen = () => {
+                                      if (isLink || !getPreviewInfo(res).canPreview) {
+                                        window.open(res.url, '_blank', 'noopener,noreferrer')
+                                      } else {
+                                        setPreviewResource(res)
+                                      }
+                                    }
+                                    return <ResourceRow key={res.id} resource={res} onOpen={handleOpen} />
+                                  })}
+                                </div>
+
+                                {/* Add own material button */}
+                                <footer className="border-t border-outline-variant/60 px-3 py-2.5">
+                                  <button
+                                    onClick={() => {
+                                      setPresetEventId(session.event.id)
+                                      setPresetSubjectId(session.event.subjectId)
+                                      setIsModalOpen(true)
+                                    }}
+                                    className="flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-outline-variant px-3 py-2 text-xs font-medium text-on-surface-variant transition-colors hover:border-primary/40 hover:bg-primary/5 hover:text-primary cursor-pointer bg-transparent"
+                                  >
+                                    <Plus className="size-4" />
+                                    <span>{t('resources:library.addCustom')}</span>
+                                  </button>
+                                </footer>
+                              </article>
+                            </div>
+                          )
+                        })}
+                      </div>
+                    </section>
+                  )
+                })}
+
+                {/* General materials (Other) */}
+                {generalGrouped.length > 0 && (
+                  <section className="flex flex-col gap-6">
+                    <h2 className="text-lg font-semibold text-on-surface border-b border-outline-variant pb-2">
+                      {t('resources:library.otherMaterials')}
+                    </h2>
+                    {generalGrouped.map(({ subject, items }) => (
+                      <div key={subject.id} className="flex flex-col gap-4">
+                        <h3 className="text-sm font-semibold text-on-surface flex items-center gap-2">
+                          <CustomIcon name="folder" className="w-4 h-4" />
+                          {subject.name} <span className="text-xs text-on-surface-variant font-medium">({subject.code})</span>
+                        </h3>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                          {items.map(r => (
+                            <ResourceCard
+                              key={r.id}
+                              resource={r}
+                              subjectName={subject.name}
+                              t={t}
+                              onPreview={(res) => setPreviewResource(res)}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </section>
+                )}
+              </>
+            )}
+          </div>
+
+          {/* RIGHT COLUMN: Pinned Semestrální materiály */}
+          <aside
+            aria-label={t('resources:library.semesterMaterials')}
+            className="rounded-2xl border border-primary/25 bg-primary/[0.06] p-5 lg:sticky lg:top-8"
+          >
+            <div className="mb-3 flex items-center gap-2">
+              <Pin className="size-4 text-primary" />
+              <h2 className="text-sm font-semibold text-on-surface">{t('resources:library.semesterMaterials')}</h2>
+            </div>
+            <p className="mb-4 text-xs text-on-surface-variant/80">
+              {t('resources:library.semesterMaterialsSubtitle')}
+            </p>
+
+            <div className="flex flex-col gap-2.5">
+              {platformResources.length === 0 ? (
+                <p className="text-sm text-on-surface-variant italic text-center py-6">Žádné semestrální materiály.</p>
+              ) : (
+                platformResources.map((res) => {
+                  const cfg = getTypeConfig(res.type)
+                  const isLink = res.type === 'LINK'
+                  const url = resolveResourceUrl(res.url)
+                  const handleOpen = () => {
+                    window.open(res.url || url, '_blank', 'noopener,noreferrer')
+                  }
+
+                  return (
+                    <div
+                      key={res.id}
+                      onClick={handleOpen}
+                      className="group flex items-start gap-3 rounded-xl border border-outline-variant bg-surface p-3 transition-colors hover:border-primary/40 hover:bg-surface/80 cursor-pointer"
+                    >
+                      <span className={`flex size-9 shrink-0 items-center justify-center rounded-lg ${cfg.iconBg} ${cfg.iconColor}`}>
+                        {isLink ? <ExternalLink className="w-4.5 h-4.5" /> : <MaterialTypeIcon type={res.type} />}
+                      </span>
+                      <div className="min-w-0">
+                        <p className="truncate text-sm font-medium text-on-surface">{res.title}</p>
+                        {res.description && (
+                          <p className="truncate text-xs text-on-surface-variant/80">{res.description}</p>
+                        )}
+                      </div>
+                      <ExternalLink className="ml-auto size-3.5 shrink-0 text-on-surface-variant opacity-0 transition-opacity group-hover:opacity-100" />
+                    </div>
+                  )
+                })
+              )}
+            </div>
+          </aside>
+        </div>
+      </div>
 
       {/* Upload Modal */}
       {isModalOpen && (
-        <UploadModal 
-          onClose={() => setIsModalOpen(false)} 
+        <UploadModal
+          onClose={() => {
+            setIsModalOpen(false)
+            setPresetEventId(null)
+            setPresetSubjectId(null)
+          }}
           onSave={onUploadResource}
           subjects={subjects}
+          presetEventId={presetEventId}
+          presetSubjectId={presetSubjectId}
         />
       )}
 

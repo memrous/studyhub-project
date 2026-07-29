@@ -171,6 +171,8 @@ export const logout = async (userId) => {
     localStorage.removeItem(getNamespacedKey(userId, 'subjects'))
     localStorage.removeItem(getNamespacedKey(userId, 'events'))
     localStorage.removeItem(getNamespacedKey(userId, 'materials'))
+    localStorage.removeItem(getNamespacedKey(userId, 'dashboard_summary'))
+    localStorage.removeItem(getNamespacedKey(userId, 'requirements'))
   }
 
   return success(null)
@@ -360,4 +362,201 @@ export const createResource = async (userId, newResource) => {
   const updatedList = [...list, newResource]
   localStorage.setItem(key, JSON.stringify(updatedList))
   return success(newResource)
+}
+
+const INITIAL_DASHBOARD_SUMMARY = {
+  nextClass: {
+    id: 101,
+    subjectId: 1,
+    title: 'Database Systems Lecture',
+    date: new Date().toISOString().split('T')[0],
+    startTime: '10:00',
+    endTime: '11:30',
+    type: 'Lecture'
+  },
+  todaySchedule: [
+    {
+      id: 101,
+      subjectId: 1,
+      title: 'Database Systems Lecture',
+      date: new Date().toISOString().split('T')[0],
+      startTime: '10:00',
+      endTime: '11:30',
+      type: 'Lecture'
+    }
+  ],
+  needsAttention: [
+    {
+      id: 1,
+      subjectId: 1,
+      title: 'Database Project',
+      date: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+      startTime: '23:59',
+      endTime: '23:59',
+      type: 'Assignment',
+      status: 'In Progress'
+    }
+  ],
+  subjects: [
+    { id: 1, code: 'KMI/DBS', name: 'Database Systems', credits: 6 },
+    { id: 2, code: 'KMI/WA', name: 'Web Applications', credits: 4 }
+  ],
+  progress: {
+    creditsGained: 22,
+    creditsTotal: 30,
+    completedSubjects: 3,
+    totalSubjects: 6,
+    averageScore: 88
+  }
+}
+
+export const getDashboardSummary = async (userId) => {
+  await delay(MOCK_DELAY)
+  const key = getNamespacedKey(userId, 'dashboard_summary')
+  const saved = localStorage.getItem(key)
+  if (saved) {
+    try {
+      return success(JSON.parse(saved))
+    } catch {
+      return success(INITIAL_DASHBOARD_SUMMARY)
+    }
+  }
+  localStorage.setItem(key, JSON.stringify(INITIAL_DASHBOARD_SUMMARY))
+  return success(INITIAL_DASHBOARD_SUMMARY)
+}
+
+const INITIAL_REQUIREMENTS = [
+  { id: 1, subjectId: 1, title: 'Database Design', type: 'Project', minPoints: 15, maxPoints: 30, gainedPoints: 25, isCompleted: true },
+  { id: 2, subjectId: 1, title: 'SQL Test', type: 'Test', minPoints: 15, maxPoints: 30, gainedPoints: 20, isCompleted: true },
+  { id: 3, subjectId: 1, title: 'Final Exam', type: 'Exam', minPoints: 20, maxPoints: 40, gainedPoints: 15, isCompleted: false },
+  { id: 4, subjectId: 2, title: 'React Project', type: 'Project', minPoints: 25, maxPoints: 50, gainedPoints: 40, isCompleted: true },
+  { id: 5, subjectId: 2, title: 'Final Exam', type: 'Exam', minPoints: 25, maxPoints: 50, gainedPoints: 28, isCompleted: true }
+]
+
+export const getRequirements = async (subjectId) => {
+  await delay(MOCK_DELAY)
+  const user = getCurrentMockUser()
+  const userId = user ? user.id : 'fallback'
+  const key = getNamespacedKey(userId, 'requirements')
+  const saved = localStorage.getItem(key)
+  let list = INITIAL_REQUIREMENTS
+  if (saved) {
+    try {
+      list = JSON.parse(saved)
+    } catch {
+      list = INITIAL_REQUIREMENTS
+    }
+  } else {
+    localStorage.setItem(key, JSON.stringify(INITIAL_REQUIREMENTS))
+  }
+
+  if (subjectId) {
+    list = list.filter((r) => r.subjectId === Number(subjectId) || r.subjectId === subjectId)
+  }
+  return success(list)
+}
+
+export const createRequirement = async (newRequirement) => {
+  await delay(100)
+  const user = getCurrentMockUser()
+  const userId = user ? user.id : 'fallback'
+  const key = getNamespacedKey(userId, 'requirements')
+  const saved = localStorage.getItem(key)
+  let list = INITIAL_REQUIREMENTS
+  if (saved) {
+    try {
+      list = JSON.parse(saved)
+    } catch {
+      list = INITIAL_REQUIREMENTS
+    }
+  }
+  const requirement = {
+    ...newRequirement,
+    id: Date.now(),
+    subjectId: Number(newRequirement.subjectId) || newRequirement.subjectId,
+    isCompleted: !!newRequirement.isCompleted
+  }
+  const updatedList = [...list, requirement]
+  localStorage.setItem(key, JSON.stringify(updatedList))
+  return success(requirement)
+}
+
+export const updateRequirement = async (id, updates) => {
+  await delay(100)
+  const user = getCurrentMockUser()
+  const userId = user ? user.id : 'fallback'
+  const key = getNamespacedKey(userId, 'requirements')
+  const saved = localStorage.getItem(key)
+  let list = INITIAL_REQUIREMENTS
+  if (saved) {
+    try {
+      list = JSON.parse(saved)
+    } catch {
+      list = INITIAL_REQUIREMENTS
+    }
+  }
+  let updatedReq = null
+  const updatedList = list.map((r) => {
+    if (r.id === Number(id) || r.id === id) {
+      updatedReq = { ...r, ...updates }
+      return updatedReq
+    }
+    return r
+  })
+  localStorage.setItem(key, JSON.stringify(updatedList))
+  if (!updatedReq) {
+    return failure('Requirement not found')
+  }
+  return success(updatedReq)
+}
+
+export const deleteRequirement = async (id) => {
+  await delay(100)
+  const user = getCurrentMockUser()
+  const userId = user ? user.id : 'fallback'
+  const key = getNamespacedKey(userId, 'requirements')
+  const saved = localStorage.getItem(key)
+  let list = INITIAL_REQUIREMENTS
+  if (saved) {
+    try {
+      list = JSON.parse(saved)
+    } catch {
+      list = INITIAL_REQUIREMENTS
+    }
+  }
+  const updatedList = list.filter((r) => r.id !== Number(id) && r.id !== id)
+  localStorage.setItem(key, JSON.stringify(updatedList))
+  return success(id)
+}
+
+export const getNote = async (subjectId) => {
+  await delay(MOCK_DELAY)
+  const user = getCurrentMockUser()
+  const userId = user ? user.id : 'fallback'
+  const key = getNamespacedKey(userId, `note:${subjectId}`)
+  const saved = localStorage.getItem(key)
+  return success({ content: saved || '' })
+}
+
+export const updateNote = async (subjectId, content) => {
+  await delay(MOCK_DELAY)
+  const user = getCurrentMockUser()
+  const userId = user ? user.id : 'fallback'
+  const key = getNamespacedKey(userId, `note:${subjectId}`)
+  localStorage.setItem(key, content)
+  return success({ content })
+}
+
+export const getSubjectDetail = async (subjectId) => {
+  await delay(MOCK_DELAY)
+  const user = getCurrentMockUser()
+  const userId = user ? user.id : 'fallback'
+  const key = getNamespacedKey(userId, 'subjects')
+  const saved = localStorage.getItem(key)
+  const list = saved ? JSON.parse(saved) : INITIAL_SUBJECTS
+  const subject = list.find((s) => s.id === Number(subjectId) || s.id === subjectId)
+  if (!subject) {
+    return failure('Subject not found')
+  }
+  return success(subject)
 }

@@ -1,7 +1,8 @@
 import { useNavigate, useParams, Navigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { useSubjects } from '../hooks/useSubjects'
-import { useEvents } from '../hooks/useEvents'
+import { useSubjectDetail } from '../hooks/useSubjectDetail'
+import { useRequirements } from '../hooks/useRequirements'
+import { useNote } from '../hooks/useNote'
 import { useResources } from '../hooks/useResources'
 import SubjectDetailView from '../components/SubjectDetailView'
 import PageState from '../components/PageState'
@@ -10,17 +11,23 @@ const SubjectDetailPage = () => {
   const { t } = useTranslation('common')
   const { subjectId } = useParams()
   const navigate = useNavigate()
-  const { data: subjects, isLoading: subjectsLoading } = useSubjects()
-  const { data: events, updateEventStatus: handleUpdateEventStatus, createEvent: handleCreateEvent, isLoading: eventsLoading } = useEvents()
+
+  const { data: subject, isLoading: subjectLoading } = useSubjectDetail(subjectId)
+  const {
+    data: requirements,
+    isLoading: requirementsLoading,
+    createRequirement,
+    updateRequirement,
+    deleteRequirement,
+  } = useRequirements(subjectId)
+  const { data: note, saveNote } = useNote(subjectId)
   const { data: resources, uploadResource: handleUploadResource, isLoading: resourcesLoading } = useResources()
 
-  const isLoading = subjectsLoading || eventsLoading || resourcesLoading
+  const isLoading = subjectLoading || requirementsLoading || resourcesLoading
 
   if (isLoading) {
     return <PageState variant="loading" title={t('loading')} />
   }
-
-  const subject = subjects.find((s) => s.id === Number(subjectId)) || null
 
   // If the subject ID is invalid, redirect back to subjects list
   if (!subject) {
@@ -30,11 +37,14 @@ const SubjectDetailPage = () => {
   return (
     <SubjectDetailView
       subject={subject}
-      events={events}
+      requirements={requirements}
+      note={note}
       resources={resources}
       onBack={() => navigate('/subjects')}
-      onUpdateEventStatus={handleUpdateEventStatus}
-      onCreateEvent={handleCreateEvent}
+      onCreateRequirement={createRequirement}
+      onUpdateRequirement={updateRequirement}
+      onDeleteRequirement={deleteRequirement}
+      onSaveNote={saveNote}
       onUploadResource={handleUploadResource}
     />
   )

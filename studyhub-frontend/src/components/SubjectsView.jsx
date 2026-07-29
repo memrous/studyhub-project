@@ -8,7 +8,7 @@ import {
   Check,
 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import SubjectCard from './SubjectCard'
+import SubjectOverviewCard from './SubjectOverviewCard'
 import CustomIcon from './CustomIcon'
 
 // ─── Create Subject Modal ────────────────────────────────────
@@ -176,6 +176,7 @@ const Dropdown = ({ label, icon: Icon, options, value, onChange }) => {
 }
 
 // ─── Main SubjectsView Component ─────────────────────────────
+// eslint-disable-next-line no-unused-vars
 const SubjectsView = ({ subjects, onSelectSubject, onAddSubject, onDeleteSubject }) => {
   const { t } = useTranslation(['academic', 'dashboard'])
   const [filterType, setFilterType] = useState('all')     // 'all' | 'Mandatory' | 'Elective'
@@ -251,26 +252,54 @@ const SubjectsView = ({ subjects, onSelectSubject, onAddSubject, onDeleteSubject
 
         {/* Subjects Grid */}
         {displayed.length === 0 ? (
-          <div className="bg-white border border-[#E2E8F0] rounded-lg p-16 text-center flex flex-col items-center gap-3 shadow-ambient">
-            <div className="w-12 h-12 bg-[#eeefff] text-primary rounded-full flex items-center justify-center">
-              <CustomIcon name="book" className="w-6 h-6" />
+          <div className="flex flex-col gap-5">
+            <div className="bg-white border border-[#E2E8F0] rounded-lg p-16 text-center flex flex-col items-center gap-3 shadow-ambient">
+              <div className="w-12 h-12 bg-[#eeefff] text-primary rounded-full flex items-center justify-center">
+                <CustomIcon name="book" className="w-6 h-6" />
+              </div>
+              <p className="text-headline-md font-semibold text-on-surface">
+                {subjects.length === 0
+                  ? t('academic:subjectsView.emptyState.noDataTitle')
+                  : t('academic:subjectsView.emptyState.noMatchingTitle')}
+              </p>
+              <p className="text-body-md text-[#737686]">
+                {subjects.length === 0
+                  ? t('academic:subjectsView.emptyState.noDataDescription')
+                  : t('academic:subjectsView.emptyState.noMatchingDescription')}
+              </p>
             </div>
-            <p className="text-headline-md font-semibold text-on-surface">
-              {subjects.length === 0
-                ? t('academic:subjectsView.emptyState.noDataTitle')
-                : t('academic:subjectsView.emptyState.noMatchingTitle')}
-            </p>
-            <p className="text-body-md text-[#737686]">
-              {subjects.length === 0
-                ? t('academic:subjectsView.emptyState.noDataDescription')
-                : t('academic:subjectsView.emptyState.noMatchingDescription')}
-            </p>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+              <div
+                onClick={() => setIsModalOpen(true)}
+                className="border-2 border-dashed border-outline-variant hover:border-primary hover:bg-surface-container-low transition-colors rounded-lg p-5 flex flex-col items-center justify-center gap-3 cursor-pointer min-h-[220px] text-center bg-surface-container-lowest shadow-ambient"
+              >
+                <div className="w-10 h-10 rounded-full border border-dashed border-outline-variant flex items-center justify-center text-outline-variant hover:text-primary">
+                  <Plus className="w-5 h-5" />
+                </div>
+                <span className="text-body-md font-bold text-on-surface-variant hover:text-primary transition-colors">
+                  {t('academic:subjectsView.addManually')}
+                </span>
+              </div>
+            </div>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
             {displayed.map(subject => (
-              <SubjectCard key={subject.id} subject={subject} onSelect={onSelectSubject} onDelete={onDeleteSubject} />
+              <SubjectOverviewCard key={subject.id} subject={subject} onSelect={onSelectSubject} />
             ))}
+            {/* "Vložit předmět ručně" Card */}
+            <div
+              onClick={() => setIsModalOpen(true)}
+              className="border-2 border-dashed border-outline-variant hover:border-primary hover:bg-surface-container-low transition-colors rounded-lg p-5 flex flex-col items-center justify-center gap-3 cursor-pointer min-h-[220px] text-center bg-surface-container-lowest shadow-ambient"
+            >
+              <div className="w-10 h-10 rounded-full border border-dashed border-outline-variant flex items-center justify-center text-outline-variant hover:text-primary">
+                <Plus className="w-5 h-5" />
+              </div>
+              <span className="text-body-md font-bold text-on-surface-variant hover:text-primary transition-colors">
+                {t('academic:subjectsView.addManually')}
+              </span>
+            </div>
           </div>
         )}
 
@@ -278,15 +307,6 @@ const SubjectsView = ({ subjects, onSelectSubject, onAddSubject, onDeleteSubject
           {t('academic:subjectsView.page.footer')}
         </footer>
       </div>
-
-      {/* Floating Action Button */}
-      <button
-        onClick={() => setIsModalOpen(true)}
-        title={t('academic:subjectsView.modalTitle')}
-        className="fixed lg:bottom-8 bottom-20 right-8 w-14 h-14 bg-[#004ac6] hover:bg-[#003ea8] active:scale-95 text-white rounded-full shadow-xl flex items-center justify-center transition-all z-30 cursor-pointer"
-      >
-        <Plus className="w-6 h-6" />
-      </button>
 
       {/* Create Subject Modal */}
       {isModalOpen && (

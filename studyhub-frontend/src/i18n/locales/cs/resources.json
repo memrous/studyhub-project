@@ -84,5 +84,19 @@
   "emptyState": {
     "title": "Žádné materiály neodpovídají vašemu vyhledávání",
     "description": "Zkuste upravit filtry nebo nahrát nový materiál."
+  },
+  "library": {
+    "title": "Knihovna materiálů",
+    "subtitle": "Chronologický přehled materiálů a odkazů ze všech tvých předmětů.",
+    "uploadButton": "Nahrát materiál / Odkaz",
+    "thisWeek": "Tento týden",
+    "weekLabel": "Týden {{n}}",
+    "otherMaterials": "Ostatní materiály",
+    "addCustom": "Přidat vlastní poznámku / soubor",
+    "semesterMaterials": "Semestrální materiály",
+    "semesterMaterialsSubtitle": "Trvalé odkazy pro celý semestr, které potřebuješ denně.",
+    "allSubjects": "Všechny předměty",
+    "allTypes": "Všechny typy",
+    "externalLink": "Externí odkaz"
   }
 }

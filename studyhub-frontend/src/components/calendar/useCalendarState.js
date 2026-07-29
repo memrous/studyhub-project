@@ -2,6 +2,7 @@ import { useState, useMemo, useEffect } from 'react'
 import { useCalendarGrid, formatDateKey } from './useCalendarGrid'
 import { useCalendarFilters } from './useCalendarFilters'
 import { useEventForm } from './useEventForm'
+import { getSubjectColor } from '../../utils/subjectColors'
 
 export { formatDateKey } from './useCalendarGrid'
 
@@ -18,6 +19,18 @@ export const TYPE_COLOR_MAP = {
 
 export const getEventStyle = (type) => {
   return TYPE_COLOR_MAP[type] || TYPE_COLOR_MAP['default']
+}
+
+export const getSubjectStyle = (subject) => {
+  const { bg, text } = getSubjectColor(subject)
+  let dot = 'var(--color-outline-variant)'
+  if (bg === 'bg-primary-container') dot = 'var(--color-primary)'
+  else if (bg === 'bg-secondary-container') dot = 'var(--color-secondary)'
+  else if (bg === 'bg-tertiary-container') dot = 'var(--color-tertiary)'
+  else if (bg === 'bg-success-container') dot = 'var(--color-success)'
+  else if (bg === 'bg-warning-container') dot = 'var(--color-warning)'
+  else if (bg === 'bg-error-container') dot = 'var(--color-error)'
+  return { bg, text, dot }
 }
 
 export const useCalendarState = ({

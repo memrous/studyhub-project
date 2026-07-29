@@ -2,6 +2,7 @@ import json
 import os
 import sys
 import requests
+from datetime import date, timedelta
 
 # --- KONFIGURACE (injected by StagSyncJob via environment variables) ---
 LARAVEL_API_URL  = os.environ.get("LARAVEL_API_URL",  "http://localhost/api")
@@ -18,6 +19,15 @@ def nacti_surova_data(soubor):
     with open(soubor, "r", encoding="utf-8") as f:
         data = json.load(f)
         return data.get("rozvrhovaAkce", [])
+
+def spocitej_datum_akce(den_zkr):
+    """Spočítá datum nejbližšího výskytu daného dne v týdnu (od dneška, včetně dneška)."""
+    dny_mapa = {"Po": 0, "Út": 1, "St": 2, "Čt": 3, "Pá": 4, "So": 5, "Ne": 6}
+    cilovy_den = dny_mapa.get(den_zkr, 0)
+    dnes = date.today()
+    dnesni_den = dnes.weekday()
+    posun = (cilovy_den - dnesni_den) % 7
+    return (dnes + timedelta(days=posun)).isoformat()
 
 def transformuj_data_pro_laravel(surova_data):
     """Transformuje STAG data do formátu pro Laravel."""
@@ -46,7 +56,7 @@ def transformuj_data_pro_laravel(surova_data):
             },
             "event": {
                 "title": f"{full_typ} - {plny_kod}",
-                "date": "2026-09-21",
+                "date": spocitej_datum_akce(akce.get("denZkr", "Po")),
                 "startTime": akce.get("casOd", "00:00"),
                 "endTime": akce.get("casDo", "00:00"),
                 "type": full_typ,

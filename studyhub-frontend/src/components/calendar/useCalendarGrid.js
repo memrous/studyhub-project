@@ -18,7 +18,7 @@ export const useCalendarGrid = () => {
   const handlePrev = () => {
     if (activeView === 'month') {
       setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1))
-    } else if (activeView === 'week') {
+    } else if (activeView === 'week' || activeView === 'agenda') {
       const nextD = new Date(selectedDate)
       nextD.setDate(nextD.getDate() - 7)
       setSelectedDate(nextD)
@@ -34,7 +34,7 @@ export const useCalendarGrid = () => {
   const handleNext = () => {
     if (activeView === 'month') {
       setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1))
-    } else if (activeView === 'week') {
+    } else if (activeView === 'week' || activeView === 'agenda') {
       const nextD = new Date(selectedDate)
       nextD.setDate(nextD.getDate() + 7)
       setSelectedDate(nextD)

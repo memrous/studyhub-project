@@ -176,3 +176,29 @@ export const createResource = async (userId, newResource) => {
   }
   return request(() => httpClient.post('/materials', newResource).then((res) => res.data))
 }
+
+export const getDashboardSummary = async () => {
+  return request(() => httpClient.get('/dashboard/summary').then((res) => res.data))
+}
+
+export const getRequirements = async (subjectId) => {
+  return request(() => httpClient.get('/requirements', { params: subjectId ? { subjectId } : {} }).then((res) => res.data))
+}
+export const createRequirement = async (newRequirement) => {
+  return request(() => httpClient.post('/requirements', newRequirement).then((res) => res.data))
+}
+export const updateRequirement = async (id, updates) => {
+  return request(() => httpClient.put(`/requirements/${id}`, updates).then((res) => res.data))
+}
+export const deleteRequirement = async (id) => {
+  return request(() => httpClient.delete(`/requirements/${id}`).then((res) => res.data))
+}
+export const getNote = async (subjectId) => {
+  return request(() => httpClient.get(`/subjects/${subjectId}/note`).then((res) => res.data))
+}
+export const updateNote = async (subjectId, content) => {
+  return request(() => httpClient.put(`/subjects/${subjectId}/note`, { content }).then((res) => res.data))
+}
+export const getSubjectDetail = async (subjectId) => {
+  return request(() => httpClient.get(`/subjects/${subjectId}`).then((res) => res.data))
+}
