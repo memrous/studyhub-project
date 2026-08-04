@@ -18,9 +18,14 @@ const SubjectMiniCard = ({ subject, onSelect }) => {
       ? subject.maxPoints
       : subject.max_points
   const hasPoints =
-    gained !== undefined && gained !== null && max !== undefined && max !== null
+    gained !== undefined &&
+    gained !== null &&
+    max !== undefined &&
+    max !== null &&
+    Number(max) > 0
 
-  const hasScore = subject.score !== undefined && subject.score !== null
+  const score = hasPoints ? Math.round((gained / max) * 100) : null
+  const hasScore = score !== null
 
   return (
     <button
@@ -30,14 +35,14 @@ const SubjectMiniCard = ({ subject, onSelect }) => {
     >
       {/* Top row: code pill + score badge */}
       <div className="flex items-center justify-between gap-2">
-        <span className="font-mono text-xs font-semibold text-primary truncate max-w-[60%]">
+        <span className="font-mono text-xs font-semibold text-primary truncate max-w-[60%] lg:max-w-[65%]">
           {subject.code}
         </span>
         {hasScore && (
           <span
-            className={`rounded-md px-1.5 py-0.5 text-[11px] font-bold tabular-nums shrink-0 ${getScoreClasses(subject.score)}`}
+            className={`rounded-md px-1.5 py-0.5 text-[11px] font-bold tabular-nums shrink-0 ${getScoreClasses(score)}`}
           >
-            {subject.score}%
+            {score}%
           </span>
         )}
       </div>
@@ -49,7 +54,7 @@ const SubjectMiniCard = ({ subject, onSelect }) => {
 
       {/* Points earned line */}
       {hasPoints && (
-        <span className="mt-1 text-[11px] text-on-surface-variant">
+        <span className="mt-1 text-[11px] font-medium text-on-surface-variant">
           {t('subjectMiniCard.points', { gained, max })}
         </span>
       )}

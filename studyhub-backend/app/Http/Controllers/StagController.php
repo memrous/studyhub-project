@@ -88,7 +88,7 @@ class StagController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => "Synchronizace úspěšná. Bylo vytvořeno {$importedCount} nových rozvrhových akcí.",
+            'message' => "Sync successful. {$importedCount} new schedule events were created.",
         ], 200);
     }
 }

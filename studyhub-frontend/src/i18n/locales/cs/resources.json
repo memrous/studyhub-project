@@ -79,7 +79,9 @@
     "failedRenderDocument": "Dokument se nepodařilo vykreslit",
     "directPreviewLocalOffice": "Přímý náhled není pro místní Office dokumenty k dispozici.",
     "pleaseDownload": "Soubor si prosím stáhněte a otevřete ve svém zařízení.",
-    "noPreview": "Pro tento typ souboru není náhled k dispozici."
+    "noPreview": "Pro tento typ souboru není náhled k dispozici.",
+    "loadTextError": "Nepodařilo se načíst textový soubor.",
+    "loadDocxError": "Nepodařilo se načíst soubor DOCX."
   },
   "emptyState": {
     "title": "Žádné materiály neodpovídají vašemu vyhledávání",

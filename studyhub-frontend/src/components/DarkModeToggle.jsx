@@ -1,9 +1,11 @@
 import { useId } from 'react'
 import { useTheme } from '../context/ThemeContext'
+import { useTranslation } from 'react-i18next'
 
 const DarkModeToggle = () => {
   const toggleId = useId()
   const { theme, toggleTheme } = useTheme()
+  const { t } = useTranslation('common')
 
   return (
     <label className="inline-flex items-center relative scale-75 origin-center shrink-0 cursor-pointer">
@@ -13,7 +15,7 @@ const DarkModeToggle = () => {
             type="checkbox"
             checked={theme === 'dark'}
             onChange={toggleTheme}
-            aria-label="Toggle dark mode"
+            aria-label={t('common:toggleDarkMode')}
           />
 
           <div

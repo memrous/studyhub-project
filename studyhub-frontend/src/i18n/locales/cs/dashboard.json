@@ -146,6 +146,7 @@
     "urgentTasks_few": "{{count}} urgentní úkoly",
     "urgentTasks_other": "{{count}} urgentních úkolů",
     "allDone": "Vše splněno",
-    "open": "Otevřít"
+    "open": "Otevřít",
+    "pts": "bodů"
   }
 }

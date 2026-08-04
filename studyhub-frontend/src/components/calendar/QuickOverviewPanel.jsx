@@ -48,11 +48,11 @@ const QuickOverviewPanel = ({
       {/* Top Header */}
       <div className="flex flex-col gap-1">
         <span className="text-xs font-medium uppercase tracking-wide text-on-surface-variant/80">
-          {dayName || 'Dnes'}
+          {dayName || t('academic:calendarView.quickOverview.todayTitle')}
         </span>
-        <h2 className="text-lg font-bold text-on-surface">Rychlý přehled</h2>
+        <h2 className="text-lg font-bold text-on-surface">{t('academic:calendarView.quickOverview.title')}</h2>
         <p className="text-xs text-on-surface-variant">
-          Vyberte událost v kalendáři pro zobrazení detailů.
+          {t('academic:calendarView.quickOverview.selectEventNotice')}
         </p>
       </div>
 
@@ -60,13 +60,13 @@ const QuickOverviewPanel = ({
       <div className="flex flex-col gap-3">
         <div className="flex items-center gap-2 text-on-surface-variant font-bold text-sm">
           <Calendar className="w-4 h-4 text-primary" />
-          <span>Dnešní výuka</span>
+          <span>{t('academic:calendarView.quickOverview.todayClasses')}</span>
         </div>
 
         <div className="flex flex-col gap-2">
           {todayEvents.length === 0 ? (
             <p className="text-xs text-on-surface-variant italic text-center py-4 bg-surface-container-lowest border border-outline-variant rounded-lg">
-              Dnes nemáte žádnou výuku.
+              {t('academic:calendarView.quickOverview.noClassesToday')}
             </p>
           ) : (
             todayEvents.map((event) => {
@@ -110,13 +110,13 @@ const QuickOverviewPanel = ({
       <div className="flex flex-col gap-3">
         <div className="flex items-center gap-2 text-on-surface-variant font-bold text-sm">
           <Flame className="w-4 h-4 text-warning" />
-          <span>Nadcházející deadliny</span>
+          <span>{t('academic:calendarView.quickOverview.upcomingDeadlines')}</span>
         </div>
 
         <div className="flex flex-col gap-2">
           {upcomingDeadlines.length === 0 ? (
             <p className="text-xs text-on-surface-variant italic text-center py-4 bg-surface-container-lowest border border-outline-variant rounded-lg">
-              Žádné blížící se deadliny.
+              {t('academic:calendarView.quickOverview.noDeadlines')}
             </p>
           ) : (
             upcomingDeadlines.map((req) => {
@@ -156,9 +156,9 @@ const QuickOverviewPanel = ({
       <div className="rounded-xl border border-outline-variant bg-surface-container-lowest p-4 flex gap-3 items-start">
         <BookOpen className="w-5 h-5 text-primary shrink-0 mt-0.5" />
         <div className="flex flex-col gap-1">
-          <h4 className="text-sm font-semibold text-on-surface">Tip</h4>
+          <h4 className="text-sm font-semibold text-on-surface">{t('academic:calendarView.quickOverview.tipHeading')}</h4>
           <p className="text-xs text-on-surface-variant leading-relaxed">
-            {t('academic:calendarView.quickOverview.tipText', 'Kliknutím na jakoukoliv hodinu zobrazíte materiály, vyučujícího a rychlé akce.')}
+            {t('academic:calendarView.quickOverview.tipText')}
           </p>
         </div>
       </div>

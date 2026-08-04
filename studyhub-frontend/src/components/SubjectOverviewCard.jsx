@@ -90,7 +90,7 @@ const SubjectOverviewCard = ({ subject, onSelect }) => {
           <div className="flex items-center justify-between text-xs">
             <span className="text-on-surface-variant">{t('dashboard:subjectOverviewCard.gainedPoints')}</span>
             <span className="font-mono font-semibold text-foreground">
-              {gained} / {max} <span className="text-on-surface-variant">PTS</span>
+              {gained} / {max} <span className="text-on-surface-variant">{t('dashboard:subjectOverviewCard.pts')}</span>
             </span>
           </div>
           <div className="mt-2 h-2 overflow-hidden rounded-full bg-surface-container">

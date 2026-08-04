@@ -300,7 +300,7 @@ const Profile = ({ user: initialUser }) => {
         <div className="relative">
           <img
             src={effectiveUser.avatarUrl || 'src/assets/icons/user.png'}
-            alt="Student Avatar"
+            alt={t('header.avatarAlt')}
             className="w-24 h-24 rounded-full object-cover border border-outline-variant shadow-sm"
           />
           <div className="absolute -bottom-1 -right-1 bg-primary text-white w-8 h-8 rounded-full grid place-items-center border-2 border-white shadow-sm">

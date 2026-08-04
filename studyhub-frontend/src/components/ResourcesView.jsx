@@ -24,6 +24,7 @@ import fileIcon from '../assets/icons/file.png'
 import folderIcon from '../assets/icons/folder.png'
 import CustomIcon from './CustomIcon'
 import { getSubjectColor } from '../utils/subjectColors'
+import { getLocaleFromLanguage } from '../utils/locale'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:80/api"
 
@@ -434,7 +435,7 @@ const ResourcePreviewModal = ({ resource, onClose }) => {
       setTextError(null)
       try {
         const res = await fetch(url)
-        if (!res.ok) throw new Error('Failed to load text file.')
+        if (!res.ok) throw new Error('preview.loadTextError')
         const text = await res.text()
         if (!active) return
         setTextContent(text)
@@ -462,7 +463,7 @@ const ResourcePreviewModal = ({ resource, onClose }) => {
     container.innerHTML = ''
     fetch(url)
       .then((res) => {
-        if (!res.ok) throw new Error('Failed to load DOCX file.')
+        if (!res.ok) throw new Error('preview.loadDocxError')
         return res.arrayBuffer()
       })
       .then((data) => renderAsync(data, container, undefined, {
@@ -545,7 +546,7 @@ const ResourcePreviewModal = ({ resource, onClose }) => {
                   </div>
                 ) : textError ? (
                   <div className="flex items-center justify-center h-full text-error font-medium">
-                    <span>Error: {textError}</span>
+                    <span>{t(`resources:${textError}`, t('resources:preview.loadTextError'))}</span>
                   </div>
                 ) : (
                   <pre className="text-sm font-mono whitespace-pre-wrap text-on-surface">
@@ -668,7 +669,7 @@ const Dropdown = ({ label, icon: Icon, options, value, onChange }) => {
 
 // ─── Main ResourcesView Component ────────────────────────────
 const ResourcesView = ({ resources, subjects, events, onUploadResource }) => {
-  const { t } = useTranslation(['resources', 'dashboard'])
+  const { t, i18n } = useTranslation(['resources', 'dashboard'])
   const [searchQuery, setSearchQuery] = useState('')
   const [subjectFilter, setSubjectFilter] = useState('all')
   const [typeFilter, setTypeFilter] = useState('all')
@@ -793,7 +794,7 @@ const ResourcesView = ({ resources, subjects, events, onUploadResource }) => {
   const formatEventDate = (dateStr) => {
     if (!dateStr) return ''
     const date = new Date(dateStr)
-    return date.toLocaleDateString('cs-CZ', {
+    return date.toLocaleDateString(getLocaleFromLanguage(i18n.language), {
       weekday: 'short',
       day: 'numeric',
       month: 'numeric',
@@ -833,7 +834,7 @@ const ResourcesView = ({ resources, subjects, events, onUploadResource }) => {
             <Search className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-on-surface-variant" />
             <input
               type="text"
-              placeholder="Hledat v materiálech..."
+              placeholder={t('resources:searchPlaceholder')}
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
               className="w-full rounded-xl border border-outline-variant bg-surface-container-low py-2.5 pl-10 pr-4 text-sm text-on-surface placeholder:text-on-surface-variant/70 outline-none transition-colors focus:border-primary/50 focus:ring-2 focus:ring-primary/20"

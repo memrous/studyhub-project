@@ -97,16 +97,13 @@
       "inProgress": "In Progress",
       "submitted": "Submitted",
       "completed": "Completed",
-      "upcoming": "Upcoming",
-      "showInfo": "Show subject description",
-      "progress": {
-      "minimumMet": "Minimum requirement met"
+      "upcoming": "Upcoming"
     },
+    "showInfo": "Show subject description",
     "infoDialog": {
       "title": "Subject description",
       "close": "Close",
       "importedFromStag": "Imported from IS/STAG · Lecturer: {{teacher}}"
-    }
     },
     "testsExamsTracked": "{{count}} tests and exams listed",
     "noTestsExams": "No tests or exams scheduled.",
@@ -149,6 +146,7 @@
     "progress": {
       "title": "Progress Assessment",
       "minimum": "Minimum to pass",
+      "minimumMet": "Minimum requirement met",
       "missingToMinimum": "Missing to minimum: {{diff}} PTS",
       "pts": "PTS"
     },
@@ -161,6 +159,13 @@
   },
   "calendarView": {
     "title": "Calendar",
+    "today": "Today",
+    "previous": "Previous",
+    "next": "Next",
+    "viewLabel": "View",
+    "filterLabel": "Filter:",
+    "hidePanel": "Hide panel",
+    "showPanel": "Show panel",
     "views": {
       "month": "Month",
       "week": "Week",
@@ -172,6 +177,14 @@
     "eventTypesTitle": "Event Types",
     "createNewEvent": "Add Reminder",
     "quickOverview": {
+      "title": "Quick Overview",
+      "todayTitle": "Today",
+      "selectEventNotice": "Select an event in the calendar to view details.",
+      "todayClasses": "Today's Classes",
+      "noClassesToday": "You have no classes today.",
+      "upcomingDeadlines": "Upcoming Deadlines",
+      "noDeadlines": "No upcoming deadlines.",
+      "tipHeading": "Tip",
       "tipText": "Click on any class to view materials, lecturer and quick actions."
     },
     "eventTypeDescriptions": {
@@ -203,12 +216,32 @@
       "sat": "Sat",
       "sun": "Sun"
     },
+    "daysLong": {
+      "monday": "Monday",
+      "tuesday": "Tuesday",
+      "wednesday": "Wednesday",
+      "thursday": "Thursday",
+      "friday": "Friday",
+      "saturday": "Saturday",
+      "sunday": "Sunday",
+      "mon": "Monday",
+      "tue": "Tuesday",
+      "wed": "Wednesday",
+      "thu": "Thursday",
+      "fri": "Friday",
+      "sat": "Saturday",
+      "sun": "Sunday"
+    },
+    "allDay": "All day",
+    "deadlineSubmission": "Submission",
     "agenda": "Agenda:",
     "noEventsToday": "No events scheduled for this day.",
     "noEvents": "No events",
     "yourSchedule": "Your schedule and deadlines for today",
     "addEvent": "Add Event",
-    "freeSlot": "Free schedule slot"
+    "freeSlot": "Free schedule slot",
+    "prevDay": "Previous day",
+    "nextDay": "Next day"
   },
   "eventModal": {
     "createTitle": "Create New Event",
@@ -235,9 +268,11 @@
     "actions": {
       "cancel": "Cancel",
       "save": "Save Event"
-    }
+    },
+    "closeButton": "Close"
   },
-    "eventDetail": {
+  "eventDetail": {
+    "title": "Event Details",
     "unknownSubject": "Unknown Subject",
     "lecturer": "Lecturer:",
     "notSpecified": "Not specified",
@@ -246,6 +281,7 @@
     "openSubjectHub": "Open Subject Hub",
     "editEvent": "Edit Event",
     "deleteEvent": "Delete Event",
-    "areYouSure": "Are you sure?"
+    "areYouSure": "Are you sure?",
+    "closeButton": "Close"
   }
 }

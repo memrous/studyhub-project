@@ -30,5 +30,15 @@
     "connected": "Připojeno",
     "notConnected": "Nepřipojeno",
     "logout": "Odhlásit se"
+  },
+  "notFound": {
+    "title": "Stránka nenalezena",
+    "description": "Tato stránka neexistuje nebo byla přesunuta.",
+    "backToDashboard": "Zpět na nástěnku"
+  },
+  "toggleDarkMode": "Přepnout tmavý režim",
+  "toast": {
+    "dismiss": "Zavřít oznámení",
+    "container": "Oznámení"
   }
 }

@@ -32,7 +32,9 @@ const NextUp = ({ nextClass, onOpenMaterials, onAddToCalendar }) => {
     return t('nextUp.startsIn', { count: minutesLeft, minutes: minutesLeft })
   }
 
-  const typeBadge = nextClass?.type === 'Lecture' ? 'PŘEDNÁŠKA' : 'SEMINÁŘ'
+  const typeBadge = nextClass?.type
+    ? t(`timetable.eventTypes.${nextClass.type}`, nextClass.type).toUpperCase()
+    : ''
 
   return (
     <section aria-labelledby="nextup-heading" className="w-full">

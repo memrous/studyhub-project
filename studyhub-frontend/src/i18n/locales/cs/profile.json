@@ -10,7 +10,8 @@
     "hint": "Obnovte stránku nebo se přihlaste znovu."
   },
   "header": {
-    "badge": "Institucionální studentský účet"
+    "badge": "Institucionální studentský účet",
+    "avatarAlt": "Avatar studenta"
   },
   "sections": {
     "academicDetails": {

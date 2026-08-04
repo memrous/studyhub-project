@@ -33,6 +33,10 @@ class Subject extends Model
         'isMandatory',
         'guarantor',
         'passThreshold',
+        'gainedPoints',
+        'maxPoints',
+        'gained_points',
+        'max_points',
     ];
 
     public function user()
@@ -78,5 +82,21 @@ class Subject extends Model
     public function getPassThresholdAttribute()
     {
         return $this->attributes['pass_threshold'] ?? null;
+    }
+
+    public function getGainedPointsAttribute()
+    {
+        if ($this->relationLoaded('requirements')) {
+            return (int) $this->requirements->sum('gained_points');
+        }
+        return (int) $this->requirements()->sum('gained_points');
+    }
+
+    public function getMaxPointsAttribute()
+    {
+        if ($this->relationLoaded('requirements')) {
+            return (int) $this->requirements->sum('max_points');
+        }
+        return (int) $this->requirements()->sum('max_points');
     }
 }

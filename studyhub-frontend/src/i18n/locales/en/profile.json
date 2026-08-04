@@ -10,7 +10,8 @@
     "hint": "Please refresh the page or sign in again."
   },
   "header": {
-    "badge": "Institutional Student Account"
+    "badge": "Institutional Student Account",
+    "avatarAlt": "Student Avatar"
   },
   "sections": {
     "academicDetails": {

@@ -79,7 +79,9 @@
     "failedRenderDocument": "Failed to render document",
     "directPreviewLocalOffice": "Direct preview is not available for local Office documents.",
     "pleaseDownload": "Please download the file to view it on your device.",
-    "noPreview": "No preview is available for this file type."
+    "noPreview": "No preview is available for this file type.",
+    "loadTextError": "Failed to load text file.",
+    "loadDocxError": "Failed to load DOCX file."
   },
   "emptyState": {
     "title": "No resources match your search criteria",

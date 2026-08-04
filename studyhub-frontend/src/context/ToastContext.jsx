@@ -1,6 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createContext, useCallback, useContext, useRef, useState } from 'react'
 import { CheckCircle, XCircle, Info, X } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 // ── Types ─────────────────────────────────────────────────────────
 // variant: 'success' | 'error' | 'info'
@@ -46,6 +47,7 @@ const VARIANT_STYLES = {
 const ToastCard = ({ id, variant, message, onDismiss }) => {
   const styles = VARIANT_STYLES[variant] ?? VARIANT_STYLES.info
   const { Icon } = styles
+  const { t } = useTranslation('common')
 
   return (
     <div
@@ -71,7 +73,7 @@ const ToastCard = ({ id, variant, message, onDismiss }) => {
       <button
         onClick={() => onDismiss(id)}
         className="shrink-0 -mt-0.5 -mr-1 p-1 rounded-md opacity-60 hover:opacity-100 transition-opacity cursor-pointer"
-        aria-label="Dismiss notification"
+        aria-label={t('common:toast.dismiss')}
       >
         <X className="w-4 h-4" />
       </button>
@@ -81,6 +83,7 @@ const ToastCard = ({ id, variant, message, onDismiss }) => {
 
 // ── Provider ──────────────────────────────────────────────────────
 export const ToastProvider = ({ children }) => {
+  const { t: translate } = useTranslation('common')
   const [toasts, setToasts] = useState([])
   const counterRef = useRef(0)
 
@@ -106,7 +109,7 @@ export const ToastProvider = ({ children }) => {
 
       {/* Fixed container — bottom-right on desktop, bottom-center on mobile */}
       <div
-        aria-label="Notifications"
+        aria-label={translate('common:toast.container')}
         className="fixed bottom-6 right-6 z-[9999] flex flex-col gap-2 items-end pointer-events-none"
       >
         {toasts.map((t) => (

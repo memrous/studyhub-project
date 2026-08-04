@@ -35,7 +35,7 @@ const EventModal = ({
           <button 
             onClick={onClose}
             className="p-1 text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer rounded-full hover:bg-surface-container-low"
-            aria-label="Zavřít"
+            aria-label={t('academic:eventModal.closeButton')}
           >
             <X className="w-4 h-4" />
           </button>

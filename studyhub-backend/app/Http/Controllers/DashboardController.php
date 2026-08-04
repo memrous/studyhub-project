@@ -71,16 +71,13 @@ class DashboardController extends Controller
 
         // 3b. Low-scoring subjects
         $subjects = Subject::where('user_id', $userId)
-            ->with(['requirements' => function ($q) {
-                $q->where('completed', true)
-                  ->whereNotNull('gained_points')
-                  ->whereNotNull('max_points')
-                  ->where('max_points', '>', 0);
-            }])
+            ->with('requirements')
             ->get();
 
         foreach ($subjects as $subject) {
-            $completedWithPoints = $subject->requirements;
+            $completedWithPoints = $subject->requirements->filter(function ($r) {
+                return $r->completed && $r->gained_points !== null && $r->max_points !== null && $r->max_points > 0;
+            });
             if ($completedWithPoints->isNotEmpty()) {
                 $avgScore = $completedWithPoints->avg(function ($r) {
                     return ($r->gained_points / $r->max_points) * 100;
@@ -99,15 +96,24 @@ class DashboardController extends Controller
 
         // 4. subjects with computed score
         $subjectsWithScore = $subjects->map(function ($subject) {
-            $completedWithPoints = $subject->requirements;
+            $completedWithPoints = $subject->requirements->filter(function ($r) {
+                return $r->completed && $r->gained_points !== null && $r->max_points !== null && $r->max_points > 0;
+            });
             $score = null;
             if ($completedWithPoints->isNotEmpty()) {
                 $score = round($completedWithPoints->avg(function ($r) {
                     return ($r->gained_points / $r->max_points) * 100;
                 }));
             }
+            $gainedPoints = (int) $subject->requirements->sum('gained_points');
+            $maxPoints = (int) $subject->requirements->sum('max_points');
+
             $subjectArray = $subject->toArray();
             $subjectArray['score'] = $score;
+            $subjectArray['gained_points'] = $gainedPoints;
+            $subjectArray['gainedPoints'] = $gainedPoints;
+            $subjectArray['max_points'] = $maxPoints;
+            $subjectArray['maxPoints'] = $maxPoints;
             return $subjectArray;
         });
 

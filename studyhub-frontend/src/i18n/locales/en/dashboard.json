@@ -142,6 +142,7 @@
     "urgentTasks_one": "1 urgent task",
     "urgentTasks_other": "{{count}} urgent tasks",
     "allDone": "Vše splněno",
-    "open": "Open"
+    "open": "Open",
+    "pts": "pts"
   }
 }
