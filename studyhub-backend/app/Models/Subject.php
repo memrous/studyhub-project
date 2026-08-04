@@ -21,6 +21,8 @@ class Subject extends Model
         'description',
         'guarantor',
         'pass_threshold',
+        'status',
+        'final_grade',
     ];
 
     protected $casts = [
@@ -37,6 +39,7 @@ class Subject extends Model
         'maxPoints',
         'gained_points',
         'max_points',
+        'finalGrade',
     ];
 
     public function user()
@@ -82,6 +85,11 @@ class Subject extends Model
     public function getPassThresholdAttribute()
     {
         return $this->attributes['pass_threshold'] ?? null;
+    }
+
+    public function getFinalGradeAttribute()
+    {
+        return $this->attributes['final_grade'] ?? null;
     }
 
     public function getGainedPointsAttribute()

@@ -20,6 +20,7 @@ class Requirement extends Model
         'max_points',
         'gained_points',
         'completed',
+        'grade',
     ];
 
     protected $casts = [
@@ -35,6 +36,7 @@ class Requirement extends Model
         'dueTime',
         'maxPoints',
         'gainedPoints',
+        'grade',
     ];
 
     public function subject()
@@ -65,5 +67,10 @@ class Requirement extends Model
     public function getGainedPointsAttribute()
     {
         return $this->attributes['gained_points'] ?? null;
+    }
+
+    public function getGradeAttribute()
+    {
+        return $this->attributes['grade'] ?? null;
     }
 }

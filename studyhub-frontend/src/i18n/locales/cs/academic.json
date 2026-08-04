@@ -160,6 +160,44 @@
       "close": "Zavřít",
       "importedFromStag": "Importováno z IS/STAG · Vyučující: {{teacher}}"
     },
+    "sections": {
+      "moodleHeader": "Průběžné hodnocení",
+      "moodleBadge": "Moodle / Průběh",
+      "stagHeader": "Výsledek předmětu",
+      "stagBadge": "IS/STAG Oficiální"
+    },
+    "status": {
+      "inProgress": "V průběhu",
+      "completed": "Splněno",
+      "closed": "Ukončeno",
+      "failed": "Nesplněno"
+    },
+    "metrics": {
+      "successRate": "Procentuální úspěšnost",
+      "estimatedGrade": "Odhad výsledné známky",
+      "estimateNote": "Průběžný odhad",
+      "remainingTasks": "Co chybí / k odevzdání",
+      "remainingTasksCount_one": "{{count}} zbývající aktivita",
+      "remainingTasksCount_few": "{{count}} zbývající aktivity",
+      "remainingTasksCount_other": "{{count}} zbývajících aktivit",
+      "averageGrade": "Průměrná známka",
+      "creditGranted": "Nárok na zápočet",
+      "creditPending": "Zápočet v řešení",
+      "noPointsSubject": "Zápočtový předmět"
+    },
+    "stagSection": {
+      "title": "Oficiální stav z IS/STAG",
+      "pendingTitle": "Čeká na uzavření v IS/STAG",
+      "pendingDescription": "Vyučující zatím nezapsal finální známku ani udělení zápočtu do studijního systému.",
+      "finalGrade": "Finální známka:",
+      "creditsAwarded": "Získané kredity:",
+      "closedDate": "Stav předmětu:"
+    },
+    "moodleSection": {
+      "checklistCompleted": "Splněno",
+      "checklistPending": "Nesplněno",
+      "gradeLabel": "Známka: {{grade}}"
+    },
     "notes": {
       "placeholder": "Začněte psát poznámky k tomuto předmětu...",
       "save": "Uložit poznámky",

@@ -150,6 +150,43 @@
       "missingToMinimum": "Missing to minimum: {{diff}} PTS",
       "pts": "PTS"
     },
+    "sections": {
+      "moodleHeader": "Continuous Evaluation",
+      "moodleBadge": "Moodle / Progress",
+      "stagHeader": "Course Result",
+      "stagBadge": "IS/STAG Official"
+    },
+    "status": {
+      "inProgress": "In Progress",
+      "completed": "Completed",
+      "closed": "Closed",
+      "failed": "Failed"
+    },
+    "metrics": {
+      "successRate": "Success Rate",
+      "estimatedGrade": "Estimated Grade",
+      "estimateNote": "Provisional estimate",
+      "remainingTasks": "Remaining Activities",
+      "remainingTasksCount_one": "{{count}} remaining activity",
+      "remainingTasksCount_other": "{{count}} remaining activities",
+      "averageGrade": "Average Grade",
+      "creditGranted": "Credit Met",
+      "creditPending": "Credit Pending",
+      "noPointsSubject": "Credit Course"
+    },
+    "stagSection": {
+      "title": "Official STAG Result",
+      "pendingTitle": "Awaiting STAG Closure",
+      "pendingDescription": "The lecturer has not yet entered the final grade or credit approval in the academic system.",
+      "finalGrade": "Final Grade:",
+      "creditsAwarded": "Credits Awarded:",
+      "closedDate": "Course Status:"
+    },
+    "moodleSection": {
+      "checklistCompleted": "Completed",
+      "checklistPending": "Pending",
+      "gradeLabel": "Grade: {{grade}}"
+    },
     "notes": {
       "placeholder": "Start writing notes for this subject...",
       "save": "Save Notes",
