@@ -73,13 +73,42 @@
   "toast": {
     "connectFailed": "We could not connect IS/STAG. Please check the values and try again.",
     "disconnectFailed": "We could not disconnect IS/STAG right now. Please try again.",
-    "disconnectSuccess": "IS/STAG has been disconnected."
+    "disconnectSuccess": "IS/STAG has been disconnected.",
+    "moodleConnectFailed": "We could not connect Moodle. Please check the values and try again.",
+    "moodleDisconnectFailed": "We could not disconnect Moodle right now. Please try again.",
+    "moodleDisconnectSuccess": "Moodle has been disconnected."
   },
   "moodle": {
-    "title": "Moodle",
-    "subtitle": "Placeholder for future integration",
-    "body": "Moodle integration is still in preparation. This is a visual placeholder for the future state.",
-    "action": "Coming soon",
-    "status": "NOT CONNECTED"
+    "status": {
+      "syncing": "Syncing tasks from Moodle...",
+      "success": "Tasks synced successfully from Moodle.",
+      "failed": "Moodle sync failed. Check your credentials and try again."
+    },
+    "card": {
+      "title": "Moodle",
+      "subtitle": "Moodle connection status",
+      "helper": "To connect to Moodle, enter your login credentials. If you want, you can do this later."
+    },
+    "labels": {
+      "username": "Username",
+      "password": "Password"
+    },
+    "connected": {
+      "connected": "CONNECTED",
+      "notConnected": "NOT CONNECTED"
+    },
+    "actions": {
+      "connect": "Connect Moodle",
+      "disconnect": "Disconnect Moodle",
+      "syncNow": "Sync now",
+      "syncNowCountdown": "Sync now ({{time}})",
+      "cancel": "Cancel"
+    },
+    "syncing": {
+      "background": "Moodle connected. Syncing tasks in the background...",
+      "started": "Sync started — refreshing tasks in the background.",
+      "recentlyTriggered": "Sync was already triggered recently — try again in {{minutes}} minutes.",
+      "failed": "Failed to trigger sync."
+    }
   }
 }

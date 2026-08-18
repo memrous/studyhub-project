@@ -73,13 +73,42 @@
   "toast": {
     "connectFailed": "IS/STAG se nepodařilo připojit. Zkontrolujte prosím údaje a zkuste to znovu.",
     "disconnectFailed": "IS/STAG se nyní nepodařilo odpojit. Zkuste to prosím znovu.",
-    "disconnectSuccess": "IS/STAG bylo odpojeno."
+    "disconnectSuccess": "IS/STAG bylo odpojeno.",
+    "moodleConnectFailed": "Moodle se nepodařilo připojit. Zkontrolujte prosím údaje a zkuste to znovu.",
+    "moodleDisconnectFailed": "Moodle se nyní nepodařilo odpojit. Zkuste to prosím znovu.",
+    "moodleDisconnectSuccess": "Moodle bylo odpojeno."
   },
   "moodle": {
-    "title": "Moodle",
-    "subtitle": "Zástupný text pro budoucí integraci",
-    "body": "Integrace Moodlu je stále v přípravě. Toto je vizuální zástupný stav pro budoucnost.",
-    "action": "Již brzy",
-    "status": "NEPŘIPOJENO"
+    "status": {
+      "syncing": "Synchronizuji úkoly z Moodlu...",
+      "success": "Úkoly byly úspěšně synchronizovány z Moodlu.",
+      "failed": "Synchronizace Moodlu selhala. Zkontrolujte přihlašovací údaje a zkuste to znovu."
+    },
+    "card": {
+      "title": "Moodle",
+      "subtitle": "Stav připojení k Moodlu",
+      "helper": "Pro připojení k Moodlu zadejte své přihlašovací údaje. Pokud chcete, můžete to udělat později."
+    },
+    "labels": {
+      "username": "Uživatelské jméno",
+      "password": "Heslo"
+    },
+    "connected": {
+      "connected": "PŘIPOJENO",
+      "notConnected": "NEPŘIPOJENO"
+    },
+    "actions": {
+      "connect": "Připojit Moodle",
+      "disconnect": "Odpojit Moodle",
+      "syncNow": "Synchronizovat teď",
+      "syncNowCountdown": "Synchronizovat teď ({{time}})",
+      "cancel": "Zrušit"
+    },
+    "syncing": {
+      "background": "Moodle je připojen. Úkoly se synchronizují na pozadí...",
+      "started": "Synchronizace byla spuštěna a úkoly se na pozadí obnovují.",
+      "recentlyTriggered": "Synchronizace už byla nedávno spuštěna. Zkuste to znovu za {{minutes}} minut.",
+      "failed": "Synchronizaci se nepodařilo spustit."
+    }
   }
 }

@@ -8,6 +8,8 @@ import {
   BookOpenCheck,
 } from 'lucide-react'
 
+import { formatAcademicGrade } from '../../utils/subjectColors'
+
 const getDayDiff = (dateStr) => {
   if (!dateStr) return null
   const today = new Date()
@@ -27,13 +29,12 @@ const getItemBadgeStyle = (gained, max, grade) => {
   }
 
   if (grade) {
-    const num = parseFloat(grade)
-    if (!isNaN(num)) {
-      if (num <= 1.5) return 'bg-success text-on-success font-extrabold shadow-sm px-2.5 py-0.5 rounded-md'
-      if (num <= 2.5) return 'bg-success-container text-on-success-container font-bold px-2.5 py-0.5 rounded-md'
-      if (num <= 3.5) return 'bg-warning-container text-on-warning-container font-bold px-2.5 py-0.5 rounded-md'
-      return 'bg-error-container text-on-error-container font-bold px-2.5 py-0.5 rounded-md'
-    }
+    const formatted = formatAcademicGrade(grade)
+    if (formatted === 'A') return 'bg-success text-on-success font-extrabold shadow-sm px-2.5 py-0.5 rounded-md'
+    if (formatted === 'B' || formatted === 'C') return 'bg-success-container text-on-success-container font-bold px-2.5 py-0.5 rounded-md'
+    if (formatted === 'D' || formatted === 'E') return 'bg-warning-container text-on-warning-container font-bold px-2.5 py-0.5 rounded-md'
+    if (formatted === 'F') return 'bg-error-container text-on-error-container font-bold ring-1 ring-error/20 px-2.5 py-0.5 rounded-md'
+    return 'bg-success-container text-on-success-container font-bold px-2.5 py-0.5 rounded-md'
   }
 
   return 'bg-surface-container text-on-surface-variant font-medium px-2 py-0.5 rounded-md'
@@ -184,7 +185,7 @@ const SubjectMoodleActivities = ({ requirements = [], resources = [] }) => {
                     </span>
                   ) : hasGrade ? (
                     <span className={`inline-flex font-mono text-xs ${badgeStyle}`}>
-                      {t('academic:subjectDetail.moodleSection.gradeLabel', { grade: req.grade })}
+                      {t('academic:subjectDetail.moodleSection.gradeLabel', { grade: formatAcademicGrade(req.grade) })}
                     </span>
                   ) : null}
                   {statusEl && <div className="mt-1 flex justify-end">{statusEl}</div>}

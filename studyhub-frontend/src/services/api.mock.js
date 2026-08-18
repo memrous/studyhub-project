@@ -245,6 +245,51 @@ export const resyncStag = async () => {
   })
 }
 
+export const connectMoodle = async (payload) => {
+  await delay(400)
+
+  const currentUser = getCurrentMockUser()
+  if (!currentUser) {
+    return failure('unauthorized')
+  }
+
+  currentUser.moodle_username = payload.moodle_username ?? payload.moodleUsername ?? null
+  currentUser.moodle_password = payload.moodle_password ?? payload.moodlePassword ?? null
+
+  return success({ user: sanitizeUser(currentUser) })
+}
+
+export const disconnectMoodle = async () => {
+  await delay(300)
+
+  const currentUser = getCurrentMockUser()
+  if (!currentUser) {
+    return failure('unauthorized')
+  }
+
+  currentUser.moodle_username = null
+  currentUser.moodle_password = null
+
+  return success({ user: sanitizeUser(currentUser) })
+}
+
+export const getMoodleSyncStatus = async () => {
+  await delay(200)
+  return success({ moodle_sync_status: 'success', moodle_synced_at: new Date().toISOString(), next_allowed_at: null })
+}
+
+export const resyncMoodle = async () => {
+  await delay(400)
+  const currentUser = getCurrentMockUser()
+  if (!currentUser) return failure('unauthorized')
+  if (!currentUser.moodle_username) return { data: null, error: 'Moodle is not connected.', status: 'error' }
+  const nextAllowedAt = new Date(Date.now() + 30 * 60 * 1000).toISOString()
+  return success({
+    message: 'Resync started in background.',
+    next_allowed_at: nextAllowedAt,
+  })
+}
+
 // ── Application State API Functions ──────────────────────────────
 
 export const getSubjects = async (userId) => {

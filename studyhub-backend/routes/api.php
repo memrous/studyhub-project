@@ -10,6 +10,8 @@ use App\Http\Controllers\StagConnectController;
 use App\Http\Controllers\RequirementController;
 use App\Http\Controllers\NoteController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\MoodleController;
+use App\Http\Controllers\MoodleConnectController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -63,4 +65,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/user/stag',        [StagConnectController::class, 'disconnect']);
     Route::get('/user/stag/status',    [StagConnectController::class, 'status']);
     Route::post('/user/stag/resync',   [StagConnectController::class, 'resync']);
+
+    // Moodle Synchronizace
+    Route::post('/moodle/sync-requirements', [MoodleController::class, 'syncRequirements']);
+    Route::post('/user/moodle',          [MoodleConnectController::class, 'connect']);
+    Route::delete('/user/moodle',        [MoodleConnectController::class, 'disconnect']);
+    Route::get('/user/moodle/status',    [MoodleConnectController::class, 'status']);
+    Route::post('/user/moodle/resync',   [MoodleConnectController::class, 'resync']);
 });

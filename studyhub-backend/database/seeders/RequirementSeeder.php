@@ -89,6 +89,18 @@ class RequirementSeeder extends Seeder
                         'weight'        => 30,
                         'context'       => 'Zkouškové období — termíny v IS',
                     ],
+                    [
+                        'type'          => 'activity',
+                        'title'         => 'Povinná docházka a cvičení',
+                        'due_date'      => null,
+                        'due_time'      => null,
+                        'completed'     => true,
+                        'max_points'    => null,
+                        'gained_points' => null,
+                        'grade'         => null,
+                        'weight'        => null,
+                        'context'       => 'Moodle Checklist docházky',
+                    ],
                 ],
             ],
 

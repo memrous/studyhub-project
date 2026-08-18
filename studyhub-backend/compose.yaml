@@ -12,12 +12,14 @@ services:
         volumes:
             - '.:/var/www/html'
             - '../stag_mock_import:/var/www/stag_mock_import'
+            - '../moodle_mock_import:/var/www/moodle_mock_import'
         networks:
             - sail
         depends_on:
             - pgsql
             - redis
-        entrypoint: ['php', 'artisan', 'queue:work', '--tries=1']
+        restart: unless-stopped
+        entrypoint: ['php', 'artisan', 'queue:work', '--tries=1', '--timeout=90']
     laravel.test:
         build:
             context: './vendor/laravel/sail/runtimes/8.5'
@@ -39,6 +41,7 @@ services:
         volumes:
             - '.:/var/www/html'
             - '../stag_mock_import:/var/www/stag_mock_import'
+            - '../moodle_mock_import:/var/www/moodle_mock_import'
         networks:
             - sail
         depends_on:

@@ -121,6 +121,22 @@ export const resyncStag = async () => {
   return request(() => httpClient.post('/user/stag/resync').then((res) => res.data))
 }
 
+export const connectMoodle = async (payload) => {
+  return request(() => httpClient.post('/user/moodle', payload).then((res) => res.data))
+}
+
+export const disconnectMoodle = async () => {
+  return request(() => httpClient.delete('/user/moodle').then((res) => res.data))
+}
+
+export const getMoodleSyncStatus = async () => {
+  return request(() => httpClient.get('/user/moodle/status').then((res) => res.data))
+}
+
+export const resyncMoodle = async () => {
+  return request(() => httpClient.post('/user/moodle/resync').then((res) => res.data))
+}
+
 export const getSubjects = async (userId) => {
   return request(() => httpClient.get('/subjects').then((res) => res.data))
 }

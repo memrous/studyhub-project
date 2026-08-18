@@ -1,0 +1,156 @@
+{
+  "moodleCourses": [
+    {
+      "subjectCode": "KIV/PIA",
+      "activities": [
+        {
+          "type": "assignment",
+          "title": "Domácí úloha 1: Základy JS a DOM",
+          "due_date": "2026-08-01",
+          "due_time": "23:59",
+          "max_points": 10,
+          "gained_points": 10,
+          "completed": true,
+          "weight": 10,
+          "context": "Moodle kurz PIA — Odevzdávárna"
+        },
+        {
+          "type": "quiz",
+          "title": "Průběžný test: React a komponenty",
+          "due_date": "2026-08-07",
+          "due_time": "09:00",
+          "max_points": 20,
+          "gained_points": 18,
+          "completed": true,
+          "weight": 20,
+          "context": "Moodle Kvíz z přednášky"
+        },
+        {
+          "type": "project",
+          "title": "Semestrální projekt: SPA Aplikace v Reactu",
+          "due_date": "2026-09-10",
+          "due_time": "23:59",
+          "max_points": 35,
+          "gained_points": null,
+          "completed": false,
+          "weight": 35,
+          "context": "Odevzdání úkolu v Moodle s odkazem na GitHub"
+        },
+        {
+          "type": "attendance",
+          "title": "Povinná docházka na cvičení (min. 80%)",
+          "due_date": null,
+          "due_time": null,
+          "max_points": null,
+          "gained_points": null,
+          "grade": null,
+          "completed": true,
+          "context": "Moodle modul Docházka"
+        }
+      ]
+    },
+    {
+      "subjectCode": "KIV/OS",
+      "activities": [
+        {
+          "type": "assignment",
+          "title": "Domácí úloha 1: Procesy a fork()",
+          "due_date": "2026-07-28",
+          "due_time": "23:59",
+          "max_points": 10,
+          "gained_points": 3,
+          "completed": true,
+          "weight": 10,
+          "context": "Moodle odevzdávárna OS"
+        },
+        {
+          "type": "quiz",
+          "title": "Test 1: Synchronizace a semafory",
+          "due_date": "2026-08-08",
+          "due_time": "14:00",
+          "max_points": 20,
+          "gained_points": 12,
+          "completed": true,
+          "weight": 20,
+          "context": "Moodle Test z OS"
+        },
+        {
+          "type": "exam",
+          "title": "Praktická zkouška u počítače",
+          "due_date": "2026-09-15",
+          "due_time": "10:00",
+          "max_points": null,
+          "gained_points": null,
+          "grade": "B",
+          "completed": true,
+          "context": "Moodle hodnocení ústní a praktické zkoušky"
+        },
+        {
+          "type": "attendance",
+          "title": "Odevzdání bezpečnostního prohlášení BOZP",
+          "due_date": null,
+          "due_time": null,
+          "max_points": null,
+          "gained_points": null,
+          "grade": null,
+          "completed": true,
+          "context": "Moodle Checklist BOZP"
+        }
+      ]
+    },
+    {
+      "subjectCode": "KIV/LIN",
+      "activities": [
+        {
+          "type": "assignment",
+          "title": "Domácí úloha 1: Vektory a matice",
+          "due_date": "2026-07-30",
+          "due_time": "23:59",
+          "max_points": 10,
+          "gained_points": 9,
+          "completed": true,
+          "weight": 10,
+          "context": "Moodle Úkol LIN"
+        },
+        {
+          "type": "attendance",
+          "title": "Aktivní účast na seminářích",
+          "due_date": null,
+          "due_time": null,
+          "max_points": null,
+          "gained_points": null,
+          "grade": null,
+          "completed": false,
+          "context": "Moodle Checklist seminářů"
+        }
+      ]
+    },
+    {
+      "subjectCode": "KIV/DB2",
+      "activities": [
+        {
+          "type": "assignment",
+          "title": "Domácí úloha 1: E-R Model a SQL",
+          "due_date": "2026-07-29",
+          "due_time": "23:59",
+          "max_points": 10,
+          "gained_points": 4,
+          "completed": true,
+          "weight": 10,
+          "context": "Moodle Úkol DB2"
+        },
+        {
+          "type": "exam",
+          "title": "Závěrečná obhajoba databázového projektu",
+          "due_date": "2026-09-20",
+          "due_time": "11:00",
+          "max_points": null,
+          "gained_points": null,
+          "grade": "A",
+          "completed": true,
+          "context": "Moodle Známkování obhajoby"
+        }
+      ]
+    }
+  ]
+}

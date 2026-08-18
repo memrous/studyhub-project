@@ -15,3 +15,30 @@ export const getSubjectColor = (subject) => {
   }
   return SUBJECT_COLOR_PALETTE[Math.abs(hash) % SUBJECT_COLOR_PALETTE.length]
 }
+
+/**
+ * Normalizes grades to university A–F scale.
+ * Handles existing letter grades (A, B, C, D, E, F) as well as numeric grades (1–5 -> A–F).
+ */
+export const formatAcademicGrade = (grade) => {
+  if (grade === null || grade === undefined || grade === '') return null
+  const str = String(grade).trim().toUpperCase()
+
+  const numericMap = {
+    '1': 'A',
+    '1.0': 'A',
+    '1.5': 'B',
+    '2': 'B',
+    '2.0': 'B',
+    '2.5': 'C',
+    '3': 'C',
+    '3.0': 'C',
+    '3.5': 'D',
+    '4': 'D',
+    '4.0': 'E',
+    '5': 'F',
+  }
+
+  return numericMap[str] || str
+}
+
