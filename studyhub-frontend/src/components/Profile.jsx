@@ -601,7 +601,7 @@ const Profile = ({ user: initialUser }) => {
             <button
               type="button"
               onClick={() => navigate('/dashboard')}
-              className="cursor-pointer shrink-0 inline-flex items-center gap-1.5 rounded-lg bg-success px-3 py-1.5 text-xs font-semibold text-on-success hover:bg-success-container transition-colors"
+              className="cursor-pointer shrink-0 inline-flex items-center gap-1.5 rounded-lg bg-success px-3 py-1.5 text-xs font-semibold text-on-success transition-colors"
             >
               <LayoutGrid className="w-3.5 h-3.5" />
               {t('profile:stag.actions.goToDashboard')}

@@ -117,6 +117,11 @@
     "startsIn": "Starts in {{minutes}} minutes",
     "startsIn_one": "Starts in {{minutes}} minute",
     "startsIn_other": "Starts in {{minutes}} minutes",
+    "ongoing": "Ongoing",
+    "startsInHours_one": "Starts in {{hours}} hour",
+    "startsInHours_other": "Starts in {{hours}} hours",
+    "startsInDays_one": "Starts in {{days}} day",
+    "startsInDays_other": "Starts in {{days}} days",
     "openMaterials": "Open materials",
     "addToCalendar": "Add to calendar",
     "noUpcoming": "No more classes today."

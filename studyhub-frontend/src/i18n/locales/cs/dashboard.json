@@ -120,6 +120,13 @@
     "startsIn_one": "Začíná za {{minutes}} minutu",
     "startsIn_few": "Začíná za {{minutes}} minuty",
     "startsIn_other": "Začíná za {{minutes}} minut",
+    "ongoing": "Právě probíhá",
+    "startsInHours_one": "Začíná za {{hours}} hodinu",
+    "startsInHours_few": "Začíná za {{hours}} hodiny",
+    "startsInHours_other": "Začíná za {{hours}} hodin",
+    "startsInDays_one": "Začíná za {{days}} den",
+    "startsInDays_few": "Začíná za {{days}} dny",
+    "startsInDays_other": "Začíná za {{days}} dní",
     "openMaterials": "Otevřít materiály k přednášce",
     "addToCalendar": "Přidat do kalendáře",
     "noUpcoming": "Žádná další výuka dnes."

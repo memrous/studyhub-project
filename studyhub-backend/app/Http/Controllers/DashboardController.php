@@ -17,10 +17,10 @@ class DashboardController extends Controller
         $daysThreshold = 3;
         $lowScoreThreshold = 50;
 
-        $today = Carbon::today();
-        $now = Carbon::now()->format('H:i:s');
+        $today = Carbon::today('Europe/Prague');
+        $now = Carbon::now('Europe/Prague')->format('H:i:s');
 
-        // 1. nextClass: earliest upcoming event for the user's subjects
+        // 1. nextClass: earliest upcoming or ongoing event for the user's subjects
         $nextClass = Event::whereHas('subject', function ($q) use ($userId) {
                 $q->where('user_id', $userId);
             })
@@ -28,7 +28,13 @@ class DashboardController extends Controller
                 $q->where('date', '>', $today->toDateString())
                   ->orWhere(function ($q2) use ($today, $now) {
                       $q2->where('date', $today->toDateString())
-                         ->where('time', '>=', $now);
+                         ->where(function ($q3) use ($now) {
+                             $q3->where('end_time', '>=', $now)
+                                ->orWhere(function ($q4) use ($now) {
+                                    $q4->whereNull('end_time')
+                                       ->where('time', '>=', $now);
+                                });
+                         });
                   });
             })
             ->orderBy('date')

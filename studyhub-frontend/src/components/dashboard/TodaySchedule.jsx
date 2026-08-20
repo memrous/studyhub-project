@@ -1,8 +1,24 @@
+import { useState, useEffect } from 'react'
 import { Clock, Coffee, PartyPopper } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 const TodaySchedule = ({ schedule }) => {
   const { t } = useTranslation('dashboard')
+
+  const [nowMinutes, setNowMinutes] = useState(() => {
+    const d = new Date()
+    return d.getHours() * 60 + d.getMinutes()
+  })
+
+  useEffect(() => {
+    const updateTime = () => {
+      const d = new Date()
+      setNowMinutes(d.getHours() * 60 + d.getMinutes())
+    }
+    updateTime()
+    const interval = setInterval(updateTime, 30000)
+    return () => clearInterval(interval)
+  }, [])
 
   const timeToMinutes = (timeStr) => {
     if (!timeStr) return 0
@@ -10,8 +26,26 @@ const TodaySchedule = ({ schedule }) => {
     return h * 60 + m
   }
 
-  const getDotColorClass = (type) => {
-    switch (type) {
+  const isEventActive = (event) => {
+    if (!event?.startTime || !event?.endTime) return false
+    const start = timeToMinutes(event.startTime)
+    const end = timeToMinutes(event.endTime)
+    return nowMinutes >= start && nowMinutes < end
+  }
+
+  const isGapActive = (prevEvent, nextEvent) => {
+    if (!prevEvent?.endTime || !nextEvent?.startTime) return false
+    const gapStart = timeToMinutes(prevEvent.endTime)
+    const gapEnd = timeToMinutes(nextEvent.startTime)
+    return nowMinutes >= gapStart && nowMinutes < gapEnd
+  }
+
+  const getDotColorClass = (event) => {
+    if (isEventActive(event)) {
+      return 'bg-live animate-[studyhub-live-pulse_1.8s_ease-in-out_infinite]'
+    }
+
+    switch (event.type) {
       case 'Lecture':
       case 'Lab':
         return 'bg-primary'
@@ -92,7 +126,7 @@ const TodaySchedule = ({ schedule }) => {
               className={`relative pl-6 ${isLast ? 'pb-0' : 'pb-6'}`}
             >
               <span
-                className={`absolute -left-[9px] top-1 size-4 rounded-full border-2 border-surface-container-lowest ${getDotColorClass(item.data.type)}`}
+                className={`absolute -left-[9px] top-1 size-4 rounded-full border-2 border-surface-container-lowest ${getDotColorClass(item.data)}`}
                 aria-hidden="true"
               />
               <p className="text-xs font-medium tabular-nums text-on-surface-variant">
@@ -115,16 +149,32 @@ const TodaySchedule = ({ schedule }) => {
               )}
             </li>
           ) : (
-            <li key={`g-${index}`} className="relative py-2 pl-6">
-              <span
-                className="absolute -left-[7px] top-1/2 size-3 -translate-y-1/2 rounded-full border-2 border-dashed border-outline-variant bg-surface-container-lowest"
-                aria-hidden="true"
-              />
-              <div className="flex items-center gap-2 rounded-lg border border-dashed border-outline-variant bg-surface-container-low px-3 py-2 text-on-surface-variant">
-                <Coffee className="size-3.5 shrink-0" aria-hidden="true" />
-                <span className="text-xs font-medium">{formatGap(item.minutes)}</span>
-              </div>
-            </li>
+            (() => {
+              const prevEvent = timelineItems[index - 1]?.data
+              const nextEvent = timelineItems[index + 1]?.data
+              const isGapLive = isGapActive(prevEvent, nextEvent)
+
+              return (
+                <li key={`g-${index}`} className="relative py-2 pl-6">
+                  <span
+                    className={`absolute -left-[7px] top-1/2 size-3 -translate-y-1/2 rounded-full border-2 bg-surface-container-lowest ${
+                      isGapLive
+                        ? 'border-live animate-[studyhub-live-pulse-subtle_1.8s_ease-in-out_infinite]'
+                        : 'border-dashed border-outline-variant'
+                    }`}
+                    aria-hidden="true"
+                  />
+                  <div
+                    className={`flex items-center gap-2 rounded-lg border bg-surface-container-low px-3 py-2 text-on-surface-variant ${
+                      isGapLive ? 'border-live/40' : 'border-dashed border-outline-variant'
+                    }`}
+                  >
+                    <Coffee className="size-3.5 shrink-0" aria-hidden="true" />
+                    <span className="text-xs font-medium">{formatGap(item.minutes)}</span>
+                  </div>
+                </li>
+              )
+            })()
           )
         })}
       </ol>

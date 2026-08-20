@@ -2,21 +2,59 @@ import { useState, useEffect } from 'react'
 import { MapPin, Clock, FileText, CalendarPlus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
+const parseLocalDateTime = (dateInput, timeStr) => {
+  if (!dateInput || !timeStr) return null
+  const cleanDate = typeof dateInput === 'string' ? dateInput.split('T')[0] : ''
+  if (!cleanDate) return null
+  const [year, month, day] = cleanDate.split('-').map(Number)
+  const timeParts = timeStr.split(':').map(Number)
+  const hours = timeParts[0]
+  const minutes = timeParts[1]
+  if (isNaN(year) || isNaN(month) || isNaN(day) || isNaN(hours) || isNaN(minutes)) return null
+  return new Date(year, month - 1, day, hours, minutes, 0)
+}
+
 const NextUp = ({ nextClass, onOpenMaterials, onAddToCalendar }) => {
   const { t } = useTranslation('dashboard')
   const [minutesLeft, setMinutesLeft] = useState(null)
+  const [isOngoing, setIsOngoing] = useState(false)
 
   useEffect(() => {
     if (!nextClass) return
 
     const calculateTimeLeft = () => {
       try {
-        const classDate = nextClass.date // 'YYYY-MM-DD'
-        const classTime = nextClass.startTime // 'HH:MM'
-        const targetDateTime = new Date(`${classDate}T${classTime}`)
-        const diffMs = targetDateTime - new Date()
-        const diffMins = Math.max(0, Math.ceil(diffMs / 60000))
-        setMinutesLeft(diffMins)
+        const classDate = nextClass.date
+        const startTimeStr = nextClass.startTime || nextClass.time || nextClass.start_time
+        const endTimeStr = nextClass.endTime || nextClass.end_time
+
+        const startDateTime = parseLocalDateTime(classDate, startTimeStr)
+        let endDateTime = parseLocalDateTime(classDate, endTimeStr)
+
+        if (startDateTime && !endDateTime) {
+          endDateTime = new Date(startDateTime.getTime() + 90 * 60 * 1000)
+        }
+
+        if (!startDateTime || !endDateTime) {
+          setIsOngoing(false)
+          setMinutesLeft(null)
+          return
+        }
+
+        const now = new Date()
+        const ongoing = now >= startDateTime && now < endDateTime
+        setIsOngoing(ongoing)
+
+        if (ongoing) {
+          setMinutesLeft(0)
+        } else if (now < startDateTime) {
+          const diffMs = startDateTime - now
+          const diffMins = Math.ceil(diffMs / 60000)
+          setMinutesLeft(diffMins)
+        } else {
+          setIsOngoing(false)
+          setMinutesLeft(null)
+        }
       } catch (err) {
         console.error('Failed to calculate next class time left', err)
       }
@@ -27,9 +65,24 @@ const NextUp = ({ nextClass, onOpenMaterials, onAddToCalendar }) => {
     return () => clearInterval(interval)
   }, [nextClass])
 
-  const renderCountdown = () => {
+  const formatCountdown = () => {
+    if (isOngoing) {
+      return t('nextUp.ongoing')
+    }
+
     if (minutesLeft === null) return ''
-    return t('nextUp.startsIn', { count: minutesLeft, minutes: minutesLeft })
+
+    if (minutesLeft <= 100) {
+      return t('nextUp.startsIn', { count: minutesLeft, minutes: minutesLeft })
+    }
+
+    if (minutesLeft < 24 * 60) {
+      const hours = Math.round(minutesLeft / 60)
+      return t('nextUp.startsInHours', { count: hours, hours })
+    }
+
+    const days = Math.round(minutesLeft / (24 * 60))
+    return t('nextUp.startsInDays', { count: days, days })
   }
 
   const typeBadge = nextClass?.type
@@ -53,10 +106,14 @@ const NextUp = ({ nextClass, onOpenMaterials, onAddToCalendar }) => {
             <span className="rounded-full bg-primary/20 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-balance ring-1 ring-inset ring-primary/40">
               {typeBadge}
             </span>
-            {minutesLeft !== null && (
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-success/15 px-3 py-1 text-sm font-medium text-success">
+            {(minutesLeft !== null || isOngoing) && (
+              <span
+                className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm font-medium ${
+                  isOngoing ? 'bg-live/15 text-live' : 'bg-success/15 text-success'
+                }`}
+              >
                 <Clock className="size-4" aria-hidden="true" />
-                {renderCountdown()}
+                {formatCountdown()}
               </span>
             )}
           </div>
